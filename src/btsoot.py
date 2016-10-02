@@ -20,20 +20,42 @@
 #LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
-
+debug = False
 import config
+import sys
 
 def main():
 	print("BTSOOT 0.1.0")
-	config.create()
-
+	
+	if debug == True:
+		print(len(sys.argv))
+	else:
+		pass
+		
+	if(len(sys.argv) > 1):
+		if "create" in sys.argv:
+			if config in sys.argv:
+				config.create()
+		else:
+			print("Usage: BTSOOT command")
+	else:
+		print("Console Mode.") #Should be used primarily for Win
+		while 1:
+			print(">", end="")
+			consoleinput = input()
+			if consoleinput == "create config":
+				config.create()
+			elif consoleinput == "exit":
+				sys.exit()
+			else:
+				print("Command not found")
+				
 if __name__ == __name__:
 	try:
 		main()
 	except KeyboardInterrupt:
 		print("Stopping program.")
-		exit()
+		sys.exit()
 	except Exception:
-		print("Unknown Critical Exception")
-		print("Quitting...")
-
+		print("Unknown critical exception")
+		sys.exit()
