@@ -26,15 +26,46 @@ import config
 import database
 import sys
 
+def usage():
+	print("Usage: btsoot command")
+	print("\tcreate config		| Creates configfile")
+	print("\tcreate database 	| Creates database")
+	print("\tdebug=true/false	| Sets debug mode")
+	print("MORE IS COMMING. Please report any bugs to")
+	print("https://github.com/paulkramme/btsoot/")
+
 def main():
 	print("BTSOOT 0.1.0")
-		
+	
+	#DEBUG MODE LOADER
+	try:
+		loadconfig = open("btsoot.conf", "r")
+		if "debug=true" in loadconfig.readline():
+			debug = True
+		elif "debug=false" in loadconfig.readline():
+			debug = False
+		else:
+			pass
+		loadconfig.close()
+	except FileNotFoundError:
+		print("Configfile not found. You should create one.")
+	
+	#SYSTEM ARGS
 	if(len(sys.argv) > 1):
 		if "create" in sys.argv:
-			if config in sys.argv:
+			if "config" in sys.argv:
 				config.create()
+			if "database" in sys.argv:
+				database.create()
+		elif "debug=true" in sys.argv:
+			config.configfile = open("btsoot.conf", "w")
+			config.configfile.write("debug=true\n")
+			config.configfile.close()
+		elif "help" or "usage" in sys.argv:
+			usage()
 		else:
-			print("Usage: BTSOOT command")
+			usage()
+	#BUILDIN CONSOLE MODE
 	else:
 		print("Console Mode.") #Should be used primarily for Win
 		while 1:
@@ -48,6 +79,10 @@ def main():
 				print("Debug disabled.")
 			elif consoleinput == "create config":
 				config.create()
+			elif consoleinput == "usage":
+				usage()
+			elif consoleinput == "help":
+				usage()
 			elif consoleinput == "exit":
 				sys.exit()
 			else:
@@ -59,6 +94,4 @@ if __name__ == __name__:
 	except KeyboardInterrupt:
 		print("Stopping program.")
 		sys.exit()
-	except Exception:
-		print("Unknown critical exception")
-		sys.exit()
+
