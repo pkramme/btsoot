@@ -1,5 +1,5 @@
 configfile = None
-def create():
-	configfile = open("btsoot.conf", "w")
+def create(path = "btsoot.conf"):
+	configfile = open(path, "w")
 	configfile.write("something\n")
 	
