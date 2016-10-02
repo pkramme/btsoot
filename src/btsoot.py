@@ -86,7 +86,7 @@ def main():
 			elif consoleinput == "exit":
 				sys.exit()
 			else:
-				print("Command not found")
+				print("Command '" + consoleinput + "' not found")
 				
 if __name__ == __name__:
 	try:
@@ -94,4 +94,3 @@ if __name__ == __name__:
 	except KeyboardInterrupt:
 		print("Stopping program.")
 		sys.exit()
-
