@@ -1,5 +1,5 @@
 database = None
-def create(path = "btsootdb")
+def create(path = "btsootdb"):
 	database = open(path, "w")
 	database.write("Database")
 
