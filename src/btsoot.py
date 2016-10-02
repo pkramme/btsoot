@@ -22,6 +22,7 @@
 #SOFTWARE.
 
 import config
+import database
 
 def main():
 	print("BTSOOT 0.1.0")
