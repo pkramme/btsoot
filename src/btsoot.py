@@ -21,8 +21,11 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
+import config
+
 def main():
 	print("BTSOOT 0.1.0")
+	config.create()
 
 if __name__ == __name__:
 	try:
