@@ -20,17 +20,13 @@
 #LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
+
 debug = False
 import config
 import sys
 
 def main():
 	print("BTSOOT 0.1.0")
-	
-	if debug == True:
-		print(len(sys.argv))
-	else:
-		pass
 		
 	if(len(sys.argv) > 1):
 		if "create" in sys.argv:
@@ -43,7 +39,13 @@ def main():
 		while 1:
 			print(">", end="")
 			consoleinput = input()
-			if consoleinput == "create config":
+			if consoleinput == "debug=true":
+				debug = True
+				print("Debug enabled.")
+			elif consoleinput == "debug=false":
+				debug = False
+				print("Debug disabled.")
+			elif consoleinput == "create config":
 				config.create()
 			elif consoleinput == "exit":
 				sys.exit()
