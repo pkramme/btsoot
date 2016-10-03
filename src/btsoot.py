@@ -69,8 +69,7 @@ def main():
 	else:
 		print("Console Mode.") #Should be used primarily for Win
 		while 1:
-			print(">", end="")
-			consoleinput = input()
+			consoleinput = input(">")
 			if consoleinput == "debug=true":
 				debug = True
 				print("Debug enabled.")
