@@ -88,11 +88,17 @@ def main():
 			elif consoleinput == "debug=false":
 				debug = False
 				print("Debug disabled.")
+			elif consoleinput == "create":
+				print("config, database?")
 			elif consoleinput == "create config":
 				config.create()
+			elif consoleinput == "create database":
+				database.create()
 			elif consoleinput == "usage":
 				usage()
 			elif consoleinput == "help":
+				usage()
+			elif consoleinput == "?":
 				usage()
 			elif consoleinput == "exit":
 				sys.exit()
