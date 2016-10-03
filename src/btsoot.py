@@ -48,7 +48,7 @@ def main():
 			pass
 		loadconfig.close()
 	except FileNotFoundError:
-		print("Configfile not found. You should create one.")
+		print("Configfile not found. You should create one with 'create config'.")
 	
 	#SYSTEM ARGS
 	if(len(sys.argv) > 1):
@@ -94,3 +94,4 @@ if __name__ == __name__:
 	except KeyboardInterrupt:
 		print("Stopping program.")
 		sys.exit()
+
