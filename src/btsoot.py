@@ -34,9 +34,7 @@ def usage():
 	print("MORE IS COMMING. Please report any bugs to")
 	print("https://github.com/paulkramme/btsoot/")
 
-def main():
-	print("BTSOOT 0.1.0")
-	
+def main():	
 	#DEBUG MODE LOADER
 	try:
 		loadconfig = open("btsoot.conf", "r")
@@ -61,6 +59,20 @@ def main():
 			config.configfile = open("btsoot.conf", "w")
 			config.configfile.write("debug=true\n")
 			config.configfile.close()
+		elif "add" in sys.argv:
+			if "block" in sys.argv:
+				newblock = input("New blocks name: ")
+				database = open("btsootdb", "r+")
+				if newblock in database.readline():
+					print("The block '" + newblock + "' already exists")
+				else:
+					path = input("Path: ")
+					database.write(newblock + " " + path + "\n")
+					database.close()
+			else:
+				print("block?")
+		elif "version" in sys.argv:
+			print("BTSOOT 0.1.0")
 		elif "help" or "usage" in sys.argv:
 			usage()
 		else:
