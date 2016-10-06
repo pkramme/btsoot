@@ -62,13 +62,13 @@ def main():
 		elif "add" in sys.argv:
 			if "block" in sys.argv:
 				newblock = input("New blocks name: ")
-				database = open("btsootdb", "r+")
-				if newblock in database.readline():
+				databaseblock = open("btsootdb", "r+")
+				if newblock in databaseblock.readline():
 					print("The block '" + newblock + "' already exists")
 				else:
 					path = input("Path: ")
-					database.write(newblock + " " + path + "\n")
-					database.close()
+					databaseblock.write(newblock + " " + path + "\n")
+					databaseblock.close()
 			else:
 				print("block?")
 		elif "version" in sys.argv:
@@ -111,4 +111,4 @@ if __name__ == __name__:
 	except KeyboardInterrupt:
 		print("Stopping program.")
 		sys.exit()
-
+#yay
