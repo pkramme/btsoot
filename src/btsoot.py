@@ -21,10 +21,14 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
+
 debug = False
+
+
 import config
 import database
 import sys
+
 
 def usage():
 	print("Usage: btsoot command")
@@ -33,6 +37,7 @@ def usage():
 	print("\tdebug=true/false	| Sets debug mode")
 	print("MORE IS COMMING. Please report any bugs to")
 	print("https://github.com/paulkramme/btsoot/")
+
 
 def main():	
 	#DEBUG MODE LOADER
@@ -71,44 +76,20 @@ def main():
 					databaseblock.close()
 			else:
 				print("block?")
+		elif "backup" in sys.argv:
+			print("Backup in Progress...")
+			
 		elif "version" in sys.argv:
 			print("BTSOOT 0.1.0")
 		elif "help" or "usage" in sys.argv:
 			usage()
 		else:
 			usage()
-	#BUILDIN CONSOLE MODE
-	else:
-		print("Console Mode.") #Should be used primarily for Win
-		while 1:
-			consoleinput = input(">")
-			if consoleinput == "debug=true":
-				debug = True
-				print("Debug enabled.")
-			elif consoleinput == "debug=false":
-				debug = False
-				print("Debug disabled.")
-			elif consoleinput == "create":
-				print("config, database?")
-			elif consoleinput == "create config":
-				config.create()
-			elif consoleinput == "create database":
-				database.create()
-			elif consoleinput == "usage":
-				usage()
-			elif consoleinput == "help":
-				usage()
-			elif consoleinput == "?":
-				usage()
-			elif consoleinput == "exit":
-				sys.exit()
-			else:
-				print("Command '" + consoleinput + "' not found")
-				
+
+
 if __name__ == __name__:
 	try:
 		main()
 	except KeyboardInterrupt:
 		print("Stopping program.")
 		sys.exit()
-#yay
