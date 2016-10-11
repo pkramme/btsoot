@@ -39,6 +39,15 @@ def usage():
 	print("https://github.com/paulkramme/btsoot/")
 
 
+def backup(name):
+	database = open("btsootdb", "r")
+	if name in database:
+		print("Positive match. Proceding.")
+		
+	else:
+		print("Negative Match. Aborting.")
+
+
 def main():	
 	#DEBUG MODE LOADER
 	try:
@@ -78,7 +87,7 @@ def main():
 				print("block?")
 		elif "backup" in sys.argv:
 			print("Backup in Progress...")
-			
+			backup()
 		elif "version" in sys.argv:
 			print("BTSOOT 0.1.0")
 		elif "help" or "usage" in sys.argv:
