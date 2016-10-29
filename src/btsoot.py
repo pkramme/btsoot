@@ -28,7 +28,7 @@ debug = False
 import config
 import database
 import sys
-import datalib
+import datatransfer-lib
 
 
 def usage():
