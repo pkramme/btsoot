@@ -28,6 +28,7 @@ debug = False
 import config
 import database
 import sys
+import datalib
 
 
 def usage():
