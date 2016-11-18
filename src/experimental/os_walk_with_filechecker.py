@@ -7,8 +7,9 @@ import os, sys, datetime
 #	print(dt)
 
 walk_dir = sys.argv[1]
+scanfile = sys.argv[2]
 
-with open("fsscan.scan", "w") as f:
+with open(scanfile, "w") as f:
 
 	print("SCANFROM " + walk_dir)
 
