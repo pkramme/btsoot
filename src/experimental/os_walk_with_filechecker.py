@@ -10,7 +10,7 @@ walk_dir = sys.argv[1]
 
 with open("fsscan.scan", "w") as f:
 
-	print("SCANFROM" + walk_dir)
+	print("SCANFROM " + walk_dir)
 
 	for root, subdirs, files in os.walk(walk_dir):
 		f.write(root + "\n")
