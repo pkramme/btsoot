@@ -37,11 +37,11 @@ def sha1sum(file):
         exit()
 
 
-def mdsum(file):
+def md5sum(file):
     try:
         with open(file, "rb") as fd:
             hashedfile = hashlib.md5()
-            for buf in iter(partial(fd.read, 128), b''):
+            for buf in iter(functools.partial(fd.read, 128), b''):
                 hashedfile.update(buf)
         return hashedfile.hexdigest()
     except FileNotFoundError:
