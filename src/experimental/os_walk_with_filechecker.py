@@ -1,23 +1,20 @@
 #!/usr/bin/python3
 # THIS FILE IS AN EXPERIMENTAL PROGRAM TO LEARN ABOUT OS_WALK
 
-import os, sys
+import os, sys, datetime
+
+#dt = datetime.datetime(1970,1,1).total_seconds()
+#	print(dt)
 
 walk_dir = sys.argv[1]
 
-print("walk directory: " + walk_dir)
+with open("fsscan.scan", "w") as f:
 
-print("Walk directory (absolute) = " + os.path.abspath(walk_dir))
-print("\n\n\n\n\n\n\n\n\n")
+	print("SCANFROM" + walk_dir)
 
-for root, subdirs, files in os.walk(walk_dir):
-	print(root)
-	#list_file_path = os.path.join(root, "dirlist.txt")
-	#print("dirlist = ", list_file_path)
-
-	#for subdir in subdirs:
-	#	print(subdir)
+	for root, subdirs, files in os.walk(walk_dir):
+		f.write(root + "\n")
 
 	for filename in files:
 		file_path = os.path.join(root, filename)
-		print(file_path + filename)
+		f.write(file_path + filename + "\n")
