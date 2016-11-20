@@ -27,8 +27,6 @@ debug = False
 
 
 import sys
-import pandas
-import fileinput
 
 
 class color:
@@ -44,17 +42,17 @@ class color:
 
 def scandirectory():
 	with open(scanfile, "w") as f:
-	f.write("path,checksum\n")
+		f.write("path,checksum\n")
 
-	#print("SCANFROM " + walk_dir)
+		#print("SCANFROM " + walk_dir)
 
-	for root, subdirs, files in os.walk(walk_dir):
-		f.write(root + "\n")
-		for filename in files:
-			file_path = os.path.join(root, filename)
-			checksum = compare.sha1sum(file_path)
-			print(checksum)
-			f.write(file_path + "," + checksum + "\n")
+		for root, subdirs, files in os.walk(walk_dir):
+			f.write(root + "\n")
+			for filename in files:
+				file_path = os.path.join(root, filename)
+				checksum = compare.sha1sum(file_path)
+				print(checksum)
+				f.write(file_path + "," + checksum + "\n")
 
 
 def main():
@@ -69,9 +67,9 @@ def main():
 				print("Type local if you want to use local filesystem.")
 				exit()
 			with open("btsoot.conf", "a") as f:
-				f.write("name", name, end='\n', sep='=')
-				f.write("path", path, end='\n', sep='=')
-				f.write("server", server, end='\n\n', sep='=')
+				f.write("name=" + name + '\n')
+				f.write("path=" + path + '\n')
+				f.write("server=" + server + '\n')
 		if sys.argv[1] == "rm":
 			try:
 				name = sys.argv[2]
@@ -86,7 +84,7 @@ def main():
 					row = row + 1
 					if line == "name=" + name:
 						beginning_row = row
-					elif row = beginning_row + 1 or row = beginning_row + 2:
+					elif row == beginning_row + 1 or row == beginning_row + 2:
 						pass
 					else:
 						f.write(line)
