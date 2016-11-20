@@ -76,18 +76,29 @@ def main():
 			except IndexError:
 				print("Usage: " + sys.argv[0] + "rm name")
 				exit()
-			with open("btsoot.conf", "rw") as f:
+			try:
+				f = open("btsoot.conf", "r")
 				row = 0
-				beginning_row = 0
+				beginning_row = -10
+				indentifier = "name=" + name + '\n'
+				print(indentifier)
 				lines = f.readlines()
+				f.close()
+				f = open("btsoot.conf", "w")
 				for line in lines:
+					print(row)
+					print(line)
 					row = row + 1
-					if line == "name=" + name:
+					if line == indentifier:
 						beginning_row = row
+						print("Found in line ", beginning_row)
 					elif row == beginning_row + 1 or row == beginning_row + 2:
-						pass
+						print("Removing lines...")
 					else:
 						f.write(line)
+				f.close()
+			except FileNotFoundError:
+				print("Configfile not found. Create one with 'add'.")
 
 
 	except IndexError:
