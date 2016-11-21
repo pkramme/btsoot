@@ -23,9 +23,6 @@
 #SOFTWARE.
 
 
-debug = False
-
-
 import sys
 
 
