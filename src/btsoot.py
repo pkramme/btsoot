@@ -24,6 +24,8 @@
 
 
 import sys
+import os
+from compare import compare
 
 
 class color:
@@ -37,19 +39,25 @@ class color:
 	UNDERLINE = '\033[4m'
 
 
-def scandirectory():
-	with open(scanfile, "w") as f:
-		f.write("path,checksum\n")
-
-		#print("SCANFROM " + walk_dir)
-
-		for root, subdirs, files in os.walk(walk_dir):
-			f.write(root + "\n")
-			for filename in files:
-				file_path = os.path.join(root, filename)
-				checksum = compare.sha1sum(file_path)
-				print(checksum)
-				f.write(file_path + "," + checksum + "\n")
+def scandirectory(walk_dir, scanfile, silent = False):
+	try:
+		print("Initializing scan...")
+		with open(scanfile, "w") as f:
+			f.write("path,checksum\n")
+			for root, subdirs, files in os.walk(walk_dir):
+				f.write(root + "\n")
+				for filename in files:
+					file_path = os.path.join(root, filename)
+					checksum = compare.sha1sum(file_path)
+					if silent == True:
+						print(file_path, checksum, end="\n")
+					else:
+						pass
+					print(checksum)
+					f.write(file_path + "," + checksum + "\n")
+		print("...done.")
+	except FileNotFoundError:
+		print("There were an reading error... Probably os protected.")
 
 
 def main():
@@ -67,7 +75,7 @@ def main():
 				f.write("name=" + name + '\n')
 				f.write("path=" + path + '\n')
 				f.write("server=" + server + '\n')
-		if sys.argv[1] == "rm":
+		elif sys.argv[1] == "rm":
 			try:
 				name = sys.argv[2]
 			except IndexError:
@@ -92,6 +100,11 @@ def main():
 				f.close()
 			except FileNotFoundError:
 				print("Configfile not found. Create one with 'add'.")
+		elif sys.argv[1] == "scan":
+			print("Execute scan...")
+			#NAME NEEDS TO BE RESOLVED TO CORRECT DIRECTORY!
+			#USE PPARTIAL FUNCTION FROM 'rm'
+			scandirectory(sys.argv[2], "testfile", True)
 
 
 	except IndexError:
