@@ -25,7 +25,11 @@
 
 import sys
 import os
-from compare import compare
+try:
+	from compare import compare
+except ImportError:
+	print("Failed to import compare library.")
+	exit()
 
 
 class color:
