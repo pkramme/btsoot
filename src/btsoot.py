@@ -31,6 +31,7 @@ except ImportError:
 	print("Failed to import compare library.")
 	exit()
 
+usage = "USAGE: btsoot add/rm/scan "
 
 class color:
 	HEADER = '\033[95m'
@@ -67,7 +68,7 @@ def scandirectory(walk_dir, scanfile, silent = False):
 def main():
 	try:
 		if sys.argv[1] == "add":
-			try:	
+			try:
 				name = sys.argv[2]
 				path = sys.argv[3]
 				server = sys.argv[4]
@@ -112,7 +113,7 @@ def main():
 
 
 	except IndexError:
-		print("Usage.")
+		print(usage)
 		exit()
 
 
