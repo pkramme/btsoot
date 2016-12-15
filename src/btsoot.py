@@ -44,7 +44,7 @@ def usage():
 def backup(name):
 	database = open("btsootdb", "r")
 	if name in database:
-		print("Positive match. Proceding.")
+		print("Positive match. Proceeding.")
 		
 	else:
 		print("Negative Match. Aborting.")
