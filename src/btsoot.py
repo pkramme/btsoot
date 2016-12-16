@@ -14,7 +14,7 @@ def usage():
 	print("\tcreate config		| Creates configfile")
 	print("\tcreate database 	| Creates database")
 	print("\tdebug=true/false	| Sets debug mode")
-	print("MORE IS COMMING. Please report any bugs to")
+	print("MORE IS COMMING. Please report any bugs to https://paukra.com/paulkramme/btsoot/")
 	print("https://github.com/paulkramme/btsoot/")
 
 
