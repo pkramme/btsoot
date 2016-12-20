@@ -25,8 +25,10 @@
 
 import sys
 import os
+
 try:
 	from compare import compare
+	dir()
 except ImportError:
 	print("Failed to import compare library.")
 	exit()
@@ -44,7 +46,19 @@ class color:
 	UNDERLINE = '\033[4m'
 
 
-def scandirectory(walk_dir, scanfile, silent = False):
+def split_keep(string, splitters):
+	final = [string]
+	for x in splitters:
+		for i,s in enumerate(final):
+			if x in s and x != s:
+				left, right = s.split(x, 1)
+				final[i] = left
+				final.insert(i+1, x)
+				final.insert(i+2, right)
+	return final
+
+
+def scandirectory(walk_dir, scanfile, verbose = False):
 	try:
 		print("Initializing scan...")
 		with open(scanfile, "w") as f:
@@ -54,13 +68,13 @@ def scandirectory(walk_dir, scanfile, silent = False):
 				for filename in files:
 					file_path = os.path.join(root, filename)
 					checksum = compare.sha1sum(file_path)
-					if silent == True:
+					if verbose == True:
 						print(file_path, checksum, end="\n")
 					else:
 						pass
-					print(checksum)
+					#print(checksum)
 					f.write(file_path + "," + checksum + "\n")
-		print("...done.")
+		print("Done.")
 	except FileNotFoundError:
 		print("There were an reading error... Probably os protected.")
 
@@ -109,9 +123,38 @@ def main():
 			print("Execute scan...")
 			#NAME NEEDS TO BE RESOLVED TO CORRECT DIRECTORY!
 			#USE PPARTIAL FUNCTION FROM 'rm'
-			scandirectory(sys.argv[2], "testfile", True)
+			searched_path = None			
+			try:
+				name = sys.argv[2]
+			except IndexError:
+				print("Usage: " + sys.argv[0] + "scan name")
+			try:
+				f = open("btsoot.conf", "r")
+				row = 0
+				beginning_row = -10
+				identifier = "name=" + name + '\n'
+				lines = f.readlines()
+				f.close()
+				for line in lines:
+					row = row + 1
+					if line == identifier:
+						beginning_row = row
+					elif row == beginning_row + 1:
+						searched_path = line
+						break
+					else:
+						pass
+				path_with_newline = split_keep(searched_path, "=")
+				tempstring = path_with_newline[2]
+				path = tempstring.rstrip()
+				print(path)
 
+			except FileNotFoundError:
+				print("Configfile not found. Create one with 'add'.")
+			scandirectory(path, "testfile.dump", True)
 
+		else:
+			print(usage)
 	except IndexError:
 		print(usage)
 		exit()
@@ -120,6 +163,6 @@ def main():
 if __name__ == "__main__":
 	try:
 		main()
-	except KeyboardInterrupt:
+	except KeyboardInterrupt or IndexError:
 		print("Stopping program.")
 		sys.exit()
