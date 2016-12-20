@@ -5,7 +5,6 @@ import os
 
 try:
 	from compare import compare
-	dir()
 except ImportError:
 	print("Failed to import compare library.")
 	exit()
