@@ -9,7 +9,7 @@ install:
 	cd ..
 	mkdir compare
 	cd compare
-	git clone git@ssh.paukra.com:paulkramme/compare.git
+	git clone git@ssh.paukra.com:libs/compare.git
 	cd ..
 update:
 	rm -rf datatransfer-lib
@@ -20,5 +20,5 @@ update:
 	rm -rf compare
 	mkdir compare
 	cd compare
-	git clone git@ssh.paukra.com:paulkramme/compare.git
+	git clone git@ssh.paukra.com:libs/compare.git
 	cd ..

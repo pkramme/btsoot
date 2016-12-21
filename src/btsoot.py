@@ -22,7 +22,7 @@ class color:
 	UNDERLINE = '\033[4m'
 
 
-def split_keep(string, splitters):
+def split_keep(string, splitters): #MAY RESOLVE ALL PROBLEMS WITH CSV
 	final = [string]
 	for x in splitters:
 		for i,s in enumerate(final):
