@@ -52,7 +52,7 @@ def scandirectory(walk_dir, scanfile, verbose = False):
 					f.write(file_path + "," + checksum + "\n")
 		print("Done.")
 	except FileNotFoundError:
-		print("There were an reading error... Probably os protected.")
+		print("There was a reading error... Probably os protected.")
 
 
 def main():
