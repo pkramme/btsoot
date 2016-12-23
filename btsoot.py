@@ -50,7 +50,6 @@ def scandirectory(walk_dir, scanfile, verbose = False):
 						print(file_path, checksum, end="\n")
 					else:
 						pass
-					#print(checksum)
 					f.write(file_path + "," + checksum + "\n")
 		print("Done.")
 	except FileNotFoundError:
