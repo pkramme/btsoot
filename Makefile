@@ -1,15 +1,12 @@
 clean:
 	rm btsoot.conf
 fullclean:
-	rm -rf btsoot.conf compare datatransfer-lib
+	rm -rf btsoot.conf compare datatransfer
 install:
-	mkdir compare
-	cd compare
 	git clone https://git.paukra.com/libs/compare.git
-	cd ..
+	git clone https://git.paukra.com/libs/datatransfer.git
 update:
 	rm -rf compare
-	mkdir compare
-	cd compare
 	git clone https://git.paukra.com/libs/compare.git
-	cd ..
+	rm -rf datatransfer-lib
+	git clone https://git.paukra.com/libs/datatransfer.git
