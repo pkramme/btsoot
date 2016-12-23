@@ -134,7 +134,12 @@ def main():
 			scandirectory(path, scanfilename, True)
 
 		elif sys.argv[1] == "backup":
-			pass
+			print("Filetransfer initialized...")
+			#TODO
+			# FIGURE OUT A WAY TO CREATE ALL NECESSARY DIRECTORIES
+			# FIGURE OUT A WAY TO LEAVE THE CONNECTION OPEN AND SEND THE 
+			#  FILENAME
+
 		else:
 			print(usage)
 
