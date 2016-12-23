@@ -144,15 +144,24 @@ def main():
 			#scandirectory("./", "localscanlist")
 			#scanlistfile = open("localscanlist", "r")
 			dirs = os.listdir("./")
+			number_of_files = 0
 			for file in dirs:
 				fileending = split(file, ".")
-				print(fileending)
-				if fileending[2] == "btsscan":
-					print(file)
-				else:
+				#print(fileending)
+				try:
+					if fileending[2] == "btsscan":
+						print(file)
+						number_of_files = number_of_files + 1
+					else:
+						pass
+				except IndexError:
 					pass
-			
-
+			if number_of_files == 0:
+				print("There arent any files. Create one by using 'scan'.")
+			elif number_of_files == 1:
+				print("There is only one file. I'll need two.")
+			else:
+				print("Sufficient number of files were found.")
 
 		else:
 			print(usage)
