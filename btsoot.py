@@ -105,7 +105,7 @@ def main():
 			searched_path = None			
 			try:
 				name = sys.argv[2]
-				scanfilename = "{}.{}.btsscan".format(int(time.time()), name)
+				scanfilename = "{}_{}.btsscan".format(int(time.time()), name)
 			except IndexError:
 				print("Usage: " + sys.argv[0] + "scan name")
 			try:
@@ -139,6 +139,20 @@ def main():
 			# FIGURE OUT A WAY TO CREATE ALL NECESSARY DIRECTORIES
 			# FIGURE OUT A WAY TO LEAVE THE CONNECTION OPEN AND SEND THE 
 			#  FILENAME
+
+			# Open two scanfiles and compare them
+			#scandirectory("./", "localscanlist")
+			#scanlistfile = open("localscanlist", "r")
+			dirs = os.listdir("./")
+			for file in dirs:
+				fileending = split(file, ".")
+				print(fileending)
+				if fileending[2] == "btsscan":
+					print(file)
+				else:
+					pass
+			
+
 
 		else:
 			print(usage)
