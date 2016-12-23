@@ -70,6 +70,7 @@ def main():
 				f.write("name=" + name + '\n')
 				f.write("path=" + path + '\n')
 				f.write("server=" + server + '\n')
+
 		elif sys.argv[1] == "rm":
 			try:
 				name = sys.argv[2]
@@ -95,6 +96,7 @@ def main():
 				f.close()
 			except FileNotFoundError:
 				print("Configfile not found. Create one with 'add'.")
+
 		elif sys.argv[1] == "scan":
 			print("Execute scan...")
 			#NAME NEEDS TO BE RESOLVED TO CORRECT DIRECTORY!
@@ -122,15 +124,20 @@ def main():
 						pass
 				path_with_newline = split(searched_path, "=")
 				tempstring = path_with_newline[2]
-				path = tempstring.rstrip()
+				path = tempstring.rstrip()#GETS RID OF NEWLINE
 				print(path)
 
 			except FileNotFoundError:
 				print("Configfile not found. Create one with 'add'.")
 			scandirectory(path, "testfile.dump", True)
 
+		elif sys.argv[1] == "backup":
+			# TODO: GET NAME, RESOLVE TO SERVER, START DATATRANSFER
+			print("Initializing Datatransfer... standby...")
+
 		else:
 			print(usage)
+
 	except IndexError:
 		print(usage)
 		exit()
