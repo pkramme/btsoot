@@ -42,7 +42,7 @@ def scandirectory(walk_dir, scanfile, verbose = False):
 		with open(scanfile, "w") as f:
 			f.write("path,checksum\n")
 			for root, subdirs, files in os.walk(walk_dir):
-				f.write(root + "\n")
+				#f.write(root + "\n")
 				for filename in files:
 					file_path = os.path.join(root, filename)
 					checksum = compare.md5sum(file_path)
