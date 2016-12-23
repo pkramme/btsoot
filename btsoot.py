@@ -22,7 +22,7 @@ class color:
 	UNDERLINE = '\033[4m'
 
 
-def split_keep(string, splitters): #MAY RESOLVE ALL PROBLEMS WITH CSV
+def split(string, splitters): #MAY RESOLVE ALL PROBLEMS WITH CSV
 	final = [string]
 	for x in splitters:
 		for i,s in enumerate(final):
@@ -120,7 +120,7 @@ def main():
 						break
 					else:
 						pass
-				path_with_newline = split_keep(searched_path, "=")
+				path_with_newline = split(searched_path, "=")
 				tempstring = path_with_newline[2]
 				path = tempstring.rstrip()
 				print(path)
@@ -140,5 +140,5 @@ if __name__ == "__main__":
 	try:
 		main()
 	except KeyboardInterrupt or IndexError:
-		print("Stopping program.")
+		print("\nStopping program.")
 		sys.exit()
