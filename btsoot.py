@@ -2,11 +2,13 @@
 
 import sys
 import os
+import time
 
 try:
 	from compare import compare
+	from datatransfer import datalib
 except ImportError:
-	print("Failed to import compare library.")
+	print("Failed to import library.")
 	exit()
 
 usage = "USAGE: btsoot add/rm/scan "
@@ -104,6 +106,7 @@ def main():
 			searched_path = None			
 			try:
 				name = sys.argv[2]
+				scanfilename = "{}.{}.btsscan".format(int(time.time()), name)
 			except IndexError:
 				print("Usage: " + sys.argv[0] + "scan name")
 			try:
@@ -129,7 +132,7 @@ def main():
 
 			except FileNotFoundError:
 				print("Configfile not found. Create one with 'add'.")
-			scandirectory(path, "testfile.dump", True)
+			scandirectory(path, scanfilename, True)
 
 		elif sys.argv[1] == "backup":
 			# TODO: GET NAME, RESOLVE TO SERVER, START DATATRANSFER
