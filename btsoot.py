@@ -111,7 +111,7 @@ def main():
 			try:
 				f = open("btsoot.conf", "r")
 				row = 0
-				beginning_row = -10
+				beginning_row = -1 #set counter to a negative state so it's not finding any rows
 				identifier = "name=" + name + '\n'
 				lines = f.readlines()
 				f.close()
@@ -134,9 +134,7 @@ def main():
 			scandirectory(path, scanfilename, True)
 
 		elif sys.argv[1] == "backup":
-			# TODO: GET NAME, RESOLVE TO SERVER, START DATATRANSFER
-			print("Initializing Datatransfer... standby...")
-
+			pass
 		else:
 			print(usage)
 
