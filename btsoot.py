@@ -11,7 +11,7 @@ except ImportError:
 	print("Failed to import library.")
 	exit()
 
-usage = "USAGE: btsoot add/rm/scan "
+usage = f"USAGE: {sys.argv[0]} add/rm/scan "
 
 class color:
 	HEADER = '\033[95m'
