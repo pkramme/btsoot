@@ -1,33 +1,39 @@
 #!/usr/bin/env python3
 
+
 import sys
 import os
 import time
+
 
 try:
 	from compare import compare
 except ImportError:
 	print("Failed to import compare library.")
-	print("BTSOOT can download the missing library. This requires Git and an Internet connection.")
-	if input("Should i try?") == "y" or input("Should i try?") == "":
-		system("git clone https://paukra.com/open-source/compare.git")
+	print("BTSOOT can download the missing library.")
+	print("This requires Git and an Internet connection.")
+	if input("Should i try? ") == "y":
+		os.system("git clone https://git.paukra.com/open-source/compare.git")
 	else:
 		print("Aborting. You have to manualy install it then and/or restart the program.")
-	exit()
+		exit()
+
 
 try:
 	from datatransfer import datalib
 except ImportError:
 	print("Failed to import datatransfer library.")
-	print("BTSOOT can download the missing library. This requires Git and an Internet connection.")
-	print("Should i try? (Y/n)")
-    if input("Should i try?") == "y" or input("Should i try?") == "":
-		system("git clone https://paukra.com/open-source/datatransfer.git")
+	print("BTSOOT can download the missing library.")
+	print(" This requires Git and an Internet connection.")
+	if input("Should i try? ") == "y":
+		os.system("git clone https://git.paukra.com/open-source/datatransfer.git")
 	else:
 		print("Aborting. You have to manualy install it then and/or restart the program.")
-	exit()
+		exit()
+
 
 usage = f"USAGE: {sys.argv[0]} add/rm/scan "
+
 
 class color:
 	HEADER = '\033[95m'
