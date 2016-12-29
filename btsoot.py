@@ -9,23 +9,22 @@ try:
 except ImportError:
 	print("Failed to import compare library.")
 	print("BTSOOT can download the missing library. This requires Git and an Internet connection.")
-	print("Should i try? (Y/n)
 	if input("Should i try?") == "y" or input("Should i try?") == "":
-	    system("git clone https://paukra.com/open-source/compare.git")
-    else:
-        print("Aborting. You have to manualy install it then and/or restart the program.")
+		system("git clone https://paukra.com/open-source/compare.git")
+	else:
+		print("Aborting. You have to manualy install it then and/or restart the program.")
 	exit()
 
 try:
-    from datatransfer import datalib
+	from datatransfer import datalib
 except ImportError:
-    print("Failed to import datatransfer library.")
-    print("BTSOOT can download the missing library. This requires Git and an Internet connection.")
-    print("Should i try? (Y/n)
+	print("Failed to import datatransfer library.")
+	print("BTSOOT can download the missing library. This requires Git and an Internet connection.")
+	print("Should i try? (Y/n)")
     if input("Should i try?") == "y" or input("Should i try?") == "":
-        system("git clone https://paukra.com/open-source/datalib.git")
-    else:
-        print("Aborting. You have to manualy install it then and/or restart the program.")
+		system("git clone https://paukra.com/open-source/datatransfer.git")
+	else:
+		print("Aborting. You have to manualy install it then and/or restart the program.")
 	exit()
 
 usage = f"USAGE: {sys.argv[0]} add/rm/scan "
