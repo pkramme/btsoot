@@ -43,7 +43,13 @@ except ImportError:
 		exit()
 
 
-usage = f"USAGE: {sys.argv[0]} add/rm/scan "
+usage = f"""USAGE: {sys.argv[0]} <commands>
+add <name> <path> <server/local>\tadd block
+rm <name>\t\t\t\tremove added block
+scan <name>\t\t\t\tscan added block
+backup <name>\t\t\t\tbackup scanned block
+update_dependencies\t\t\tupdate the needed libraries
+"""
 
 
 def split(string, splitters): #MAY RESOLVE ALL PROBLEMS WITH CSV
