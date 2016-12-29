@@ -188,6 +188,10 @@ def main():
 
 		elif sys.argv[1] == "update_dependencies":
 			print("This is not supported right now. Please delete them manualy and restart the program")
+			os.system("rm -rf compare")
+			os.system("git clone https://git.paukra.com/open-source/compare.git")
+			os.system("rm -rf datatransfer")
+			os.system("git clone https://git.paukra.com/open-source/datatransfer.git")
 
 		else:
 			print(usage)
@@ -200,6 +204,6 @@ def main():
 if __name__ == "__main__":
 	try:
 		main()
-	except KeyboardInterrupt or IndexError:
+	except KeyboardInterrupt:
 		print("\nStopping program.")
 		sys.exit()
