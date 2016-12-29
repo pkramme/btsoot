@@ -44,6 +44,7 @@ except ImportError:
 
 
 usage = f"""USAGE: {sys.argv[0]} <commands>
+
 add <name> <path> <server/local>\tadd block
 rm <name>\t\t\t\tremove added block
 scan <name>\t\t\t\tscan added block
