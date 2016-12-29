@@ -6,10 +6,21 @@ import os
 import time
 
 
+class color:
+	HEADER = '\033[95m'
+	OKBLUE = '\033[94m'
+	OKGREEN = '\033[92m'
+	WARNING = '\033[93m'
+	FAIL = '\033[91m'
+	ENDC = '\033[0m'
+	BOLD = '\033[1m'
+	UNDERLINE = '\033[4m'
+
+
 try:
 	from compare import compare
 except ImportError:
-	print("Failed to import compare library.")
+	print(color.FAIL + "Failed to import compare library." + color.ENDC)
 	print("BTSOOT can download the missing library.")
 	print("This requires Git and an Internet connection.")
 	if input("Should i try? ") == "y":
@@ -22,7 +33,7 @@ except ImportError:
 try:
 	from datatransfer import datalib
 except ImportError:
-	print("Failed to import datatransfer library.")
+	print(color.FAIL + "Failed to import datatransfer library." color.ENDC)
 	print("BTSOOT can download the missing library.")
 	print(" This requires Git and an Internet connection.")
 	if input("Should i try? ") == "y":
@@ -33,17 +44,6 @@ except ImportError:
 
 
 usage = f"USAGE: {sys.argv[0]} add/rm/scan "
-
-
-class color:
-	HEADER = '\033[95m'
-	OKBLUE = '\033[94m'
-	OKGREEN = '\033[92m'
-	WARNING = '\033[93m'
-	FAIL = '\033[91m'
-	ENDC = '\033[0m'
-	BOLD = '\033[1m'
-	UNDERLINE = '\033[4m'
 
 
 def split(string, splitters): #MAY RESOLVE ALL PROBLEMS WITH CSV
@@ -75,7 +75,7 @@ def scandirectory(walk_dir, scanfile, verbose = False):
 					f.write(file_path + "," + checksum + "\n")
 		print("Done.")
 	except FileNotFoundError:
-		print("There was a reading error... Probably os protected.")
+		print(color.FAIL + "There was a reading error... Probably os protected." + color.ENDC)
 
 
 def main():
