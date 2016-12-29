@@ -33,7 +33,7 @@ except ImportError:
 try:
 	from datatransfer import datalib
 except ImportError:
-	print(color.FAIL + "Failed to import datatransfer library." color.ENDC)
+	print(color.FAIL + "Failed to import datatransfer library." + color.ENDC)
 	print("BTSOOT can download the missing library.")
 	print(" This requires Git and an Internet connection.")
 	if input("Should i try? ") == "y":
@@ -184,6 +184,10 @@ def main():
 				print("There is only one file. I'll need two.")
 			else:
 				print("Sufficient number of files were found.")
+
+
+		elif sys.argv[1] == "update_dependencies":
+			print("This is not supported right now. Please delete them manualy and restart the program")
 
 		else:
 			print(usage)
