@@ -169,9 +169,7 @@ def main():
 			# FIGURE OUT A WAY TO LEAVE THE CONNECTION OPEN AND SEND THE 
 			#  FILENAME
 
-			# Open two scanfiles and compare them
-			#scandirectory("./", "localscanlist")
-			#scanlistfile = open("localscanlist", "r")
+			#OPEN TWO SCANFILES AND COMPARE THEM
 			dirs = os.listdir("./")
 			number_of_files = 0
 			for file in dirs:
@@ -215,5 +213,5 @@ if __name__ == "__main__":
 	try:
 		main()
 	except KeyboardInterrupt:
-		print("\nStopping program.")
+		print("\nStop.")
 		sys.exit()
