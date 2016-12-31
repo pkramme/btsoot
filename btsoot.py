@@ -71,7 +71,7 @@ def scandirectory(walk_dir, scanfile, verbose = False):
 		with open(scanfile, "w") as f:
 			f.write("path,checksum\n")
 			for root, subdirs, files in os.walk(walk_dir):
-				#f.write(root + "\n")
+				f.write(root + "\n")
 				for filename in files:
 					file_path = os.path.join(root, filename)
 					checksum = compare.md5sum(file_path)
@@ -168,7 +168,7 @@ def main():
 			# FIGURE OUT A WAY TO CREATE ALL NECESSARY DIRECTORIES
 			# FIGURE OUT A WAY TO LEAVE THE CONNECTION OPEN AND SEND THE 
 			#  FILENAME
-
+			# MASTER PLAN: WRITE DIRECTORIES TO FILE, CHECK FOR HASHSUM, IF NONE MAKE THIS DIRECTORY BY GIVEN NAME. 
 			#OPEN TWO SCANFILES AND COMPARE THEM
 			dirs = os.listdir("./")
 			number_of_files = 0
