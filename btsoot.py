@@ -193,44 +193,22 @@ def main():
 				#TODO: TRANSFER FILE TO SERVER, RESOLVE SERVER ADDR
 			else:
 				print("Sufficient number of files were found.")
-				#TODO: IMPLEMENT QUICKSORT ALGORITHM DETERMINED TO SORT ALL FILENAMES' TIMESTAMPS IN ORDER,
-				# TO CALCULATE THE DELTA BETWEEN FIRST TWO...
 				splitted_timestamp = []
 				#SPLIT EVERY FILE NAME TO GAIN TIMESTAMP
 				for scanfile in scanfilelist:
 					temp = split(scanfile, "_")
-					splitted_timestamp.append(int(temp[0]))	
-				
-				#print("SCANFILE LIST: " + str(scanfilelist))
-				#print("SPLITTED TIMESTAMPS: " + str(splitted_timestamp))
-				"""
-				i = 0
-				while True:
-					ordercheck = False
-					if splitted_timestamp[i] > splitted_timestamp[i + 1]:
-						i = i + 1
-						ordercheck = True
-					elif splitted_timestamp[i] < splitted_timestamp[i + 1]:
-						splitted_timestamp[1], splitted_timestamp[i + 1] = splitted_timestamp[i + 1], splitted_timestamp[i]
-						ordercheck = False
-					else:
-						print("Two Scans were created exact the same moment...")
-					if i == len(splitted_timestamp):
-						i = 0
-					elif i == len(splitted_timestamp) and ordercheck == True:
-						break
-					input()
-				print("Ordered Splitted Timestamp " + str(splitted_timestamp))
-				"""
-				try:
-					latest_timestamp = max(splitted_timestamp)
-					for timestamp in splitted_timestamp:
-						if splitted_timestamp[timestamp] == latest_timestamp:
-							splitted_timestamp[timestamp] == -1
-					print(splitted_timestamp)
-				except IndexError:
-					print("I am indeed a nasty index exception")
+					splitted_timestamp.append(int(temp[0]))
 
+
+				latest_timestamp = max(splitted_timestamp) #GETS LATEST SCANFILE
+
+				listcounter = 0
+				for timestamp in splitted_timestamp:
+					if timestamp == latest_timestamp:
+						splitted_timestamp[listcounter] = -1
+					listcounter = listcounter + 1
+
+				previous_timestamp = max(splitted_timestamp)
 
 		elif sys.argv[1] == "update_dependencies":
 			print("This requires an internet connection. ")
