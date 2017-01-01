@@ -185,23 +185,28 @@ def main():
 						pass
 				except IndexError:
 					pass
+			
 			if number_of_files == 0:
 				print("There aren't any scan files.")
 				print(f"Create one by using\n'{sys.argv[0]} scan <block name>'.")
+			
 			elif number_of_files == 1:
 				print("There is only one file. That means a complete backup must be created.")
 				#TODO: TRANSFER FILE TO SERVER, RESOLVE SERVER ADDR
+			
 			else:
 				print("Sufficient number of files were found.")
 				splitted_timestamp = []
+
 				#SPLIT EVERY FILE NAME TO GAIN TIMESTAMP
 				for scanfile in scanfilelist:
 					temp = split(scanfile, "_")
 					splitted_timestamp.append(int(temp[0]))
 
+				#GETS LATEST SCANFILE'S TIMESTAMP
+				latest_timestamp = max(splitted_timestamp)
 
-				latest_timestamp = max(splitted_timestamp) #GETS LATEST SCANFILE
-
+				#SETS MAX VALUE TO -1 TO FIND SECOND HIGHEST VALUE
 				listcounter = 0
 				for timestamp in splitted_timestamp:
 					if timestamp == latest_timestamp:
@@ -209,6 +214,10 @@ def main():
 					listcounter = listcounter + 1
 
 				previous_timestamp = max(splitted_timestamp)
+
+				#NEEDS TO BE RESOLVED BACK TO FILENAME
+				print("Latest scan: " + latest_timestamp)
+				print("Previous scan: " + previous_timestamp)
 
 		elif sys.argv[1] == "update_dependencies":
 			print("This requires an internet connection. ")
