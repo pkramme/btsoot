@@ -166,14 +166,12 @@ def main():
 
 
 		elif sys.argv[1] == "backup":
-			print("Filetransfer initialized...")
 			#TODO
 			# FIGURE OUT A WAY TO CREATE ALL NECESSARY DIRECTORIES
 			# FIGURE OUT A WAY TO LEAVE THE CONNECTION OPEN AND SEND THE 
 			#  FILENAME
-
+			scanfilelist = []
 			dirs = os.listdir("./")
-			scanfilelist[] = ""
 			number_of_files = 0
 			for file in dirs:
 				fileending = split(file, ".")
@@ -182,19 +180,56 @@ def main():
 					if fileending[2] == "btsscan":
 						print(file)
 						number_of_files = number_of_files + 1
-						scanfilelist += file
+						scanfilelist.append(file)
 					else:
 						pass
 				except IndexError:
 					pass
 			if number_of_files == 0:
-				print(f"There arent any scan files.\nCreate one by using\n'{sys.argv[0]} scan <block name>'.")
+				print("There aren't any scan files.")
+				print(f"Create one by using\n'{sys.argv[0]} scan <block name>'.")
 			elif number_of_files == 1:
 				print("There is only one file. That means a complete backup must be created.")
 				#TODO: TRANSFER FILE TO SERVER, RESOLVE SERVER ADDR
 			else:
 				print("Sufficient number of files were found.")
-				#TODO: IMPLEMENT QUICKSORT ALGORITHM DETERMINED TO SORT ALL FILENAMES' TIMESTAMPS IN ORDER, TO CALCULATE THE DELTA BETWEEN FIRST TWO...
+				#TODO: IMPLEMENT QUICKSORT ALGORITHM DETERMINED TO SORT ALL FILENAMES' TIMESTAMPS IN ORDER,
+				# TO CALCULATE THE DELTA BETWEEN FIRST TWO...
+				splitted_timestamp = []
+				#SPLIT EVERY FILE NAME TO GAIN TIMESTAMP
+				for scanfile in scanfilelist:
+					temp = split(scanfile, "_")
+					splitted_timestamp.append(int(temp[0]))	
+				
+				#print("SCANFILE LIST: " + str(scanfilelist))
+				#print("SPLITTED TIMESTAMPS: " + str(splitted_timestamp))
+				"""
+				i = 0
+				while True:
+					ordercheck = False
+					if splitted_timestamp[i] > splitted_timestamp[i + 1]:
+						i = i + 1
+						ordercheck = True
+					elif splitted_timestamp[i] < splitted_timestamp[i + 1]:
+						splitted_timestamp[1], splitted_timestamp[i + 1] = splitted_timestamp[i + 1], splitted_timestamp[i]
+						ordercheck = False
+					else:
+						print("Two Scans were created exact the same moment...")
+					if i == len(splitted_timestamp):
+						i = 0
+					elif i == len(splitted_timestamp) and ordercheck == True:
+						break
+					input()
+				print("Ordered Splitted Timestamp " + str(splitted_timestamp))
+				"""
+				try:
+					latest_timestamp = max(splitted_timestamp)
+					for timestamp in splitted_timestamp:
+						if splitted_timestamp[timestamp] == latest_timestamp:
+							splitted_timestamp[timestamp] == -1
+					print(splitted_timestamp)
+				except IndexError:
+					print("I am indeed a nasty index exception")
 
 
 		elif sys.argv[1] == "update_dependencies":
