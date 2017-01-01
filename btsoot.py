@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.6
 
 
 import sys
@@ -71,7 +71,7 @@ def scandirectory(walk_dir, scanfile, verbose = False):
 		with open(scanfile, "w") as f:
 			f.write("path,checksum\n")
 			for root, subdirs, files in os.walk(walk_dir):
-				#f.write(root + "\n")
+				f.write(root + "\n")
 				for filename in files:
 					file_path = os.path.join(root, filename)
 					checksum = compare.md5sum(file_path)
@@ -101,6 +101,7 @@ def main():
 				f.write("path=" + path + '\n')
 				f.write("server=" + server + '\n')
 
+
 		elif sys.argv[1] == "rm":
 			try:
 				name = sys.argv[2]
@@ -126,6 +127,7 @@ def main():
 				f.close()
 			except FileNotFoundError:
 				print("Configfile not found. Create one with 'add'.")
+
 
 		elif sys.argv[1] == "scan":
 			print("Execute scan...")
@@ -162,6 +164,7 @@ def main():
 				print("Configfile not found. Create one with 'add'.")
 			scandirectory(path, scanfilename, True)
 
+
 		elif sys.argv[1] == "backup":
 			print("Filetransfer initialized...")
 			#TODO
@@ -170,6 +173,7 @@ def main():
 			#  FILENAME
 
 			dirs = os.listdir("./")
+			scanfilelist[] = ""
 			number_of_files = 0
 			for file in dirs:
 				fileending = split(file, ".")
@@ -178,16 +182,19 @@ def main():
 					if fileending[2] == "btsscan":
 						print(file)
 						number_of_files = number_of_files + 1
+						scanfilelist += file
 					else:
 						pass
 				except IndexError:
 					pass
 			if number_of_files == 0:
-				print("There arent any files. Create one by using 'scan'.")
+				print(f"There arent any scan files.\nCreate one by using\n'{sys.argv[0]} scan <block name>'.")
 			elif number_of_files == 1:
-				print("There is only one file. I'll need two.")
+				print("There is only one file. That means a complete backup must be created.")
+				#TODO: TRANSFER FILE TO SERVER, RESOLVE SERVER ADDR
 			else:
 				print("Sufficient number of files were found.")
+				#TODO: IMPLEMENT QUICKSORT ALGORITHM DETERMINED TO SORT ALL FILENAMES' TIMESTAMPS IN ORDER, TO CALCULATE THE DELTA BETWEEN FIRST TWO...
 
 
 		elif sys.argv[1] == "update_dependencies":
@@ -212,5 +219,5 @@ if __name__ == "__main__":
 	try:
 		main()
 	except KeyboardInterrupt:
-		print("\nStopping program.")
+		print("\nStop.\n")
 		sys.exit()
