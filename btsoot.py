@@ -169,9 +169,6 @@ def main():
 			# FIGURE OUT A WAY TO LEAVE THE CONNECTION OPEN AND SEND THE 
 			#  FILENAME
 
-			# Open two scanfiles and compare them
-			#scandirectory("./", "localscanlist")
-			#scanlistfile = open("localscanlist", "r")
 			dirs = os.listdir("./")
 			number_of_files = 0
 			for file in dirs:
