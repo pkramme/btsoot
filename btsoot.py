@@ -188,7 +188,7 @@ def main():
 			
 			if number_of_files == 0:
 				print("There aren't any scan files.")
-				print(f"Create one by using\n'{sys.argv[0]} scan <block name>'.")
+				print(f"Create one by using\n{sys.argv[0]} scan <block name>.")
 			
 			elif number_of_files == 1:
 				print("There is only one file. That means a complete backup must be created.")
