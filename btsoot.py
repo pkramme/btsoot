@@ -5,7 +5,6 @@ import sys
 import os
 import time
 
-
 class color:
 	HEADER = '\033[95m'
 	OKBLUE = '\033[94m'
@@ -216,8 +215,64 @@ def main():
 				previous_timestamp = max(splitted_timestamp)
 
 				#NEEDS TO BE RESOLVED BACK TO FILENAME
-				print("Latest scan: " + latest_timestamp)
-				print("Previous scan: " + previous_timestamp)
+				print("Latest scan: " + str(latest_timestamp))
+				print("Previous scan: " + str(previous_timestamp))
+
+				dircounter = 0
+				latest_scan_array_index = -1
+				previous_scan_array_index = -1
+				for file in scanfilelist:
+					temp = split(file, "_")
+					print(temp)
+					if temp[0] == latest_timestamp:
+						print(f"Latesttimestamp is in array index {dircounter}")
+						latest_scan_array_index = dircounter
+					elif temp[0] == previous_timestamp:
+						print(f"Prevoistimestamp is in array index {dircounter}")
+						previous_scan_array_index = dircounter
+					else:
+						pass
+					dircounter = dircounter + 1
+
+				latest_scan_fd = open(scanfilelist[latest_scan_array_index], "r")
+				previous_scan_fd = open(scanfilelist[previous_scan_array_index], "r")
+				transmit_list_fd = open("transmit.btlist", "w")
+
+				latest_scan = latest_scan_fd.readlines()
+				previous_scan = previous_scan_fd.readlines()
+				#print(latest_scan)
+
+				file_same = 0
+				file_new = 0
+				file_total = 0
+
+
+				for line in latest_scan:
+					file_exists = False
+					for checkline in previous_scan:
+						if line in checkline:
+							file_same = file_same + 1
+							file_exists = True
+						else:
+							#print(color.OKGREEN + line + color.ENDC) 
+							file_new = file_new + 1
+							#transmit_list_fd.write(line)
+					if file_exists == False:
+						print("New line found: " + line)
+						transmit_list_fd.write(line)
+					file_total = file_total + 1
+
+
+				print(f"Total files: {file_total}")
+				print(f"Unchanged files: {file_same}")
+				print(f"New/Changed files: {file_new}")
+				block_change_percentage = file_new / file_total * 100
+				print(f"Block changed by {block_change_percentage}%")
+
+
+				transmit_list_fd.close()
+				previous_scan_fd.close()
+				latest_scan_fd.close()
 
 
 		elif sys.argv[1] == "update_dependencies":
@@ -235,7 +290,7 @@ def main():
 
 	except IndexError:
 		print(usage)
-		exit()
+		sys.exit()
 
 
 if __name__ == "__main__":
