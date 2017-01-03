@@ -174,10 +174,9 @@ def main():
 			number_of_files = 0
 			for file in dirs:
 				fileending = split(file, ".")
-				#print(fileending)
+				blockname = split(file, "_")
 				try:
-					if fileending[2] == "btsscan":
-						#print(file)
+					if fileending[2] == "btsscan" and blockname[2] == sys.argv[2]
 						number_of_files = number_of_files + 1
 						scanfilelist.append(file)
 					else:
