@@ -24,6 +24,7 @@ except ImportError:
 	print("This requires Git and an Internet connection.")
 	if input("Should i try? ") == "y":
 		os.system("git clone https://git.paukra.com/open-source/compare.git")
+		from compare import compare
 	else:
 		print("Aborting. You have to manualy install it then and/or restart the program.")
 		exit()
@@ -37,6 +38,7 @@ except ImportError:
 	print(" This requires Git and an Internet connection.")
 	if input("Should i try? ") == "y":
 		os.system("git clone https://git.paukra.com/open-source/datatransfer.git")
+		from datatransfer import datalib
 	else:
 		print("Aborting. You have to manualy install it then and/or restart the program.")
 		exit()
