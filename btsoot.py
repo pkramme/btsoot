@@ -219,6 +219,7 @@ def main():
 				print("Latest scan: " + latest_timestamp)
 				print("Previous scan: " + previous_timestamp)
 
+
 		elif sys.argv[1] == "update_dependencies":
 			print("This requires an internet connection. ")
 			if input("Should i continue?") == "y":
