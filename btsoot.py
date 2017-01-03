@@ -300,7 +300,13 @@ def main():
 				serverstring = split(searched_path, "=")
 				addr = serverstring[2]
 
-				transmit("transmit.btlist", addr)
+				for i in range(5):
+					print(f"\n[{i}/5] Trying to reach server at {addr}")
+					try:
+						datalib.transmit("transmit.btlist", addr)
+					except ConnectionRefusedError:
+						print(color.FAIL + "Connection Refused. Is the server running?" + color.ENDC)
+					time.sleep(1)
 
 
 		elif sys.argv[1] == "update_dependencies":
