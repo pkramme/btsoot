@@ -231,7 +231,7 @@ def main():
 					dircounter = dircounter + 1
 
 				print("Latest scan: " + scanfilelist[latest_scan_array_index])
-				print("Previous scan: " + scanfilelist[previous_scan_array_index])
+				print("Previous scan: " + scanfilelist[previous_scan_array_index] + "\n")
 
 				latest_scan_fd = open(scanfilelist[latest_scan_array_index], "r")
 				previous_scan_fd = open(scanfilelist[previous_scan_array_index], "r")
@@ -247,9 +247,11 @@ def main():
 
 				for line in latest_scan:
 					if line in previous_scan:
-						print(line + " found in previous scan")
+						file_same = file_same + 1
 					else:
-						print("NEW FILE FOUND! " + line)
+						print(color.OKGREEN + line + color.ENDC)
+						file_new = file_new + 1
+					file_total = file_total + 1
 
 				"""
 				for line in latest_scan:
