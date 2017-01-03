@@ -236,7 +236,7 @@ def main():
 				#COMPARE THE TWO FILES AGAINST EACH OTHER
 				latest_scan_fd = open(scanfilelist[latest_scan_array_index], "r")
 				previous_scan_fd = open(scanfilelist[previous_scan_array_index], "r")
-				transmit_list_fd = open("transmit.btlist", "w")
+				transmit_list_fd = open("transmit.list", "w")
 
 				latest_scan = latest_scan_fd.readlines()
 				previous_scan = previous_scan_fd.readlines()
@@ -251,6 +251,7 @@ def main():
 						file_same = file_same + 1
 					else:
 						print(color.OKGREEN + line + color.ENDC)
+						transmit_list_fd.write(line)
 						file_new = file_new + 1
 					file_total = file_total + 1
 
@@ -291,6 +292,10 @@ def main():
 
 				#TRY TO CONNECT TO SERVER
 				connectionerror = False
+
+				datalib.transmit("transmit.list", addr)
+
+				"""
 				for i in range(5):
 					counter = i + 1
 					print(f"\n[{counter}/5] Trying to reach server at {addr}")
@@ -300,6 +305,7 @@ def main():
 						print(color.FAIL + "Connection Refused. Is the server running?" + color.ENDC)
 						connectionerror = True
 					time.sleep(1)
+				"""
 
 				if connectionerror == True:
 					print("Cannot continue due to connection error.")
@@ -313,7 +319,10 @@ def main():
 					transmitlist = transmit.readlines()
 					for file in transmitlist:
 						path = split(file, ",")
-						transmit(path[0], addr)
+						if len(path) == 3:
+							datalib.transmit(path[0], addr)
+						else:
+							pass
 						#WELL ALL FILES ARE UNDERWAY... THAT SHOULD BE IT...
 
 
