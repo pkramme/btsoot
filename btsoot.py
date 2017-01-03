@@ -169,10 +169,9 @@ def main():
 			dirs = os.listdir("./")
 			number_of_files = 0
 			for file in dirs:
-				fileending = split(file, ".")
-				blockname = split(file, "_")
+				blockname = split(file, ["_", "."])
 				try:
-					if fileending[2] == "btsscan" and blockname[2] == sys.argv[2]:
+					if blockname[4] == "btsscan" and blockname[2] == sys.argv[2]:
 						number_of_files = number_of_files + 1
 						scanfilelist.append(file)
 					else:
@@ -279,6 +278,29 @@ def main():
 				transmit_list_fd.close()
 				previous_scan_fd.close()
 				latest_scan_fd.close()
+
+				print("Transfering transmit.list")
+
+				searched_row = None
+				f = open("btsoot.conf", "r")
+				row = 0
+				beginning_path = -1
+				indentifier = "name=" + sys.argv[2] + '\n'
+				lines = f.readlines()
+				f.close()
+				for line in lines:
+					row = row + 1
+					if line == indentifier:
+						beginning_row = row
+					if row == beginning_row + 2:
+						searched_path = line
+					else:
+						pass
+
+				serverstring = split(searched_path, "=")
+				addr = serverstring[2]
+
+				transmit("transmit.btlist", addr)
 
 
 		elif sys.argv[1] == "update_dependencies":
