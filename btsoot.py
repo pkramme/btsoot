@@ -288,6 +288,7 @@ def main():
 				indentifier = "name=" + sys.argv[2] + '\n'
 				lines = f.readlines()
 				f.close()
+
 				for line in lines:
 					row = row + 1
 					if line == indentifier:
@@ -318,6 +319,12 @@ def main():
 					pass
 				print("Starting file transfer. This may take a long time.")
 
+				with open("transmit.list", "r") as transmit:
+					transmitlist = transmit.readlines()
+					for file in transmitlist:
+						path = split(file, ",")
+						transmit(path[0], addr)
+						#WELL ALL FILES ARE UNDERWAY... THAT SHOULD BE IT...
 
 
 		elif sys.argv[1] == "update_dependencies":
