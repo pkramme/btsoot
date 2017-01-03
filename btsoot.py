@@ -300,6 +300,7 @@ def main():
 				serverstring = split(searched_path, "=")
 				addr = serverstring[2]
 
+				connectionerror = False
 				for i in range(5):
 					counter = i + 1
 					print(f"\n[{counter}/5] Trying to reach server at {addr}")
@@ -307,8 +308,15 @@ def main():
 						datalib.transmit("transmit.btlist", addr)
 					except ConnectionRefusedError:
 						print(color.FAIL + "Connection Refused. Is the server running?" + color.ENDC)
+						connectionerror = True
 					time.sleep(1)
 
+				if connectionerror == True:
+					print("Cannot continue due to connection error.")
+					sys.exit()
+				else:
+					pass
+				print("Starting file transfer. This may take a long time.")
 
 		elif sys.argv[1] == "update_dependencies":
 			print("This requires an internet connection. ")
