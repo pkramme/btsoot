@@ -214,10 +214,6 @@ def main():
 
 				previous_timestamp = max(splitted_timestamp)
 
-				#NEEDS TO BE RESOLVED BACK TO FILENAME
-				print("Latest scan: " + str(latest_timestamp))
-				print("Previous scan: " + str(previous_timestamp))
-
 				dircounter = 0
 				latest_scan_array_index = -1
 				previous_scan_array_index = -1
@@ -233,6 +229,9 @@ def main():
 					else:
 						pass
 					dircounter = dircounter + 1
+
+				print("Latest scan: " + scanfilelist[latest_scan_array_index])
+				print("Previous scan: " + scanfilelist[previous_scan_array_indexs])
 
 				latest_scan_fd = open(scanfilelist[latest_scan_array_index], "r")
 				previous_scan_fd = open(scanfilelist[previous_scan_array_index], "r")
