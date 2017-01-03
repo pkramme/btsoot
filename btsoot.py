@@ -177,7 +177,7 @@ def main():
 				#print(fileending)
 				try:
 					if fileending[2] == "btsscan":
-						print(file)
+						#print(file)
 						number_of_files = number_of_files + 1
 						scanfilelist.append(file)
 					else:
@@ -194,7 +194,7 @@ def main():
 				#TODO: TRANSFER FILE TO SERVER, RESOLVE SERVER ADDR
 			
 			else:
-				print("Sufficient number of files were found.")
+				print("Sufficient number of scan files were found.")
 				splitted_timestamp = []
 
 				#SPLIT EVERY FILE NAME TO GAIN TIMESTAMP
@@ -219,12 +219,12 @@ def main():
 				previous_scan_array_index = -1
 				for file in scanfilelist:
 					temp = split(file, "_")
-					print(temp)
-					if temp[0] == latest_timestamp:
-						print(f"Latesttimestamp is in array index {dircounter}")
+					#print(f"Check {temp[0]} against {latest_timestamp} and {previous_timestamp}")
+					if int(temp[0]) == latest_timestamp:
+						#print(f"Latesttimestamp is in array index {dircounter}")
 						latest_scan_array_index = dircounter
-					elif temp[0] == previous_timestamp:
-						print(f"Prevoistimestamp is in array index {dircounter}")
+					elif int(temp[0]) == previous_timestamp:
+						#print(f"Prevoistimestamp is in array index {dircounter}")
 						previous_scan_array_index = dircounter
 					else:
 						pass
@@ -239,7 +239,6 @@ def main():
 
 				latest_scan = latest_scan_fd.readlines()
 				previous_scan = previous_scan_fd.readlines()
-				#print(latest_scan)
 
 				file_same = 0
 				file_new = 0
@@ -249,13 +248,15 @@ def main():
 				for line in latest_scan:
 					file_exists = False
 					for checkline in previous_scan:
+						print(f"Checking {line} agaist {checkline}")
 						if line in checkline:
+							file_exists = False
 							file_same = file_same + 1
 							file_exists = True
+							break
 						else:
-							#print(color.OKGREEN + line + color.ENDC) 
+							file_exists = True
 							file_new = file_new + 1
-							#transmit_list_fd.write(line)
 					if file_exists == False:
 						print("New line found: " + line)
 						transmit_list_fd.write(line)
