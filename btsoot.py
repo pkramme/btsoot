@@ -301,7 +301,8 @@ def main():
 				addr = serverstring[2]
 
 				for i in range(5):
-					print(f"\n[{i}/5] Trying to reach server at {addr}")
+					counter = i + 1
+					print(f"\n[{counter}/5] Trying to reach server at {addr}")
 					try:
 						datalib.transmit("transmit.btlist", addr)
 					except ConnectionRefusedError:
