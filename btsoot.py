@@ -249,26 +249,6 @@ def main():
 						file_new = file_new + 1
 					file_total = file_total + 1
 
-				"""
-				for line in latest_scan:
-					file_exists = False
-					for checkline in previous_scan:
-						print(f"Checking {line} agaist {checkline}")
-						if line in checkline:
-							file_exists = False
-							file_same = file_same + 1
-							file_exists = True
-							print(color.FAIL + "File already exists" + color.ENDC)
-							break
-						else:
-							file_exists = True
-							file_new = file_new + 1
-							print(color.OKGREEN + "New file found!" + color.ENDC)
-					if file_exists == False:
-						print("New line found: " + line)
-						transmit_list_fd.write(line)
-					file_total = file_total + 1
-				"""
 
 				print(f"Total files: {file_total}")
 				print(f"Unchanged files: {file_same}")
