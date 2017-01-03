@@ -318,6 +318,8 @@ def main():
 					pass
 				print("Starting file transfer. This may take a long time.")
 
+
+
 		elif sys.argv[1] == "update_dependencies":
 			print("This requires an internet connection. ")
 			if input("Should i continue?") == "y":
