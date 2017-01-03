@@ -165,10 +165,6 @@ def main():
 
 
 		elif sys.argv[1] == "backup":
-			#TODO
-			# FIGURE OUT A WAY TO CREATE ALL NECESSARY DIRECTORIES
-			# FIGURE OUT A WAY TO LEAVE THE CONNECTION OPEN AND SEND THE 
-			#  FILENAME
 			scanfilelist = []
 			dirs = os.listdir("./")
 			number_of_files = 0
@@ -176,7 +172,7 @@ def main():
 				fileending = split(file, ".")
 				blockname = split(file, "_")
 				try:
-					if fileending[2] == "btsscan" and blockname[2] == sys.argv[2]
+					if fileending[2] == "btsscan" and blockname[2] == sys.argv[2]:
 						number_of_files = number_of_files + 1
 						scanfilelist.append(file)
 					else:
