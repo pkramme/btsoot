@@ -231,7 +231,7 @@ def main():
 					dircounter = dircounter + 1
 
 				print("Latest scan: " + scanfilelist[latest_scan_array_index])
-				print("Previous scan: " + scanfilelist[previous_scan_array_indexs])
+				print("Previous scan: " + scanfilelist[previous_scan_array_index])
 
 				latest_scan_fd = open(scanfilelist[latest_scan_array_index], "r")
 				previous_scan_fd = open(scanfilelist[previous_scan_array_index], "r")
