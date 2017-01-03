@@ -167,6 +167,8 @@ def main():
 
 
 		elif sys.argv[1] == "backup":
+			#LIST FILES TO FIND SCANFILES
+			#SORT OUT ANY UNINTERESTING FILES
 			scanfilelist = []
 			dirs = os.listdir("./")
 			number_of_files = 0
@@ -193,6 +195,7 @@ def main():
 				print("Sufficient number of scan files were found.")
 				splitted_timestamp = []
 
+				#FIND LATEST TWO FILES
 				#SPLIT EVERY FILE NAME TO GAIN TIMESTAMP
 				for scanfile in scanfilelist:
 					temp = split(scanfile, "_")
@@ -208,6 +211,7 @@ def main():
 						splitted_timestamp[listcounter] = -1
 					listcounter = listcounter + 1
 
+				#GET PREVIOUS FILE'S TIMESTAMP
 				previous_timestamp = max(splitted_timestamp)
 
 				dircounter = 0
@@ -229,6 +233,7 @@ def main():
 				print("Latest scan: " + scanfilelist[latest_scan_array_index])
 				print("Previous scan: " + scanfilelist[previous_scan_array_index] + "\n")
 
+				#COMPARE THE TWO FILES AGAINST EACH OTHER
 				latest_scan_fd = open(scanfilelist[latest_scan_array_index], "r")
 				previous_scan_fd = open(scanfilelist[previous_scan_array_index], "r")
 				transmit_list_fd = open("transmit.btlist", "w")
@@ -263,6 +268,7 @@ def main():
 
 				print("Transfering transmit.list")
 
+				#FIND SERVER ADDRESS
 				searched_row = None
 				f = open("btsoot.conf", "r")
 				row = 0
@@ -283,6 +289,7 @@ def main():
 				serverstring = split(searched_path, "=")
 				addr = serverstring[2]
 
+				#TRY TO CONNECT TO SERVER
 				connectionerror = False
 				for i in range(5):
 					counter = i + 1
@@ -301,6 +308,7 @@ def main():
 					pass
 				print("Starting file transfer. This may take a long time.")
 
+				#TRANSFER FILES
 				with open("transmit.list", "r") as transmit:
 					transmitlist = transmit.readlines()
 					for file in transmitlist:
