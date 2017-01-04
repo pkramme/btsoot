@@ -313,14 +313,14 @@ def main():
 				else:
 					pass
 				print("Starting file transfer. This may take a long time.")
-
+				
 				#TRANSFER FILES
 				with open("transmit.list", "r") as transmit:
 					transmitlist = transmit.readlines()
 					for file in transmitlist:
 						path = split(file, ",")
 						if len(path) == 3:
-							datalib.transmit(path[0], addr)
+							datalib.transmit(path[0], addr, 8001)
 						else:
 							pass
 						#WELL ALL FILES ARE UNDERWAY... THAT SHOULD BE IT...
