@@ -4,6 +4,8 @@
 import sys
 import os
 import time
+import ftplib
+
 
 class color:
 	HEADER = '\033[95m'
@@ -253,7 +255,7 @@ def main():
 				previous_scan_fd.close()
 				latest_scan_fd.close()
 
-				print("Transfering transmit.list")
+				#print("Transfering transmit.list")
 
 				#FIND SERVER ADDRESS
 				searched_row = None
@@ -277,6 +279,22 @@ def main():
 				addr = serverstring[2]
 
 				#ADD FTP CODE... I'm kicking datalib out...
+				ftp = ftplib(addr)
+				ftp.login()
+				ftp.cwd('btsoot/backup/')
+				with open("transmit.list", "r") as transmitfile:
+					transmitlist = transmitfile.readlines()
+					for file in transmitlist:
+						splitted_string = split(file, ",")
+						if len(splitted_string) != 3:
+							ftp.mkd(splitted_string[0])
+						elif splitted_string[2] == "error":
+							pass
+						elif splitted_string[2] == "permission_denied":
+							pass
+						else:
+							ftp.storbinary(splitted_string[0])
+
 
 		elif sys.argv[1] == "update_dependencies":
 			print("This requires an internet connection. ")
