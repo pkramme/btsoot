@@ -30,20 +30,6 @@ except ImportError:
 		exit()
 
 
-try:
-	from datatransfer import datalib
-except ImportError:
-	print(color.FAIL + "Failed to import datatransfer library." + color.ENDC)
-	print("BTSOOT can download the missing library.")
-	print(" This requires Git and an Internet connection.")
-	if input("Should i try? ") == "y":
-		os.system("git clone https://git.paukra.com/open-source/datatransfer.git")
-		from datatransfer import datalib
-	else:
-		print("Aborting. You have to manualy install it then and/or restart the program.")
-		exit()
-
-
 usage = f"""USAGE: {sys.argv[0]} <commands>
 
 add <name> <path> <server/local>\tadd block
@@ -290,41 +276,7 @@ def main():
 				serverstring = split(searched_path, "=")
 				addr = serverstring[2]
 
-				#TRY TO CONNECT TO SERVER
-				connectionerror = False
-
-				datalib.transmit("transmit.list", addr)
-
-				"""
-				for i in range(5):
-					counter = i + 1
-					print(f"\n[{counter}/5] Trying to reach server at {addr}")
-					try:
-						datalib.transmit("transmit.btlist", addr)
-					except ConnectionRefusedError:
-						print(color.FAIL + "Connection Refused. Is the server running?" + color.ENDC)
-						connectionerror = True
-					time.sleep(1)
-				"""
-
-				if connectionerror == True:
-					print("Cannot continue due to connection error.")
-					sys.exit()
-				else:
-					pass
-				print("Starting file transfer. This may take a long time.")
-				
-				#TRANSFER FILES
-				with open("transmit.list", "r") as transmit:
-					transmitlist = transmit.readlines()
-					for file in transmitlist:
-						path = split(file, ",")
-						if len(path) == 3:
-							datalib.transmit(path[0], addr, 8001)
-						else:
-							pass
-						#WELL ALL FILES ARE UNDERWAY... THAT SHOULD BE IT...
-
+				#ADD FTP CODE... I'm kicking datalib out...
 
 		elif sys.argv[1] == "update_dependencies":
 			print("This requires an internet connection. ")
