@@ -255,7 +255,6 @@ def main():
 				previous_scan_fd.close()
 				latest_scan_fd.close()
 
-				#print("Transfering transmit.list")
 
 				#FIND SERVER ADDRESS
 				searched_row = None
