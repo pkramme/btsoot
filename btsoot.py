@@ -276,7 +276,7 @@ def main():
 				serverstring = split(searched_path, "=")
 				addr = serverstring[2]
 
-				#ADD FTP CODE... I'm kicking datalib out...
+				#ADD FTP CODE... I'm kicking datalib out... NEEDS TO BE TESTED!
 				ftp = ftplib(addr)
 				ftp.login()
 				ftp.cwd('btsoot/backup/')
