@@ -295,7 +295,7 @@ def main():
 
 
 		elif sys.argv[1] == "update_dependencies":
-		    print("Updating dependecies.")
+			print("Updating dependecies.")
 			print("This requires an internet connection. ")
 			if input("Should i continue?") == "y":
 				os.system("rm -rf compare")
