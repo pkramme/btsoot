@@ -284,9 +284,9 @@ def main():
 			print("Updating dependecies.")
 			print("This requires an internet connection. ")
 			if input("Should i continue?") == "y":
-				os.system("rm -rf compare")
+				shutil.rmtree("compare")
 				os.system("git clone https://git.paukra.com/open-source/compare.git")
-				os.system("rm -rf datatransfer")
+				shutil.rmtree("datatransfer")
 				os.system("git clone https://git.paukra.com/open-source/datatransfer.git")
 			else:
 				print(color.FAIL + "Abort." + color.ENDC)
