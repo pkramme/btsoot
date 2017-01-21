@@ -276,8 +276,8 @@ def main():
 				serverstring = split(searched_path, "=")
 				addr = serverstring[2]
 
-                print("THIS PROGRAM ENDS AT THIS POINT.")
-                #ADD CODE TO PUT FILES INTO SMB/CIFS SHARE
+				print("THIS PROGRAM ENDS AT THIS POINT.")
+				#ADD CODE TO PUT FILES INTO SMB/CIFS SHARE
 
 
 		elif sys.argv[1] == "update_dependencies":
