@@ -68,8 +68,8 @@ a USB 3.0 interface. It even has dedicated Gigabits LAN (not so surprising, as i
 Well. The Raspberry Pi was slow. The very definition of slow. 7 MB/s at best with ext4 for the HDD, NFSv4 and NFSv3
 and all speed fixes i know. My other Raspberry Pi, a second generation device, brought it up to 15MB/s max. So i turned to the FritzBox.
 And was disappointed again: 10MB/s without even the possibility of speed improvements, because hacking a Router OS is beyond what one should do
-with absolute mission critical hardware. If the FritzBox get broken, i have to spend money to fix it, which i do not have, and my family members and myself
-are out of internet untill a replacement device arrives. So, no. I have to work with this. 
+with absolute mission critical hardware. If the FritzBox get broken, i have to spend money to fix it, which i do not have, and my family members and me
+are out of internet until a replacement device arrives. So, no. I have to work with this. 
 ### Planning and Development
 At this point i decided that there was not much i could do about the performance.
 I decided to use the FritzBox, because i only could use the slower of them, the other one were redisigned to a PiHole DNS server, and the speed 
