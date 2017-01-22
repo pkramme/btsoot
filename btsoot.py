@@ -63,7 +63,7 @@ def scandirectory(walk_dir, scanfile, verbose = False):
 				f.write(root + "\n")
 				for filename in files:
 					file_path = os.path.join(root, filename)
-					checksum = compare.md5sum(file_path)
+					checksum = compare.crc(file_path)
 					if verbose == True:
 						print(file_path, checksum, end="\n")
 					else:
