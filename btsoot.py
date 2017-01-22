@@ -209,10 +209,8 @@ def main():
 					temp = split(file, "_")
 					#print(f"Check {temp[0]} against {latest_timestamp} and {previous_timestamp}")
 					if int(temp[0]) == latest_timestamp:
-						#print(f"Latesttimestamp is in array index {dircounter}")
 						latest_scan_array_index = dircounter
 					elif int(temp[0]) == previous_timestamp:
-						#print(f"Prevoistimestamp is in array index {dircounter}")
 						previous_scan_array_index = dircounter
 					else:
 						pass
@@ -244,14 +242,14 @@ def main():
 					file_total = file_total + 1
 
 
+				block_change_percentage = file_new / file_total * 100
+				block_change_percentage = int(block_change_percentage)
 				print(f"Total files: {file_total}")
 				print(f"Unchanged files: {file_same}")
 				print(f"New/Changed files: {file_new}")
-				block_change_percentage = file_new / file_total * 100
-				print(f"Block changed by {block_change_percentage}%")
+				print(color.OKBLUE + f"Block changed by {block_change_percentage}%" + color.ENDC)
 
 
-				transmit_list_fd.close()
 				previous_scan_fd.close()
 				latest_scan_fd.close()
 
@@ -276,9 +274,18 @@ def main():
 
 				serverstring = split(searched_path, "=")
 				addr = serverstring[2]
-
-				print("THIS PROGRAM ENDS AT THIS POINT.")
-				#ADD CODE TO PUT FILES INTO SMB/CIFS SHARE
+				"""
+				print(f"Sending to {addr}")
+				transmitlist = transmit_list_fd.readlines()
+				print(transmitlist)
+				for line in transmitlist:
+					print(line)
+"""
+				transmit_list_fd.close()
+				
+				
+				
+				
 
 
 		elif sys.argv[1] == "update_dependencies":
