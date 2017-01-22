@@ -83,7 +83,7 @@ In this moment i changed from sysadmin to developer:
 
 **I had to create a program which identifies a file, and mirrors a tree over the network, without having to send already existing files.**  
 
-I thought about a project which i already thought about: A program where you can create certain blocks, and monitor them.
+I thought about a project which i already planned before: A program where you can create certain blocks, and monitor them.
 Early drafts of this are found in [this](https://git.paukra.com/open-source/backup) repository, where i was eager to write it in system dependent languages, like C
 for Linux and C# for Windows. I wasn't experienced enough to write it, and altough i could have learned it, it would need time, which i don't had.
 So i created a new project, this project, called BTSOOT, and began to write it in Python.
