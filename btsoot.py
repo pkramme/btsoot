@@ -244,9 +244,9 @@ def main():
 
 				block_change_percentage = file_new / file_total * 100
 				block_change_percentage = int(block_change_percentage)
-				print(f"Total files: {file_total}")
 				print(f"Unchanged files: {file_same}")
 				print(f"New/Changed files: {file_new}")
+				print(f"Total files: {file_total}")
 				print(color.OKBLUE + f"Block changed by {block_change_percentage}%" + color.ENDC)
 
 
@@ -280,7 +280,7 @@ def main():
 				print(transmitlist)
 				for line in transmitlist:
 					print(line)
-"""
+				"""
 				transmit_list_fd.close()
 				
 				
