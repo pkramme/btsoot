@@ -252,18 +252,26 @@ def main():
 				file_new = 0
 				file_total = 0
 
+				
+				#REMOVE DELETED OR CHANGED FILES
+				for oldline in previous_scan:
+					if oldline not in latest_scan:
+						print(color.FAIL + f"- {oldline}" + color.ENDC)
 
+				
+				#FIND OUT CHANGED OR NEW FILES
 				for line in latest_scan:
 					if line in previous_scan:
 						file_same = file_same + 1
 					else:
 						#TODO: Delete deleted or changed files to replace them in the next step
-						
+						"""
 						for oldline in previous_scan:
-							print(oldline)
+							#print(oldline)
 							if oldline not in latest_scan:
 								print(color.FAIL + f"Delete: {oldline}" + color.ENDC)
-						print(color.OKGREEN + line + color.ENDC)
+						"""						
+						print(color.OKGREEN + f"+ {line}" + color.ENDC)
 						#TODO: Split path and create directories if needed
 
 						#TODO: Copy files via shutils copy2 to their places
