@@ -305,6 +305,10 @@ def main():
 	except IndexError:
 		print(usage)
 		sys.exit()
+	except:
+		print("Whoa, this came down hard. Please file a bug report at")
+		print("https://git.paukra.com/open-source/btsoot or mail it to")
+		print("pjkramme@gmail.com")
 
 
 if __name__ == "__main__":
