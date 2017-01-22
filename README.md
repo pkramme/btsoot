@@ -20,16 +20,16 @@ met, BTSOOT could be your saviour - it was mine. A list of this circumstaces
 4. Done
 
 ### Create a block
-`./btsoot add <block-name> <path> <path-to-remote-dir`
+`./btsoot add <block-name> <path> <path-to-remote-dir`  
 This is written to a file named `btsoot.conf` which is created inside the directory where BTSOOT lies.
 
 ### Scan a block
-`./btsoot scan <block-name>`
+`./btsoot scan <block-name>`  
 This creates a scanfile at the folder where BTSOOT lies. The filename identifies the time the scan 
 where initiated, and the block name. The file ending is `.btscan`.
 
 ### Backup a block
-`./btsoot backup <block-name>`
+`./btsoot backup <block-name>`  
 The program will search for the latest two scanfiles, and compare them for changed files, which it then copyies to their
 paths on the remote location. 
 ** This also means that you MUST NOT change the remote files per hand. BTSOOT will not know about any changed file which it doesn't change itself.**
