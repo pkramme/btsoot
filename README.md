@@ -55,12 +55,12 @@ What i do have
 Now i have a problem. I don't have much money, so buying new hardware for an offsite 
 (which is defined here as not in the same room or the same server) NAS is not an option.
 So i have to work with what i have. Let's see:
-### Raspberry Pi
+#### Raspberry Pi
 Raspberry Pi's are not suited for NAS's. You can read this anywhere on the internet.
 They are slow, because they lack of a dedicated Ethernet Interface, everything is runned over
 one single USB 2.0 Host. This is slow. On the plus side, they are small, silent, have low energy
 usage, and are cheap - 35 Euros, here in Germany.
-### FritzBox Router
+#### FritzBox Router
 I have two of them, one is my primary gateway, one my Wifi AP, both have rudimentary NAS features like SMB and FTP.
 Also, one of them has USB3.0 which theoreticly should be fast, when it is combined with my 3TB HDD from WD, which also has 
 a USB 3.0 interface. It even has dedicated Gigabits LAN (not so surprising, as it is a router) but for a NAS, it's great.  
