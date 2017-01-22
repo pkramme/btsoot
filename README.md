@@ -79,7 +79,7 @@ I tought about the thing every sysadmin would have though about: rsync. I would 
 and would therefore only have to deal with a minimum filesize, as most of the files are media files, which doesn't change that often. There were a problem though:
 What happens when a file gets renamed, or a folder moved, or deleted? Rsync doesn't cover that. I a file is deleted, rsync doesn't remove it, it will just remain.
 Same with renamed directories.  
-In this moment i changed from sysadmin to developer.  
+In this moment i changed from sysadmin to developer:  
 
 **I had to create a program which identifies a file, and mirrors a tree over the network, without having to send already existing files.**  
 
