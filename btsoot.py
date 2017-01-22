@@ -274,10 +274,6 @@ def main():
 				previous_scan_fd.close()
 				latest_scan_fd.close()
 				transmit_list_fd.close()
-				
-				
-				
-				
 
 
 		elif sys.argv[1] == "update_dependencies":
