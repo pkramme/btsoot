@@ -131,7 +131,7 @@ def main():
 			try:
 				f = open("btsoot.conf", "r")
 				row = 0
-				beginning_row = -1 #set counter to a negative state so it's not finding any rows
+				beginning_row = -1 #set counter to a negative state so it won't find any rows
 				identifier = "name=" + name + '\n'
 				lines = f.readlines()
 				f.close()
@@ -146,7 +146,7 @@ def main():
 						pass
 				path_with_newline = split(searched_path, "=")
 				tempstring = path_with_newline[2]
-				path = tempstring.rstrip()#GETS RID OF NEWLINE
+				path = tempstring.rstrip() #GETS RID OF NEWLINE
 				print(path)
 
 			except FileNotFoundError:
@@ -257,7 +257,19 @@ def main():
 					if line in previous_scan:
 						file_same = file_same + 1
 					else:
+						#TODO: Delete deleted or changed files to replace them in the next step
+						
+						for oldline in previous_scan:
+							print(oldline)
+							if oldline not in latest_scan:
+								print(color.FAIL + f"Delete: {oldline}" + color.ENDC)
 						print(color.OKGREEN + line + color.ENDC)
+						#TODO: Split path and create directories if needed
+
+						#TODO: Copy files via shutils copy2 to their places
+
+
+
 						transmit_list_fd.write(line)
 						file_new = file_new + 1
 					file_total = file_total + 1
