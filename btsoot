@@ -250,14 +250,18 @@ def main():
 
 				file_same = 0
 				file_new = 0
-				file_total = 0
+				file_total_old = 0
+				file_total_latest = 0
 
 				
 				#REMOVE DELETED OR CHANGED FILES
+				oldline_total = 0
 				for oldline in previous_scan:
 					if oldline not in latest_scan:
-						print(color.FAIL + f"- {oldline}" + color.ENDC)
-						transmit_list_fd.write(oldline, ",-")
+						print(color.FAIL + f"- {oldline}" + color.ENDC, end='')
+						transmit_list_fd.write(f"{oldline},-")
+						oldline_total = oldline_total + 1
+					file_total_old = file_total_old + 1
 
 				
 				#FIND OUT CHANGED OR NEW FILES
@@ -265,24 +269,26 @@ def main():
 					if line in previous_scan:
 						file_same = file_same + 1
 					else:					
-						print(color.OKGREEN + f"+ {line}" + color.ENDC)
+						print(color.OKGREEN + f"+ {line}" + color.ENDC, end='')
 						#TODO: Split path and create directories if needed
 
 						#TODO: Copy files via shutils copy2 to their places
 
 
 
-						transmit_list_fd.write(line, ",+")
+						transmit_list_fd.write("{line},+")
 						file_new = file_new + 1
-					file_total = file_total + 1
+					file_total_latest = file_total_latest + 1
 
 
-				block_change_percentage = file_new / file_total * 100
-				block_change_percentage = int(block_change_percentage)
+				block_change_percentage = int((file_total_old / file_total_latest) * 100)
+				#block_change_percentage = int(block_change_percentage)
 				print(f"Unchanged files: {file_same}")
 				print(f"New/Changed files: {file_new}")
-				print(f"Total files: {file_total}")
-				print(color.OKBLUE + f"Block changed by {block_change_percentage}%" + color.ENDC)
+				print(f"Deleted files: {oldline_total}")
+				print(f"Total files in latest scan: {file_total_latest}")
+				print(f"Total files in previous scan: {file_total_old}")
+				print(color.OKBLUE + f"Block file number changed by {block_change_percentage}%" + color.ENDC)
 
 				
 
@@ -306,11 +312,12 @@ def main():
 	except IndexError:
 		print(usage)
 		sys.exit()
+"""	
 	except:
 		print(color.FAIL + "\nCRITICAL ERROR" + color.ENDC + " Please file a bug report at")
 		print("- https://git.paukra.com/open-source/btsoot or mail it to")
 		print("- pjkramme@gmail.com")
-
+"""
 
 if __name__ == "__main__":
 	try:
