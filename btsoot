@@ -260,6 +260,8 @@ def main():
 					if oldline not in latest_scan:
 						checkifdir = split(oldline, ",")
 						if len(checkifdir) == 1:
+							#IF DIRECTORY, HASH WILL BE NONE, BUT THE PLACE IS STILL THERE.
+							#THAT IS NEEDED DURING DIRECTORY REMOVAL
 							transmit_list_fd.write(f"{oldline.rstrip},,-\n")
 							print(color.FAIL + f"- {oldline}" + color.ENDC, end='')
 						else:
@@ -276,6 +278,8 @@ def main():
 					else:					
 						checkifdir = split(line, ",")
 						if len(checkifdir) == 1:
+							#IF DIRECTORY, HASH WILL BE NONE, BUT THE PLACE IS STILL THERE.
+							#THAT IS NEEDED DURING DIRECTORY CREATION
 							transmit_list_fd.write(f"{line.rstrip},,-\n")
 							print(color.OKGREEN + f"+ {line}" + color.ENDC, end='')
 						else:
