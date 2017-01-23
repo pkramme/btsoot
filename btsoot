@@ -302,8 +302,6 @@ def main():
 			if input("Should i continue? ") == "y":
 				shutil.rmtree("compare")
 				os.system("git clone https://git.paukra.com/open-source/compare.git")
-				shutil.rmtree("datatransfer")
-				os.system("git clone https://git.paukra.com/open-source/datatransfer.git")
 			else:
 				print(color.FAIL + "Abort." + color.ENDC)
 
@@ -314,7 +312,7 @@ def main():
 		print(usage)
 		sys.exit()
 	except:
-		print("Whoa, this came down hard. Please file a bug report at")
+		print(color.FAIL + "Whoa, this came down hard." + color.ENDC + " Please file a bug report at")
 		print("- https://git.paukra.com/open-source/btsoot or mail it to")
 		print("- pjkramme@gmail.com")
 
