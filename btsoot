@@ -307,7 +307,7 @@ def main():
 						if line[3] == "":
 							shutil.rmtree(f"{serverlocation}{line[0]}")
 						else:
-							os.remove(f"{serverlocation{line[0]}")
+							os.remove(f"{serverlocation}{line[0]}")
 					elif line[5] == "+":
 						shutil.copy2(line[0], f"{serverlocation}{line[0]}")#REPLACE WITH FASTER ALTERNATIVE
 					else:
