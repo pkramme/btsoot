@@ -262,11 +262,11 @@ def main():
 						if len(checkifdir) == 1:
 							#IF DIRECTORY, HASH WILL BE NONE, BUT THE PLACE IS STILL THERE.
 							#THAT IS NEEDED DURING DIRECTORY REMOVAL
-							transmit_list_fd.write(f"{oldline.rstrip},,-\n")
+							transmit_list_fd.write(f"{oldline.rstrip()},,-\n")
 							print(color.FAIL + f"- {oldline}" + color.ENDC, end='')
 						else:
-							print(color.FAIL + f"- {oldline}" + color.ENDC, end='')
 							transmit_list_fd.write(f"{oldline.rstrip()},-\n")
+							print(color.FAIL + f"- {oldline}" + color.ENDC, end='')
 							oldline_total = oldline_total + 1
 					file_total_old = file_total_old + 1
 
@@ -280,11 +280,11 @@ def main():
 						if len(checkifdir) == 1:
 							#IF DIRECTORY, HASH WILL BE NONE, BUT THE PLACE IS STILL THERE.
 							#THAT IS NEEDED DURING DIRECTORY CREATION
-							transmit_list_fd.write(f"{line.rstrip},,-\n")
+							transmit_list_fd.write(f"{line.rstrip()},,-\n")
 							print(color.OKGREEN + f"+ {line}" + color.ENDC, end='')
 						else:
+							transmit_list_fd.write(f"{line.rstrip()},+\n")
 							print(color.OKGREEN + f"+ {line}" + color.ENDC, end='')
-							transmit_list_fd.write("{line.rstrip()},+\n")
 							file_new = file_new + 1
 					file_total_latest = file_total_latest + 1
 
