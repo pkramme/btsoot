@@ -258,9 +258,14 @@ def main():
 				oldline_total = 0
 				for oldline in previous_scan:
 					if oldline not in latest_scan:
-						print(color.FAIL + f"- {oldline}" + color.ENDC, end='')
-						transmit_list_fd.write(f"{oldline.rstrip()},-\n")
-						oldline_total = oldline_total + 1
+						checkifdir = split(oldline, ",")
+						if len(checkifdir) == 1:
+							transmit_list_fd.write(f"{oldline.rstrip},,-\n")
+							print(color.FAIL + f"- {oldline}" + color.ENDC, end='')
+						else:
+							print(color.FAIL + f"- {oldline}" + color.ENDC, end='')
+							transmit_list_fd.write(f"{oldline.rstrip()},-\n")
+							oldline_total = oldline_total + 1
 					file_total_old = file_total_old + 1
 
 				
@@ -269,20 +274,18 @@ def main():
 					if line in previous_scan:
 						file_same = file_same + 1
 					else:					
-						print(color.OKGREEN + f"+ {line}" + color.ENDC, end='')
-						#TODO: Split path and create directories if needed
-
-						#TODO: Copy files via shutils copy2 to their places
-
-
-
-						transmit_list_fd.write("{line.rstrip()},+\n")
-						file_new = file_new + 1
+						checkifdir = split(line, ",")
+						if len(checkifdir) == 1:
+							transmit_list_fd.write(f"{line.rstrip},,-\n")
+							print(color.OKGREEN + f"+ {line}" + color.ENDC, end='')
+						else:
+							print(color.OKGREEN + f"+ {line}" + color.ENDC, end='')
+							transmit_list_fd.write("{line.rstrip()},+\n")
+							file_new = file_new + 1
 					file_total_latest = file_total_latest + 1
 
 
 				block_change_percentage = int((file_total_old / file_total_latest) * 100)
-				#block_change_percentage = int(block_change_percentage)
 				print(f"Unchanged files: {file_same}")
 				print(f"New/Changed files: {file_new}")
 				print(f"Deleted files: {oldline_total}")
@@ -290,12 +293,25 @@ def main():
 				print(f"Total files in previous scan: {file_total_old}")
 				print(color.OKBLUE + f"Block file number changed by {block_change_percentage}%" + color.ENDC)
 
-				
+				"""
+				transmit = tranmit_list_fd.readlines()
+				for line in transmit:
+					line = split(line)
+					if line[5] == "-":
+						if line[3] == "":
+							shutil.rmtree(f"{serverlocation}{line[0]}")
+						else:
+							os.remove(f"{serverlocation{line[0]}")
+					elif line[5] == "+":
+						pass
+					else:
+						pass
+				"""
 
 				previous_scan_fd.close()
 				latest_scan_fd.close()
 				transmit_list_fd.close()
-
+				#os.remove("transmit.list")
 
 		elif sys.argv[1] == "update_dependencies":
 			print("Updating dependecies.")
