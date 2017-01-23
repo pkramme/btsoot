@@ -58,7 +58,6 @@ def scandirectory(walk_dir, scanfile, verbose = False):
 	try:
 		print("Initializing scan...")
 		with open(scanfile, "w") as f:
-			f.write("path,checksum\n")
 			for root, subdirs, files in os.walk(walk_dir):
 				f.write(root + "\n")
 				for filename in files:
@@ -289,6 +288,7 @@ def main():
 					file_total_latest = file_total_latest + 1
 
 
+				#FILE STATS
 				block_change_percentage = int((file_total_old / file_total_latest) * 100)
 				print(f"\nUnchanged files: {file_same}")
 				print(f"New/Changed files: {file_new}")
@@ -297,21 +297,23 @@ def main():
 				print(f"Total files in previous scan: {file_total_old}")
 				print(color.OKBLUE + f"Block file number changed by {block_change_percentage}%" + color.ENDC)
 
-				transmit_list_fd.seek(0)
+				#TRANSMITTER
+				transmit_list_fd.seek(0) #SET FILE POINTER TO START
 				transmit = transmit_list_fd.readlines()
 				transmit_list_linenumber = 0
-				#print(transmit)
 				for line in transmit:
 					transmit_list_linenumber = transmit_list_linenumber + 1
 					line = split(line.rstrip(), ",")
-					print(line)
-					input()
 					if line[4] == "-":
 						if line[2] == "":
-							shutil.rmtree(f"{serverlocation}{line[0]}")
+							try:
+								shutil.rmtree(f"{serverlocation}{line[0]}")
+							except FileNotFoundError
 						else:
-							print("Whip")
-							os.remove(f"{serverlocation}{line[0]}")
+							try:
+								os.remove(f"{serverlocation}{line[0]}")
+							except FileNotFoundError:
+								pass
 					elif line[4] == "+":
 						if line[2] == "":
 							os.makedirs(f"{serverlocation}{line[0]}", exist_ok=True)
