@@ -201,7 +201,7 @@ def main():
 					else:
 						pass
 
-				serverstring = split(searched_path, "=")
+				serverstring = split(searched_path.rstrip(), "=")
 				serverlocation = serverstring[2]
 
 				#FIND LATEST TWO FILES
@@ -243,7 +243,7 @@ def main():
 				#COMPARE THE TWO FILES AGAINST EACH OTHER
 				latest_scan_fd = open(scanfilelist[latest_scan_array_index], "r")
 				previous_scan_fd = open(scanfilelist[previous_scan_array_index], "r")
-				transmit_list_fd = open("transmit.list", "w")
+				transmit_list_fd = open("transmit.list", "w+")
 
 				latest_scan = latest_scan_fd.readlines()
 				previous_scan = previous_scan_fd.readlines()
@@ -290,34 +290,41 @@ def main():
 
 
 				block_change_percentage = int((file_total_old / file_total_latest) * 100)
-				print(f"Unchanged files: {file_same}")
+				print(f"\nUnchanged files: {file_same}")
 				print(f"New/Changed files: {file_new}")
 				print(f"Deleted files: {oldline_total}")
 				print(f"Total files in latest scan: {file_total_latest}")
 				print(f"Total files in previous scan: {file_total_old}")
 				print(color.OKBLUE + f"Block file number changed by {block_change_percentage}%" + color.ENDC)
 
-
+				transmit_list_fd.seek(0)
 				transmit = transmit_list_fd.readlines()
 				transmit_list_linenumber = 0
+				#print(transmit)
 				for line in transmit:
 					transmit_list_linenumber = transmit_list_linenumber + 1
-					line = split(line)
-					if line[5] == "-":
-						if line[3] == "":
+					line = split(line.rstrip(), ",")
+					print(line)
+					input()
+					if line[4] == "-":
+						if line[2] == "":
 							shutil.rmtree(f"{serverlocation}{line[0]}")
 						else:
+							print("Whip")
 							os.remove(f"{serverlocation}{line[0]}")
-					elif line[5] == "+":
-						shutil.copy2(line[0], f"{serverlocation}{line[0]}")#REPLACE WITH FASTER ALTERNATIVE
+					elif line[4] == "+":
+						if line[2] == "":
+							os.makedirs(f"{serverlocation}{line[0]}", exist_ok=True)
+						else:
+							shutil.copy2(line[0], f"{serverlocation}{line[0]}")
 					else:
-						print(color.WARNING + "transmit.list is corrupted at line {transmit_list_linenumber}" + color.ENDC)
+						print(color.WARNING + "transmit.list is corrupted" + color.ENDC)
 						print(color.WARNING + line + color.ENDC)
 
 				previous_scan_fd.close()
 				latest_scan_fd.close()
 				transmit_list_fd.close()
-				os.remove("transmit.list")
+				#os.remove("transmit.list")
 				print("Done.")
 
 		elif sys.argv[1] == "update_dependencies":
