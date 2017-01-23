@@ -308,7 +308,8 @@ def main():
 						if line[2] == "":
 							try:
 								shutil.rmtree(f"{serverlocation}{line[0]}")
-							except FileNotFoundError
+							except FileNotFoundError:
+								pass
 						else:
 							try:
 								os.remove(f"{serverlocation}{line[0]}")
@@ -323,7 +324,7 @@ def main():
 						print(color.WARNING + "transmit.list is corrupted" + color.ENDC)
 						print(color.WARNING + line + color.ENDC)
 
-				previous_scan_fd.close()
+				previous_scan_fd.close() 
 				latest_scan_fd.close()
 				transmit_list_fd.close()
 				#os.remove("transmit.list")
