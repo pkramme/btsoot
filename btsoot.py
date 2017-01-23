@@ -151,7 +151,7 @@ def main():
 
 			except FileNotFoundError:
 				print("Configfile not found. Create one with 'add'.")
-			scandirectory(path, scanfilename, True)
+			scandirectory(path, scanfilename, False)
 
 
 		elif sys.argv[1] == "backup":
