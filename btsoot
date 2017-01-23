@@ -257,20 +257,14 @@ def main():
 				for oldline in previous_scan:
 					if oldline not in latest_scan:
 						print(color.FAIL + f"- {oldline}" + color.ENDC)
+						transmit_list_fd.write(oldline, ",-")
 
 				
 				#FIND OUT CHANGED OR NEW FILES
 				for line in latest_scan:
 					if line in previous_scan:
 						file_same = file_same + 1
-					else:
-						#TODO: Delete deleted or changed files to replace them in the next step
-						"""
-						for oldline in previous_scan:
-							#print(oldline)
-							if oldline not in latest_scan:
-								print(color.FAIL + f"Delete: {oldline}" + color.ENDC)
-						"""						
+					else:					
 						print(color.OKGREEN + f"+ {line}" + color.ENDC)
 						#TODO: Split path and create directories if needed
 
@@ -278,7 +272,7 @@ def main():
 
 
 
-						transmit_list_fd.write(line)
+						transmit_list_fd.write(line, ",+")
 						file_new = file_new + 1
 					file_total = file_total + 1
 
@@ -290,6 +284,7 @@ def main():
 				print(f"Total files: {file_total}")
 				print(color.OKBLUE + f"Block changed by {block_change_percentage}%" + color.ENDC)
 
+				
 
 				previous_scan_fd.close()
 				latest_scan_fd.close()
@@ -312,7 +307,7 @@ def main():
 		print(usage)
 		sys.exit()
 	except:
-		print(color.FAIL + "CRITICAL ERROR" + color.ENDC + " Please file a bug report at")
+		print(color.FAIL + "\nCRITICAL ERROR" + color.ENDC + " Please file a bug report at")
 		print("- https://git.paukra.com/open-source/btsoot or mail it to")
 		print("- pjkramme@gmail.com")
 
