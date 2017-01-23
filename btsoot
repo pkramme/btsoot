@@ -259,7 +259,7 @@ def main():
 				for oldline in previous_scan:
 					if oldline not in latest_scan:
 						print(color.FAIL + f"- {oldline}" + color.ENDC, end='')
-						transmit_list_fd.write(f"{oldline},-")
+						transmit_list_fd.write(f"{oldline.rstrip()},-\n")
 						oldline_total = oldline_total + 1
 					file_total_old = file_total_old + 1
 
@@ -276,7 +276,7 @@ def main():
 
 
 
-						transmit_list_fd.write("{line},+")
+						transmit_list_fd.write("{line.rstrip()},+\n")
 						file_new = file_new + 1
 					file_total_latest = file_total_latest + 1
 
