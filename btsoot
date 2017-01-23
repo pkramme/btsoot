@@ -297,9 +297,11 @@ def main():
 				print(f"Total files in previous scan: {file_total_old}")
 				print(color.OKBLUE + f"Block file number changed by {block_change_percentage}%" + color.ENDC)
 
-				"""
-				transmit = tranmit_list_fd.readlines()
+
+				transmit = transmit_list_fd.readlines()
+				transmit_list_linenumber = 0
 				for line in transmit:
+					transmit_list_linenumber = transmit_list_linenumber + 1
 					line = split(line)
 					if line[5] == "-":
 						if line[3] == "":
@@ -307,10 +309,10 @@ def main():
 						else:
 							os.remove(f"{serverlocation{line[0]}")
 					elif line[5] == "+":
-						pass
+						shutil.copy2(line[0], f"{serverlocation}{line[0]}")#REPLACE WITH FASTER ALTERNATIVE
 					else:
-						pass
-				"""
+						print(color.WARNING + "transmit.list is corrupted at line {transmit_list_linenumber}" + color.ENDC)
+						print(color.WARNING + line + color.ENDC)
 
 				previous_scan_fd.close()
 				latest_scan_fd.close()
