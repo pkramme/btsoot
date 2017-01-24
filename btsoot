@@ -68,7 +68,6 @@ def scandirectory(walk_dir, scanfile, verbose = False):
 					else:
 						pass
 					f.write(file_path + "," + checksum + "\n")
-		print("Done.")
 	except FileNotFoundError:
 		print(color.FAIL + "There was a reading error... Probably os protected." + color.ENDC)
 
@@ -118,10 +117,8 @@ def main():
 
 
 		elif sys.argv[1] == "scan":
-			print("Execute scan...")
-			#NAME NEEDS TO BE RESOLVED TO CORRECT DIRECTORY!
-			#USE PPARTIAL FUNCTION FROM 'rm'
-			searched_path = None			
+			#Rm entree from btsoot config
+			searched_path = None
 			try:
 				name = sys.argv[2]
 				scanfilename = "{}_{}.btsscan".format(int(time.time()), name)
@@ -146,11 +143,12 @@ def main():
 				path_with_newline = split(searched_path, "=")
 				tempstring = path_with_newline[2]
 				path = tempstring.rstrip() #GETS RID OF NEWLINE
-				print(path)
+				print("Initializing scan for {path}")
 
 			except FileNotFoundError:
 				print("Configfile not found. Create one with 'add'.")
 			scandirectory(path, scanfilename, False)
+			print("...done.")
 
 
 		elif sys.argv[1] == "backup":
