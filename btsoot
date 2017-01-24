@@ -56,7 +56,6 @@ def split(string, splitters): #MAY RESOLVE ALL PROBLEMS WITH CSV
 
 def scandirectory(walk_dir, scanfile, verbose = False):
 	try:
-		print("Initializing scan...")
 		with open(scanfile, "w") as f:
 			for root, subdirs, files in os.walk(walk_dir):
 				f.write(root + "\n")
@@ -143,7 +142,7 @@ def main():
 				path_with_newline = split(searched_path, "=")
 				tempstring = path_with_newline[2]
 				path = tempstring.rstrip() #GETS RID OF NEWLINE
-				print("Initializing scan for {path}")
+				print(f"Initializing scan for {path}")
 
 			except FileNotFoundError:
 				print("Configfile not found. Create one with 'add'.")
