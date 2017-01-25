@@ -47,7 +47,7 @@ What i do have
 - nearly 3 TB's of data
 - 2 Routers with NAS features
 - 2 Raspberry Pi's
-- Fast RAIDz1 on my primary NAS (450MB/s)
+- Fast RAIDz1 on my primary NAS (450 - 600 MB/s)
 - Gigabits LAN
 - Very important files, like backups, which needs to be backup'd
 - Sysadmin and programming skills
