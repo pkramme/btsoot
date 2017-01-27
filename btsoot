@@ -352,5 +352,9 @@ if __name__ == "__main__":
 	try:
 		main()
 	except KeyboardInterrupt:
-		print("\nInterrupt by keyboard.\n")
+		print("\nInterrupted by keyboard. Quitting.\n")
+		#CLOSING ANY OPEN FD's
+		previous_scan_fd.close()
+		latest_scan_fd.close()
+		transmit_list_fd.close()
 		sys.exit()
