@@ -169,19 +169,19 @@ def main():
 						pass
 				except IndexError:
 					pass
-			
+
 			if number_of_files == 0:
 				print("There aren't any scan files.")
 				print(f"Create one by using\n{sys.argv[0]} scan <block name>.")
-			
+
 			elif number_of_files == 1:
 				print("There is only one file. That means a complete backup must be created.")
 				#TODO: TRANSFER FILE TO SERVER, RESOLVE SERVER ADDR
-			
+
 			else:
 				print("Sufficient number of scan files were found.")
 				splitted_timestamp = []
-				
+
 				# FIND SERVER ADDRESS
 				searched_row = None
 				f = open("btsoot.conf", "r")
@@ -252,7 +252,7 @@ def main():
 				file_total_old = 0
 				file_total_latest = 0
 
-				
+
 				#REMOVE DELETED OR CHANGED FILES
 				oldline_total = 0
 				for oldline in previous_scan:
@@ -269,12 +269,12 @@ def main():
 							oldline_total = oldline_total + 1
 					file_total_old = file_total_old + 1
 
-				
+
 				#FIND OUT CHANGED OR NEW FILES
 				for line in latest_scan:
 					if line in previous_scan:
 						file_same = file_same + 1
-					else:					
+					else:
 						checkifdir = split(line, ",")
 						if len(checkifdir) == 1:
 							#IF DIRECTORY, HASH WILL BE NONE, BUT THE PLACE IS STILL THERE.
@@ -345,7 +345,7 @@ def main():
 	except IndexError:
 		print(usage)
 		sys.exit()
-"""	
+"""
 	except:
 		print(color.FAIL + "\nCRITICAL ERROR" + color.ENDC + " Please file a bug report at")
 		print("- https://git.paukra.com/open-source/btsoot or mail it to")
