@@ -172,8 +172,37 @@ def main():
 				print(f"Create one by using\n{sys.argv[0]} scan <block name>.")
 
 			elif number_of_files == 1:
-				print("There is only one file. That means a complete backup must be created.")
+				print("Only one scanfile found. A complete backup of ALL data will be created.")
+				print("This may take a long time.")
 				#TODO: TRANSFER FILE TO SERVER, RESOLVE SERVER ADDR
+				# FIND SERVER ADDRESS 
+				#TODO THIS NEEDS TO BE A FUNCTION
+				#TODO REFACTOR
+				searched_row = None
+				source_location = None
+				f = open("btsoot.conf", "r")
+				row = 0
+				beginning_path = -1
+				identifier = "name=" + sys.argv[2] + '\n'
+				lines = f.readlines()
+				f.close()
+				for line in lines:
+					row = row + 1
+					if line == identifier:
+						beginning_row = row
+					if row == beginning_row + 1:
+						sourcelocation = line
+					if row == beginning_row + 2:
+						searched_path = line
+					else:
+						pass
+				serverstring = split(searched_path.rstrip(), "=")
+				serverlocation = serverstring[2]
+				sourcelocation = split(sourcelocation.rstrip(), "=")
+				sourcelocation = sourcelocation[2]
+				
+				#COPY ANYTHING
+				shutil.copytree(sourcelocation, f"{serverlocation}{sourcelocation}")
 
 			else:
 				print("Sufficient number of scan files were found.")
@@ -338,7 +367,7 @@ def main():
 				previous_scan_fd.close() 
 				latest_scan_fd.close()
 				transmit_list_fd.close()
-				os.remove("transmit.list")
+				#os.remove("transmit.list")
 				print("Done.")
 
 		elif sys.argv[1] == "update_dependencies":
