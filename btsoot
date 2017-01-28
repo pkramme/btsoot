@@ -377,7 +377,7 @@ def main():
 				latest_scan_fd.close()
 				transmit_list_fd.close()
 				os.remove("transmit.list")
-				print(color.OKGREEN + "Done." color.ENDC)
+				print(color.OKGREEN + "Done." + color.ENDC)
 
 		elif sys.argv[1] == "update_dependencies":
 			print("Updating dependecies.")
