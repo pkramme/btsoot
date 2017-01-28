@@ -367,7 +367,7 @@ def main():
 				previous_scan_fd.close() 
 				latest_scan_fd.close()
 				transmit_list_fd.close()
-				#os.remove("transmit.list")
+				os.remove("transmit.list")
 				print("Done.")
 
 		elif sys.argv[1] == "update_dependencies":
