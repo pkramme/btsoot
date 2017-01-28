@@ -18,6 +18,14 @@ class color:
 	UNDERLINE = '\033[4m'
 
 
+debug = False
+if "--debug" in sys.argv:
+	debug = True
+def dprint(message):
+	if debug == True:
+		print(f"DEBUG: {message}") 
+
+
 try:
 	from compare import compare
 except ImportError:
@@ -79,14 +87,13 @@ def main():
 				path = sys.argv[3]
 				server = sys.argv[4]
 			except IndexError:
-				print("Usage: " + sys.argv[0] + " add name path server")
-				print("Type local if you want to use local filesystem.")
-				exit()
+				print(usage)
+				sys.exit()
 			with open("btsoot.conf", "a") as f:
 				f.write("name=" + name + '\n')
 				f.write("path=" + path + '\n')
 				f.write("server=" + server + '\n')
-
+			print(color.OKGREEN + "Done." + color.ENDC)
 
 		elif sys.argv[1] == "rm":
 			try:
@@ -111,8 +118,10 @@ def main():
 					else:
 						f.write(line)
 				f.close()
+				print(color.OKGREEN + "Done." + color.ENDC)
 			except FileNotFoundError:
-				print("Configfile not found. Create one with 'add'.")
+				print(color.FAIL + "Configfile not found." + color.ENDC)
+				print("Create one with 'add'.")
 
 
 		elif sys.argv[1] == "scan":
@@ -333,7 +342,7 @@ def main():
 					transmit_list_linenumber = transmit_list_linenumber + 1
 					line = split(line.rstrip(), ",")
 					if line[4] == "-":
-						print(f"REMOVING:{serverlocation}{line[0]}")
+						#print(f"REMOVING:{serverlocation}{line[0]}")
 						if line[2] == "directory":
 							print(color.FAIL + "RMTREE" + color.ENDC)
 							try:
@@ -346,9 +355,9 @@ def main():
 							except FileNotFoundError:
 								pass
 					elif line[4] == "+":
-						print(f"COPYING:{line[0]} -> {serverlocation}{line[0]}")
+						#print(f"COPYING:{line[0]} -> {serverlocation}{line[0]}")
 						if line[2] == "directory":
-							print(color.FAIL + "MAKEDIRS" + color.ENDC)
+							#print(color.FAIL + "MAKEDIRS" + color.ENDC)
 							"""
 							path = split(line[0],"/")
 							lengh = len(line)
@@ -368,7 +377,7 @@ def main():
 				latest_scan_fd.close()
 				transmit_list_fd.close()
 				os.remove("transmit.list")
-				print("Done.")
+				print(color.OKGREEN + "Done." + color.ENDC)
 
 		elif sys.argv[1] == "update_dependencies":
 			print("Updating dependecies.")
