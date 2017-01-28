@@ -344,7 +344,7 @@ def main():
 		print(usage)
 		sys.exit()
 	except:
-		print(color.FAIL + "\nCRITICAL ERROR" + color.ENDC + " Please file a bug report at")
+		print(color.FAIL + "\nCRITICAL ERROR\n" + color.ENDC + " Please file a bug report at")
 		print("- https://git.paukra.com/open-source/btsoot or mail it to")
 		print("- pjkramme@gmail.com")
 
