@@ -333,7 +333,7 @@ def main():
 					transmit_list_linenumber = transmit_list_linenumber + 1
 					line = split(line.rstrip(), ",")
 					if line[4] == "-":
-						print(f"REMOVING:{serverlocation}{line[0]}")
+						#print(f"REMOVING:{serverlocation}{line[0]}")
 						if line[2] == "directory":
 							print(color.FAIL + "RMTREE" + color.ENDC)
 							try:
@@ -346,9 +346,9 @@ def main():
 							except FileNotFoundError:
 								pass
 					elif line[4] == "+":
-						print(f"COPYING:{line[0]} -> {serverlocation}{line[0]}")
+						#print(f"COPYING:{line[0]} -> {serverlocation}{line[0]}")
 						if line[2] == "directory":
-							print(color.FAIL + "MAKEDIRS" + color.ENDC)
+							#print(color.FAIL + "MAKEDIRS" + color.ENDC)
 							"""
 							path = split(line[0],"/")
 							lengh = len(line)
@@ -367,8 +367,8 @@ def main():
 				previous_scan_fd.close() 
 				latest_scan_fd.close()
 				transmit_list_fd.close()
-				#os.remove("transmit.list")
-				print("Done.")
+				os.remove("transmit.list")
+				print(color.OKGREEN + "Done." color.ENDC)
 
 		elif sys.argv[1] == "update_dependencies":
 			print("Updating dependecies.")
