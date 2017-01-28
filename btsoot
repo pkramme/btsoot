@@ -256,9 +256,9 @@ def main():
 					if oldline not in latest_scan:
 						checkifdir = split(oldline, ",")
 						if len(checkifdir) == 1:
-							#IF DIRECTORY, HASH WILL BE NONE, BUT THE PLACE IS STILL THERE.
+							#IF DIRECTORY, HASH WILL BE "directory".
 							#THAT IS NEEDED DURING DIRECTORY REMOVAL
-							transmit_list_fd.write(f"{oldline.rstrip()},,-\n")
+							transmit_list_fd.write(f"{oldline.rstrip()},directory,-\n")
 							print(color.FAIL + f"- {oldline}" + color.ENDC, end='')
 						else:
 							transmit_list_fd.write(f"{oldline.rstrip()},-\n")
@@ -274,9 +274,9 @@ def main():
 					else:
 						checkifdir = split(line, ",")
 						if len(checkifdir) == 1:
-							#IF DIRECTORY, HASH WILL BE NONE, BUT THE PLACE IS STILL THERE.
+							#IF DIRECTORY, HASH WILL BE "directory".
 							#THAT IS NEEDED DURING DIRECTORY CREATION
-							transmit_list_fd.write(f"{line.rstrip()},,-\n")
+							transmit_list_fd.write(f"{line.rstrip()},directory,+\n")
 							print(color.OKGREEN + f"+ {line}" + color.ENDC, end='')
 						else:
 							transmit_list_fd.write(f"{line.rstrip()},+\n")
@@ -296,6 +296,7 @@ def main():
 				#print(color.OKBLUE + f"Block file number changed by {block_change_percentage}%" + color.ENDC)
 
 				#TRANSMITTER
+				print(color.OKBLUE + "Initializing Filetransfer" + color.ENDC)
 				transmit_list_fd.seek(0) #SET FILE POINTER TO START
 				transmit = transmit_list_fd.readlines()
 				transmit_list_linenumber = 0
@@ -303,7 +304,9 @@ def main():
 					transmit_list_linenumber = transmit_list_linenumber + 1
 					line = split(line.rstrip(), ",")
 					if line[4] == "-":
-						if line[2] == "":
+						print(f"REMOVING:{serverlocation}{line[0]}")
+						if line[2] == "directory":
+							print(color.FAIL + "RMTREE" + color.ENDC)
 							try:
 								shutil.rmtree(f"{serverlocation}{line[0]}")
 							except FileNotFoundError:
@@ -314,10 +317,20 @@ def main():
 							except FileNotFoundError:
 								pass
 					elif line[4] == "+":
-						if line[2] == "":
+						print(f"COPYING:{line[0]} -> {serverlocation}{line[0]}")
+						if line[2] == "directory":
+							print(color.FAIL + "MAKEDIRS" + color.ENDC)
+							"""
+							path = split(line[0],"/")
+							lengh = len(line)
+							print(path[0:lengh-1])
+							input()
+							"""
 							os.makedirs(f"{serverlocation}{line[0]}", exist_ok=True)
 						else:
-							shutil.copy2(line[0], f"{serverlocation}{line[0]}")
+							#print(f"PATH:{line[0]} to {serverlocation}{line[0]}")
+							shutil.copyfile(line[0], f"{serverlocation}{line[0]}")
+							shutil.copystat(line[0], f"{serverlocation}{line[0]}")
 					else:
 						print(color.WARNING + "transmit.list is corrupted" + color.ENDC)
 						print(color.WARNING + line + color.ENDC)
@@ -325,7 +338,7 @@ def main():
 				previous_scan_fd.close() 
 				latest_scan_fd.close()
 				transmit_list_fd.close()
-				os.remove("transmit.list")
+				#os.remove("transmit.list")
 				print("Done.")
 
 		elif sys.argv[1] == "update_dependencies":
@@ -343,11 +356,12 @@ def main():
 	except IndexError:
 		print(usage)
 		sys.exit()
+"""
 	except:
 		print(color.FAIL + "\nCRITICAL ERROR\n" + color.ENDC + " Please file a bug report at")
 		print("- https://git.paukra.com/open-source/btsoot or mail it to")
 		print("- pjkramme@gmail.com")
-
+"""
 
 if __name__ == "__main__":
 	try:
