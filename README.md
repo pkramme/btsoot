@@ -5,7 +5,7 @@ First of: BTSOOT should only be used under very special circumstaces. If these a
 met, BTSOOT could be your saviour - it was mine. A list of this circumstaces
 - You want to create offsite backups
 - You have fast internal drive speed (in my case 450MB/s +)
-- You have a slow connection to the remote device (basicly below Gigabits) and/or
+- You have a slow connection to the remote device (far below your diskspeed) and/or
 - You have much data
 
 ## Dependencies
@@ -32,7 +32,7 @@ where initiated, and the block name. The file ending is `.btscan`.
 `./btsoot backup <block-name>`  
 The program will search for the latest two scanfiles, and compare them for changed files, which it then copyies to their
 paths on the remote location. 
-** This also means that you MUST NOT change the remote files per hand. BTSOOT will not know about any changed file which it doesn't change itself.**
+**This also means that you MUST NOT change the remote files per hand. BTSOOT will not know about any changed file which it doesn't change itself.**
 
 ### Restore a block
 This is not implemented yet. Incase of a dataloss, you have to copy them manually back to the source folder.
@@ -110,3 +110,4 @@ As BTSOOT is currently, as of 52a445fa, single threaded, the performance is not 
 - Going to make program a service with front and backend for usability reasons
 - Going to add better outputs during scans, such as percent of files completed
 - Going to distribute it with usable format (format currently unclear, snaps are insecure, debs hard to make, etc)
+- Requires the compare lib, which may have a higher overhead than directly included functions
