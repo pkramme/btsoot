@@ -32,7 +32,7 @@ where initiated, and the block name. The file ending is `.btscan`.
 `./btsoot backup <block-name>`  
 The program will search for the latest two scanfiles, and compare them for changed files, which it then copyies to their
 paths on the remote location.  
-**This also means that you MUST NOT change the remote files per hand. BTSOOT will not know about any changed file which it doesn't change itself.**
+**This also means that you MUST NOT change the remote files per hand. BTSOOT will not know about any changed file that it didn't changed itself.**
 
 ### Restore a block
 This is not implemented yet. Incase of a dataloss, you have to copy them manually back to the source folder.
@@ -49,7 +49,7 @@ What i do have
 - 2 Raspberry Pi's
 - Fast RAIDz1 on my primary NAS (450 - 600 MB/s)
 - Gigabits LAN
-- Very important files, like backups, which needs to be backup'd
+- Very important files, like backups and other mission critical files, that are irreplaceable
 - Sysadmin and programming skills
 
 Now i have a problem. I don't have much money, so buying new hardware for an offsite 
