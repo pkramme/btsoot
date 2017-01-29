@@ -1,5 +1,14 @@
 #!/usr/bin/env python3.6
 
+#CONFIGURATION
+#If these paths are empty, storage will be at default location
+##############################################################
+
+configpath = ""
+scanstorage = ""
+
+##############################################################
+#DO NOT EDIT BELOW HERE!
 
 import sys
 import os
