@@ -31,7 +31,7 @@ where initiated, and the block name. The file ending is `.btscan`.
 ### Backup a block
 `./btsoot backup <block-name>`  
 The program will search for the latest two scanfiles, and compare them for changed files, which it then copyies to their
-paths on the remote location. 
+paths on the remote location.  
 **This also means that you MUST NOT change the remote files per hand. BTSOOT will not know about any changed file which it doesn't change itself.**
 
 ### Restore a block
