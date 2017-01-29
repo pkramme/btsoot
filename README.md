@@ -5,7 +5,7 @@ First of: BTSOOT should only be used under very special circumstaces. If these a
 met, BTSOOT could be your saviour - it was mine. A list of this circumstaces
 - You want to create offsite backups
 - You have fast internal drive speed (in my case 450MB/s +)
-- You have a slow connection to the remote device (basicly below Gigabits) and/or
+- You have a slow connection to the remote device (far below your diskspeed) and/or
 - You have much data
 
 ## Dependencies
@@ -31,8 +31,8 @@ where initiated, and the block name. The file ending is `.btscan`.
 ### Backup a block
 `./btsoot backup <block-name>`  
 The program will search for the latest two scanfiles, and compare them for changed files, which it then copyies to their
-paths on the remote location. 
-** This also means that you MUST NOT change the remote files per hand. BTSOOT will not know about any changed file which it doesn't change itself.**
+paths on the remote location.  
+**This also means that you MUST NOT change the remote files per hand. BTSOOT will not know about any changed file that it didn't changed itself.**
 
 ### Restore a block
 This is not implemented yet. Incase of a dataloss, you have to copy them manually back to the source folder.
@@ -49,7 +49,7 @@ What i do have
 - 2 Raspberry Pi's
 - Fast RAIDz1 on my primary NAS (450 - 600 MB/s)
 - Gigabits LAN
-- Very important files, like backups, which needs to be backup'd
+- Very important files, like backups and other mission critical files, that are irreplaceable
 - Sysadmin and programming skills
 
 Now i have a problem. I don't have much money, so buying new hardware for an offsite 
@@ -89,5 +89,25 @@ for Linux and C# for Windows. I wasn't experienced enough to write it, and altou
 So i created a new project, this project, called BTSOOT, and began to write it in Python.
 I wasn't good in Python, but it is way faster to learn than C with all Linux system calls. And here i am. The program as it is runs on a Linux host under Python3.6 (formatted srings
 were to nice to ignore them) and copies changed files to a mounted network folder on the host.
-# TIMELOG
-Scan completed for 2 TB in 188Min6Sec
+## Performance
+As BTSOOT is currently, as of 52a445fa, single threaded, the performance is not as good as it could be. Limiting factors include, but are not limited to:
+- Slow disk speed
+- Many little files, which slow down the CRC algorithm
+
+|  COMMIT  | Data   |  Time             |  
+| -------- | :----- | :---------------- |  
+| 52a445fa | 1,9TB  |  187 Min, 22 Secs |  
+
+# Roadmap and Known Problems  
+- Going to add application file format with sqlite
+- Going to add Multithreading
+- Going to add installer
+- Going to add safety guard that aborts file copying if suddenly no file is found (Disk failure or unmount)
+- File with "," in name corrupts the transmit list, solution is to stop using csv files
+- Copying files is slow, solution is to stop using shutil's copy2
+- Going to add verbose mode, and silence current mode for performance reasons
+- Refactor all code to use common practices (such as functions, what have i done), for maintainabilitie's sake
+- Going to make program a service with front and backend for usability reasons
+- Going to add better outputs during scans, such as percent of files completed
+- Going to distribute it with usable format (format currently unclear, snaps are insecure, debs hard to make, etc)
+- Requires the compare lib, which may have a higher overhead than directly included functions
