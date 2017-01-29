@@ -1,8 +1,8 @@
 # BTSOOT
 ## What is this
 `tl;dr: A backup/cloning tool`  
-First of: BTSOOT should only be used under very special circumstaces. If these are
-met, BTSOOT could be your saviour - it was mine. A list of this circumstaces
+First of: BTSOOT should only be used under very special circumstaces. If these requirements are
+met, BTSOOT could be **your** backup/cloning solution. A list of this circumstaces:
 - You want to create offsite backups
 - You have fast internal drive speed (in my case 450MB/s +)
 - You have a slow connection to the remote device (far below your diskspeed) and/or
