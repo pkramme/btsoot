@@ -11,7 +11,7 @@ scanstorage = ""
 #DO NOT EDIT BELOW HERE!
 
 
-import os, sys, time, shutil
+import os, sys, time, shutil, zlib
 
 
 #STARTUP CODE
@@ -206,14 +206,14 @@ def main():
 			#LIST FILES TO FIND SCANFILES
 			#SORT OUT ANY UNINTERESTING FILES
 			scanfilelist = []
-			dirs = os.listdir("./")
+			dirs = os.listdir(scanstorage)
 			number_of_files = 0
-			for file in dirs:
-				blockname = split(file, ["_", "."])
+			for singlefile in dirs:
+				blockname = split(singlefile, ["_", "."])
 				try:
 					if blockname[4] == "btsscan" and blockname[2] == sys.argv[2]:
 						number_of_files = number_of_files + 1
-						scanfilelist.append(file)
+						scanfilelist.append(singlefile)
 					else:
 						pass
 				except IndexError:
@@ -255,6 +255,7 @@ def main():
 				
 				#COPY ANYTHING
 				shutil.copytree(sourcelocation, f"{serverlocation}{sourcelocation}")
+				print(color.OKGREEN + "Done." + color.ENDC)
 
 			else:
 				print("Sufficient number of scan files were found.")
@@ -303,8 +304,8 @@ def main():
 				dircounter = 0
 				latest_scan_array_index = -1
 				previous_scan_array_index = -1
-				for file in scanfilelist:
-					temp = split(file, "_")
+				for singlefile in scanfilelist:
+					temp = split(singlefile, "_")
 					#print(f"Check {temp[0]} against {latest_timestamp} and {previous_timestamp}")
 					if int(temp[0]) == latest_timestamp:
 						latest_scan_array_index = dircounter
@@ -318,8 +319,8 @@ def main():
 				print("Previous scan: " + scanfilelist[previous_scan_array_index] + "\n")
 
 				#COMPARE THE TWO FILES AGAINST EACH OTHER
-				latest_scan_fd = open(scanfilelist[latest_scan_array_index], "r")
-				previous_scan_fd = open(scanfilelist[previous_scan_array_index], "r")
+				latest_scan_fd = open(f"{scanstorage}{scanfilelist[latest_scan_array_index]}", "r")
+				previous_scan_fd = open(f"{scanstorage}{scanfilelist[previous_scan_array_index]}", "r")
 				transmit_list_fd = open("transmit.list", "w+")
 
 				latest_scan = latest_scan_fd.readlines()
