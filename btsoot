@@ -145,6 +145,28 @@ def main():
 				print("Create one with 'add'.")
 
 
+		elif sys.argv[1] == "list":
+			try:
+				f = open(configpath, "r")
+				row = 0
+				beginning_row = -10
+				lines = f.readlines()
+				f.close()
+				namerow = 1
+				for line in lines:
+					#row = row + 1
+					if row % 3 == 0 or row == 0:
+						rawname = split(line, "=")
+						rawname = rawname[2]
+						print(f"NAME: {rawname.rstrip()}")
+					elif row % 3 == 1 or row == 1:
+						print(f"\t{line.rstrip()}")
+					elif row % 3 == 2 or row == 2:
+						print(f"\t{line.rstrip()}")
+					row = row + 1
+			except FileNotFoundError:
+				print("not yet created")
+
 		elif sys.argv[1] == "scan":
 			#REMOVE ENTREE FROM BTSOOT CONFIG
 			searched_path = None
