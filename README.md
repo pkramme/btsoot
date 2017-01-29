@@ -10,6 +10,7 @@ met, BTSOOT could be **your** backup/cloning solution. A list of this circumstac
 
 ## Dependencies
 - [Python 3.6](https://python.org) or above
+- A linux os
 
 ## Usage
 ### Installation
