@@ -89,5 +89,9 @@ for Linux and C# for Windows. I wasn't experienced enough to write it, and altou
 So i created a new project, this project, called BTSOOT, and began to write it in Python.
 I wasn't good in Python, but it is way faster to learn than C with all Linux system calls. And here i am. The program as it is runs on a Linux host under Python3.6 (formatted srings
 were to nice to ignore them) and copies changed files to a mounted network folder on the host.
-# TIMELOG
-Scan completed for 2 TB in 188Min6Sec
+## Performance
+As BTSOOT is currently, as of 52a445fa, single threaded, the performance is not as good as it could be. Limiting factors include, but are not limited to:
+- Slow disk speed
+- Many little files, which slow down the CRC algorithm
+
+As of 52a445fa, BTSOOT managed to scan 1,9TB of data in 187 minutes and 22 seconds.
