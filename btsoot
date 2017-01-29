@@ -10,10 +10,25 @@ scanstorage = ""
 ##############################################################
 #DO NOT EDIT BELOW HERE!
 
-import sys
-import os
-import time
-import shutil
+
+import os, sys, time, shutil
+
+
+#STARTUP CODE
+if configpath == "":
+	configpath = "/etc/btsoot/btsoot.conf"
+if scanstorage == "":
+	scanstorage = "/etc/btsoot/scans/"
+if os.path.exists("/etc/btsoot") == True:
+	pass
+else:
+	try:
+		os.makedirs("/etc/btsoot/scans")
+	except PermissionError:
+		print("Permission Denied.")
+		print("BTSOOT could not create directory in /etc.")
+		print("Please try with again with root permissions.")
+		sys.exit()
 
 
 class color:
@@ -94,7 +109,7 @@ def main():
 			except IndexError:
 				print(usage)
 				sys.exit()
-			with open("btsoot.conf", "a") as f:
+			with open(configpath, "a") as f:
 				f.write("name=" + name + '\n')
 				f.write("path=" + path + '\n')
 				f.write("server=" + server + '\n')
@@ -108,13 +123,13 @@ def main():
 				print("Usage: " + sys.argv[0] + "rm name")
 				exit()
 			try:
-				f = open("btsoot.conf", "r")
+				f = open(configpath, "r")
 				row = 0
 				beginning_row = -10
 				indentifier = "name=" + name + '\n'
 				lines = f.readlines()
 				f.close()
-				f = open("btsoot.conf", "w")
+				f = open(configpath, "w")
 				for line in lines:
 					row = row + 1
 					if line == indentifier:
@@ -139,7 +154,7 @@ def main():
 			except IndexError:
 				print("Usage: " + sys.argv[0] + "scan name")
 			try:
-				f = open("btsoot.conf", "r")
+				f = open(configpath, "r")
 				row = 0
 				beginning_row = -1 #set counter to a negative state so it won't find any rows
 				identifier = "name=" + name + '\n'
@@ -161,7 +176,7 @@ def main():
 
 			except FileNotFoundError:
 				print("Configfile not found. Create one with 'add'.")
-			scandirectory(path, scanfilename, False)
+			scandirectory(path, f"{scanstorage}{scanfilename}", False)
 			print(color.OKGREEN + "Done." + color.ENDC)
 
 
@@ -195,7 +210,7 @@ def main():
 				#TODO REFACTOR
 				searched_row = None
 				source_location = None
-				f = open("btsoot.conf", "r")
+				f = open(configpath, "r")
 				row = 0
 				beginning_path = -1
 				identifier = "name=" + sys.argv[2] + '\n'
@@ -225,7 +240,7 @@ def main():
 
 				# FIND SERVER ADDRESS
 				searched_row = None
-				f = open("btsoot.conf", "r")
+				f = open(configpath, "r")
 				row = 0
 				beginning_path = -1
 				indentifier = "name=" + sys.argv[2] + '\n'
@@ -350,7 +365,7 @@ def main():
 					if line[4] == "-":
 						#print(f"REMOVING:{serverlocation}{line[0]}")
 						if line[2] == "directory":
-							print(color.FAIL + "RMTREE" + color.ENDC)
+							#print(color.FAIL + "RMTREE" + color.ENDC)
 							try:
 								shutil.rmtree(f"{serverlocation}{line[0]}")
 							except FileNotFoundError:
