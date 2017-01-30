@@ -109,5 +109,5 @@ As BTSOOT is currently, as of 52a445fa, single threaded, the performance is not 
 - Refactor all code to use common practices (such as functions, what have i done), for maintainabilitie's sake
 - Going to make program a service with front and backend for usability reasons
 - Going to add better outputs during scans, such as percent of files completed
-- Going to distribute it with usable format (format currently unclear, snaps are insecure, debs hard to make, etc)
-- ~~Requires the compare lib, which may have a higher overhead than directly included functions~~
+- ~~Going to distribute it with usable format (format currently unclear, snaps are insecure, debs hard to make, etc)~~ Using .deb now.
+- ~~Requires the compare lib, which may have a higher overhead than directly included functions~~ Introduced CRC function into BTSOOT
