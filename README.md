@@ -4,9 +4,24 @@
 First of: BTSOOT should only be used under very special circumstaces. If these requirements are
 met, BTSOOT could be **your** backup/cloning solution. A list of this circumstaces:
 - You want to create offsite backups
-- You have fast internal drive speed (in my case 400 - 600 MB/s)
+- You have much faster internal drive speed (in my case 400 - 600 MB/s) than your LAN/WAN
 - You have a slow connection to the remote device (far below your diskspeed) and/or
-- You have much data
+- You have much unchanged data
+
+### Practical Example
+Lets say you have
+- 2 TBs Movies
+- 200 GBs Music
+- 100 GBs Files, like PDFs, DOCXs, Mails, whatever...
+- 50 GB Photos
+
+I bet you do not change 90% of these files. You put movies one time on your server, 
+and then don't touch them anymore. Same goes for Music and Photos. Your files however,
+are daily used. You move a few gigabyte here, add a few megabytes there, delete something.
+However, if you want an offsite backup, your software doesn't care. It will still copy any file,
+every Movie, every single MP3, everything, even if only your "Files" folder changed, aside from 
+maybe 3 added Music files.  
+This software fixes that, as it will only copy the real changed data.
 
 ## Dependencies
 - [Python 3.6](https://python.org) or above
