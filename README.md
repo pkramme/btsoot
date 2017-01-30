@@ -1,7 +1,8 @@
 # BTSOOT
 ## How to get it
 [btsoot_0.3-1.deb](https://drive.google.com/file/d/0B2sQy9J1YjgJYndrakZOR0tEZkE/view?usp=sharing)  
-
+**Until i spinn up my own aptly server, the distribution will unfortunately happen over google drive.  
+I apologize.**
 ## What is this
 `tl;dr: A backup/cloning tool`  
 First of: BTSOOT should only be used under very special circumstaces. If these requirements are
