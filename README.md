@@ -3,6 +3,9 @@
 i386/amd64: [btsoot_0.3.0-i386.deb](https://drive.google.com/open?id=0B2sQy9J1YjgJbHBEcm5DbjFKWjA)  
 **Until i spinn up my own aptly server, the distribution will unfortunately happen over google drive.  
 I apologize.**
+
+---
+
 ## What is this
 `tl;dr: A backup/cloning tool`  
 First of: BTSOOT should only be used under very special circumstaces. If these requirements are
@@ -27,9 +30,13 @@ every Movie, every single MP3, everything, even if only your "Files" folder chan
 maybe 3 added Music files.  
 This software fixes that, as it will only copy the real changed data.
 
+---
+
 ## Dependencies
 - [Python 3.6](https://python.org) or above
 - Any Linux OS
+
+---
 
 ## Usage
 ### Installation
@@ -55,6 +62,8 @@ paths on the remote location.
 
 ### Restore a block
 This is not implemented yet. Incase of a dataloss, you have to copy them manually back to the source folder.
+
+---
 
 ## Backstory
 ### What i have
@@ -108,6 +117,9 @@ for Linux and C# for Windows. I wasn't experienced enough to write it, and altou
 So i created a new project, this project, called BTSOOT, and began to write it in Python.
 I wasn't good in Python, but it is way faster to learn than C with all Linux system calls. And here i am. The program as it is runs on a Linux host under Python3.6 (formatted srings
 were to nice to ignore them) and copies changed files to a mounted network folder on the host.
+
+---
+
 ## Performance
 As BTSOOT is currently, as of 52a445fa, single threaded, the performance is not as good as it could be. Limiting factors include, but are not limited to:
 - Slow disk speed
@@ -117,7 +129,9 @@ As BTSOOT is currently, as of 52a445fa, single threaded, the performance is not 
 | -------- | :----- | :---------------- |  
 | 52a445fa | 1,9TB  |  187 Min, 22 Secs |  
 
-# Roadmap and Known Problems  
+---
+
+## Roadmap and Known Problems  
 - Going to add application file format with sqlite
 - Going to add Multithreading
 - Going to add installer
