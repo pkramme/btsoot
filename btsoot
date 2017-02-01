@@ -338,7 +338,7 @@ def main():
 				file_new = 0
 				file_total_old = 0
 				file_total_latest = 0
-				oldline_total = 0 #DELETED LINES COUNTER
+				file_deleted = 0 #DELETED LINES COUNTER
 
 				#REMOVE DELETED OR CHANGED FILES
 				for oldline in previous_scan:
@@ -352,7 +352,7 @@ def main():
 						else:
 							transmit_list_fd.write(f"{oldline.rstrip()},-\n")
 							print(color.FAIL + f"- {oldline}" + color.ENDC, end='')
-							oldline_total = oldline_total + 1
+							file_deleted = file_deleted + 1
 					file_total_old = file_total_old + 1
 
 
@@ -375,19 +375,21 @@ def main():
 
 
 				#FILE STATS
-				block_change_percentage = int((file_total_old / file_total_latest) * 100)
+				#block_change_percentage = int((file_total_old / file_total_latest) * 100)
 				print(f"\nUnchanged files: {file_same}")
 				print(f"New/Changed files: {file_new}")
-				print(f"Deleted files: {oldline_total}")
+				print(f"Deleted files: {file_deleted}")
 				print(f"Total files in latest scan: {file_total_latest}")
 				print(f"Total files in previous scan: {file_total_old}")
 
 				#SAFETY GUARD: SEE ISSUE #8
 				if safetyguard == True:
-					if changed_files >= oldline_total / 100 * minwarningvalue:
+					"""
+					if new_files >= oldline_total / 100 * minwarningvalue:
 						print("SAFETY GUARD: CHANGED FILES BIGGER THAN {minwarningvalue}%")
 						shouldcontinue()
-					elif deleted_files >= oldline_total / 100 * minwarningvalue:
+					"""
+					if file_deleted >= file_total_old / 100 * minwarningvalue:
 						print(f"SAFETY GUARD: MORE THAN {minwarningvalue}% DELETED")
 						shouldcontinue()
 					elif file_total_latest == 0:
@@ -405,7 +407,7 @@ def main():
 				for line in transmit:
 					transmit_list_linenumber = transmit_list_linenumber + 1
 					line = split(line.rstrip(), ",")
-					if len(line) > 4:
+					if len(line) > 5:
 						print(color.FAIL + f"Cannot backup file {line}." + color.ENDC)
 						print("Path would brick BTSOOT.")
 					else:
