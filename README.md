@@ -134,7 +134,7 @@ As BTSOOT is currently, as of 52a445fa, single threaded, the performance is not 
 ## Roadmap and Known Problems  
 - Going to add application file format with sqlite
 - Going to add Multithreading
-- Going to add installer
+- ~~Going to add installer~~
 - Going to add safety guard that aborts file copying if suddenly no file is found (Disk failure or unmount)
 - File with "," in name corrupts the transmit list, solution is to stop using csv files
 - Copying files is slow, solution is to stop using shutil's copy2
