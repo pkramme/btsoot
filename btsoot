@@ -226,10 +226,7 @@ def main():
 			elif number_of_files == 1:
 				print("Only one scanfile found. A complete backup of ALL data will be created.")
 				print("This may take a long time.")
-				#TODO: TRANSFER FILE TO SERVER, RESOLVE SERVER ADDR
-				# FIND SERVER ADDRESS 
-				#TODO THIS NEEDS TO BE A FUNCTION
-				#TODO REFACTOR
+
 				searched_row = None
 				source_location = None
 				f = open(configpath, "r")
@@ -330,10 +327,9 @@ def main():
 				file_new = 0
 				file_total_old = 0
 				file_total_latest = 0
-
+				oldline_total = 0 #DELETED LINES COUNTER
 
 				#REMOVE DELETED OR CHANGED FILES
-				oldline_total = 0
 				for oldline in previous_scan:
 					if oldline not in latest_scan:
 						checkifdir = split(oldline, ",")
@@ -385,37 +381,40 @@ def main():
 				for line in transmit:
 					transmit_list_linenumber = transmit_list_linenumber + 1
 					line = split(line.rstrip(), ",")
-					if line[4] == "-":
-						#print(f"REMOVING:{serverlocation}{line[0]}")
-						if line[2] == "directory":
-							#print(color.FAIL + "RMTREE" + color.ENDC)
-							try:
-								shutil.rmtree(f"{serverlocation}{line[0]}")
-							except FileNotFoundError:
-								pass
-						else:
-							try:
-								os.remove(f"{serverlocation}{line[0]}")
-							except FileNotFoundError:
-								pass
-					elif line[4] == "+":
-						#print(f"COPYING:{line[0]} -> {serverlocation}{line[0]}")
-						if line[2] == "directory":
-							#print(color.FAIL + "MAKEDIRS" + color.ENDC)
-							"""
-							path = split(line[0],"/")
-							lengh = len(line)
-							print(path[0:lengh-1])
-							input()
-							"""
-							os.makedirs(f"{serverlocation}{line[0]}", exist_ok=True)
-						else:
-							#print(f"PATH:{line[0]} to {serverlocation}{line[0]}")
-							shutil.copyfile(line[0], f"{serverlocation}{line[0]}")
-							shutil.copystat(line[0], f"{serverlocation}{line[0]}")
+					if len(line) > 4:
+						print(color.FAIL + f"Cannot backup file {line}. Path would brick BTSOOT." + color.ENDC)
 					else:
-						print(color.WARNING + "transmit.list is corrupted" + color.ENDC)
-						print(color.WARNING + line + color.ENDC)
+						if line[4] == "-":
+							#print(f"REMOVING:{serverlocation}{line[0]}")
+							if line[2] == "directory":
+								#print(color.FAIL + "RMTREE" + color.ENDC)
+								try:
+									shutil.rmtree(f"{serverlocation}{line[0]}")
+								except FileNotFoundError:
+									pass
+							else:
+								try:
+									os.remove(f"{serverlocation}{line[0]}")
+								except FileNotFoundError:
+									pass
+						elif line[4] == "+":
+							#print(f"COPYING:{line[0]} -> {serverlocation}{line[0]}")
+							if line[2] == "directory":
+								#print(color.FAIL + "MAKEDIRS" + color.ENDC)
+								"""
+								path = split(line[0],"/")
+								lengh = len(line)
+								print(path[0:lengh-1])
+								input()
+								"""
+								os.makedirs(f"{serverlocation}{line[0]}", exist_ok=True)
+							else:
+								#print(f"PATH:{line[0]} to {serverlocation}{line[0]}")
+								shutil.copyfile(line[0], f"{serverlocation}{line[0]}")
+								shutil.copystat(line[0], f"{serverlocation}{line[0]}")
+						else:
+							print(color.WARNING + "transmit.list is corrupted" + color.ENDC)
+							print(color.WARNING + line + color.ENDC)
 
 				previous_scan_fd.close() 
 				latest_scan_fd.close()
