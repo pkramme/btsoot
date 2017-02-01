@@ -369,7 +369,6 @@ def main():
 				print(f"Total files in latest scan: {file_total_latest}")
 				print(f"Total files in previous scan: {file_total_old}")
 				#TODO: This is broken... Fix needed.
-				#print(color.OKBLUE + f"Block file number changed by {block_change_percentage}%" + color.ENDC)
 
 				#TRANSMITTER
 				print(color.OKBLUE + "Initializing Filetransfer" + color.ENDC)
@@ -380,7 +379,8 @@ def main():
 					transmit_list_linenumber = transmit_list_linenumber + 1
 					line = split(line.rstrip(), ",")
 					if len(line) > 4:
-						print(color.FAIL + f"Cannot backup file {line}. Path would brick BTSOOT." + color.ENDC)
+						print(color.FAIL + f"Cannot backup file {line}." + color.ENDC)
+						print("Path would brick BTSOOT.")
 					else:
 						if line[4] == "-":
 							#print(f"REMOVING:{serverlocation}{line[0]}")
