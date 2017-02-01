@@ -44,7 +44,7 @@ class color:
 	BOLD = '\033[1m'
 	UNDERLINE = '\033[4m'
 
-
+#DEBUG FUNCTION AND SETVAR
 debug = False
 if "--debug" in sys.argv:
 	debug = True
@@ -52,6 +52,14 @@ def dprint(message):
 	if debug == True:
 		print(f"DEBUG: {message}") 
 
+def shouldcontinue(quit = True):
+	if input("Should i continue? (yes/no)") == "yes":
+		return 0
+	else:
+		if quit == True:
+			sys.exit()
+		else:
+			return 1
 
 def crc(filepath):
     previous = 0
@@ -375,26 +383,17 @@ def main():
 				print(f"Total files in previous scan: {file_total_old}")
 
 				#SAFETY GUARD: SEE ISSUE #8
-				if safetyguard = True:
+				if safetyguard == True:
 					if changed_files >= oldline_total / 100 * minwarningvalue:
-						print("SAFETY GUARD: CHANGED FILES BIGGER OR EQUAL OLDSCAN")
-						print("Should i continue? (yes/no)") == "yes":
-							pass
-						else:
-							sys.exit()
+						print("SAFETY GUARD: CHANGED FILES BIGGER THAN {minwarningvalue}%")
+						shouldcontinue()
 					elif deleted_files >= oldline_total / 100 * minwarningvalue:
-						print("SAFETY GUARD: MORE THAN 75% DELETED")
-						if input("Should i continue? (yes/no)") == "yes":
-							pass
-						else:
-							sys.exit()
+						print(f"SAFETY GUARD: MORE THAN {minwarningvalue}% DELETED")
+						shouldcontinue()
 					elif file_total_latest == 0:
 						print("SAFETY GUARD: NO FILES FOUND.")
 						print("This may be due to an umounted or destroyed drive.")
-						if input("Should i continue? (yes/no)") == "yes":
-							pass
-						else:
-							sys.exit()
+						shouldcontinue()
 				else:
 					pass
 
