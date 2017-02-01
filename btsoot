@@ -4,8 +4,8 @@
 #If these paths are empty, storage will be at default location
 ##############################################################
 
-configpath = "btsoot.conf"
-scanstorage = "./"
+configpath = ""
+scanstorage = ""
 
 ##############################################################
 #DO NOT EDIT BELOW HERE!
