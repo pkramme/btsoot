@@ -25,9 +25,7 @@ else:
 	try:
 		os.makedirs("/etc/btsoot/scans")
 	except PermissionError:
-		print("Permission Denied.")
-		print("BTSOOT could not create directory in /etc.")
-		print("Please try with again with root permissions.")
+		print("BTSOOT needs root permissions")
 		sys.exit()
 
 
