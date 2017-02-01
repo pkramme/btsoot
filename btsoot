@@ -7,6 +7,11 @@
 configpath = ""
 scanstorage = ""
 
+safetyguard = True
+#Input min value for cloning file override safety guard. 
+#Backup will be aborted if change passes this value.
+minwarningvalue = 75
+
 ##############################################################
 #DO NOT EDIT BELOW HERE!
 
@@ -368,7 +373,30 @@ def main():
 				print(f"Deleted files: {oldline_total}")
 				print(f"Total files in latest scan: {file_total_latest}")
 				print(f"Total files in previous scan: {file_total_old}")
-				#TODO: This is broken... Fix needed.
+
+				#SAFETY GUARD: SEE ISSUE #8
+				if safetyguard = True:
+					if changed_files >= oldline_total / 100 * minwarningvalue:
+						print("SAFETY GUARD: CHANGED FILES BIGGER OR EQUAL OLDSCAN")
+						print("Should i continue? (yes/no)") == "yes":
+							pass
+						else:
+							sys.exit()
+					elif deleted_files >= oldline_total / 100 * minwarningvalue:
+						print("SAFETY GUARD: MORE THAN 75% DELETED")
+						if input("Should i continue? (yes/no)") == "yes":
+							pass
+						else:
+							sys.exit()
+					elif file_total_latest == 0:
+						print("SAFETY GUARD: NO FILES FOUND.")
+						print("This may be due to an umounted or destroyed drive.")
+						if input("Should i continue? (yes/no)") == "yes":
+							pass
+						else:
+							sys.exit()
+				else:
+					pass
 
 				#TRANSMITTER
 				print(color.OKBLUE + "Initializing Filetransfer" + color.ENDC)
@@ -396,22 +424,13 @@ def main():
 								except FileNotFoundError:
 									pass
 						elif line[4] == "+":
-							#print(f"COPYING:{line[0]} -> {serverlocation}{line[0]}")
 							if line[2] == "directory":
-								#print(color.FAIL + "MAKEDIRS" + color.ENDC)
-								"""
-								path = split(line[0],"/")
-								lengh = len(line)
-								print(path[0:lengh-1])
-								input()
-								"""
 								os.makedirs(f"{serverlocation}{line[0]}", exist_ok=True)
 							else:
-								#print(f"PATH:{line[0]} to {serverlocation}{line[0]}")
 								shutil.copyfile(line[0], f"{serverlocation}{line[0]}")
 								shutil.copystat(line[0], f"{serverlocation}{line[0]}")
 						else:
-							print(color.WARNING + "transmit.list is corrupted" + color.ENDC)
+							print(color.WARNING + "Transmit corrupted at" + color.ENDC)
 							print(color.WARNING + line + color.ENDC)
 
 				previous_scan_fd.close() 
