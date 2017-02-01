@@ -1,7 +1,6 @@
 # BTSOOT 
 ## Build Status
 Master:     [![build status](https://git.paukra.com/open-source/btsoot/badges/master/build.svg)](https://git.paukra.com/open-source/btsoot/commits/master)  
-Production: [![build status](https://git.paukra.com/open-source/btsoot/badges/production/build.svg)](https://git.paukra.com/open-source/btsoot/commits/production)
 ## How to get it
 i386/amd64: [btsoot_0.3.0-i386.deb](https://drive.google.com/open?id=0B2sQy9J1YjgJbHBEcm5DbjFKWjA)  
 **Until i spinn up my own aptly server, the distribution will unfortunately happen over google drive.  
