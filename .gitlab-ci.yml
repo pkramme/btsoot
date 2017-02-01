@@ -1,4 +1,4 @@
 test:
   stage: test
   script:
-    - python3.6 -m py_compile btsoot
+    - python3.6 -m py_compile btsoot.py
