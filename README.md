@@ -13,7 +13,7 @@ I apologize.**
 First of: BTSOOT should only be used under very special circumstaces. If these requirements are
 met, BTSOOT could be **your** backup/cloning solution. A list of this circumstaces:
 - You want to create offsite backups
-- You have much faster internal drive speed (in my case 400 - 600 MB/s) than your LAN/WAN
+- You have much faster internal drive speed (in my case 400 - 600 MB/s) than your external connection (LAN/WAN/remote HDD etc...)
 - You have a slow connection to the remote device (far below your diskspeed) and/or
 - You have much unchanged data
 
