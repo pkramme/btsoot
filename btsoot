@@ -384,11 +384,6 @@ def main():
 
 				#SAFETY GUARD: SEE ISSUE #8
 				if safetyguard == True:
-					"""
-					if new_files >= oldline_total / 100 * minwarningvalue:
-						print("SAFETY GUARD: CHANGED FILES BIGGER THAN {minwarningvalue}%")
-						shouldcontinue()
-					"""
 					if file_deleted >= file_total_old / 100 * minwarningvalue:
 						print(f"SAFETY GUARD: MORE THAN {minwarningvalue}% DELETED")
 						shouldcontinue()
