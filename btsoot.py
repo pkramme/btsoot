@@ -23,18 +23,18 @@ import os, sys, time, shutil, zlib
 
 #STARTUP CODE
 def startup():
-    if configpath == "":
-    	configpath = "/etc/btsoot/btsoot.conf"
-    if scanstorage == "":
-    	scanstorage = "/etc/btsoot/scans/"
-    if os.path.exists("/etc/btsoot") == True:
-    	pass
-    else:
-    	try:
-    		os.makedirs("/etc/btsoot/scans")
-    	except PermissionError:
-    		print("BTSOOT needs root permissions")
-    		sys.exit()
+	if configpath == "":
+		configpath = "/etc/btsoot/btsoot.conf"
+	if scanstorage == "":
+		scanstorage = "/etc/btsoot/scans/"
+	if os.path.exists("/etc/btsoot") == True:
+		pass
+	else:
+		try:
+			os.makedirs("/etc/btsoot/scans")
+		except PermissionError:
+			print("BTSOOT needs root permissions")
+			sys.exit()
 
 
 class color:
