@@ -1,8 +1,7 @@
 # BTSOOT [![build status](https://git.paukra.com/open-source/btsoot/badges/master/build.svg)](https://git.paukra.com/open-source/btsoot/commits/master)  
 ## How to get it
-i386/amd64: [btsoot_0.3.0-i386.deb](https://drive.google.com/open?id=0B2sQy9J1YjgJbHBEcm5DbjFKWjA)  
-**Until i spinn up my own aptly server, the distribution will unfortunately happen over google drive.  
-I apologize.**
+Because of the hardness to create automated debian packages, i want to distribute BTSOOT over a piped shell script which gets loaded over cURL.
+This script is not developed by me. Until it's finished, please install it using 
 
 ---
 
@@ -41,9 +40,10 @@ This software fixes that, as it will only copy the real changed data.
 ## Usage
 ### Installation
 1. Clone the repository to the folder where you want it
-2. Start btsoot.py
-3. If this is your first start, it'll ask you to let btsoot download dependencies
+2. Execute `make` `sudo make install`
 4. Done
+
+BTSOOT is now in your path and can be used. If you want to uninstall it, run `sudo make uninstall`. This will delete all scans and your config, too.
 
 ### Create a block
 `./btsoot add <block-name> <path> <path-to-remote-dir`  
