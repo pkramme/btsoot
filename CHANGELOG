@@ -1,0 +1,8 @@
+v0.4
+- Safety Guard to prevent accidentally destroying backups
+- Faster Copying using costum written c program
+
+v0.3
+- First minimum viable product
+- Support for add, rm, list, scan, backup added
+
