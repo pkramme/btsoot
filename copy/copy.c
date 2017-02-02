@@ -3,8 +3,6 @@
 #include<sys/stat.h>
 #include<unistd.h>
 
-#define BUFFERSIZE 1024
-
 int copy(char *source, char *destination);
 
 int main(int argc, char *argv[])
@@ -35,7 +33,7 @@ int copy(char *source, char *destination)
 {
 	int fd_source;
 	int fd_destination;
-	char buffer[BUFFERSIZE];
+	char buffer[BUFSIZ];
 	int dest_flags;
 	mode_t permissions;
 	ssize_t read_check;
@@ -58,7 +56,7 @@ int copy(char *source, char *destination)
 		return 2;
 	}
 	
-	while((read_check == read(fd_source, buffer, BUFFERSIZE)) > 0)
+	while((read_check = read(fd_source, buffer, BUFSIZ)) > 0)
 	{
 		if(write(fd_destination, buffer, read_check) != read_check)
 		{
