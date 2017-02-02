@@ -135,3 +135,13 @@ As BTSOOT is currently, as of 52a445fa, single threaded, the performance is not 
 
 ## Project Information
 I am currently trying to enforce GitLab Flow, with semantic versioning in release channels.
+
+## Error Codes
+### Copy Error
+* -1 = Incorrect number of arguments
+* 1 = Couldn't open source file descriptor
+* 2 = Couldn't open destination file descriptor
+* 3 = Couldn't write to destination file descriptor
+* 4 = Couldn't read from source file descriptor
+* 5 = Couldn't close source file descriptor
+* 6 = Couldn't close destination file descriptor
