@@ -22,7 +22,7 @@ import os, sys, time, shutil, zlib
 
 
 #STARTUP CODE
-def starup():
+def startup():
     if configpath == "":
     	configpath = "/etc/btsoot/btsoot.conf"
     if scanstorage == "":
