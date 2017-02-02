@@ -19,7 +19,7 @@ minwarningvalue = 75
 import os, sys, time, shutil, zlib
 
 
-#STARTUP CODE
+#STARTUP CODE 
 if configpath == "":
 	configpath = "/etc/btsoot/btsoot.conf"
 if scanstorage == "":
