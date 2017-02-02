@@ -38,6 +38,7 @@ int copy(char *source, char *destination)
 	mode_t permissions;
 	ssize_t read_check;
 
+    /*compiler complains...*/
 	read_check = 0;
 
 	fd_source = open(source, O_RDONLY);
@@ -77,6 +78,7 @@ int copy(char *source, char *destination)
 	{
 		return 6;
 	}
+	
 	return 0;
 }
 
