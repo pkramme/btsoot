@@ -1,8 +1,4 @@
 # BTSOOT [![build status](https://git.paukra.com/open-source/btsoot/badges/master/build.svg)](https://git.paukra.com/open-source/btsoot/commits/master)  
-## How to get it
-Because of the hardness to create automated debian packages, i want to distribute BTSOOT over a piped shell script which gets loaded over cURL.
-This script is not developed by me. Until it's finished, please install it using the repository and checking out your desired solution. 
-More information under [Installation](https://git.paukra.com/open-source/btsoot#installation).
 
 ---
 
