@@ -1,10 +1,10 @@
-test:
-  stage: test_python
+test:btsoot:
+  stage: test
   script:
     - python3.6 -m py_compile btsoot.py
 
-test:
-  stage: test_copy
+test:copy:
+  stage: test
   script:
     - cd copy
     - make test
