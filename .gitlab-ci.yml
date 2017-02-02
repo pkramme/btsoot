@@ -7,7 +7,7 @@ test:copy:
   stage: test
   script:
     - cd copy
-    - make test
+    - scan-build make test
     - cd ..
 
 build:copy:
