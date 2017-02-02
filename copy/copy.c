@@ -3,13 +3,13 @@
 #include<sys/stat.h>
 #include<unistd.h>
 
-#define BUFFERSIZE 4096
+#define BUFFERSIZE 1024
 
-int copy(const char *source, const char *destination);
+int copy(char *source, char *destination);
 
 int main(int argc, char *argv[])
 {
-	int error;
+	int exit_code;
 	
 	/*
 	return -1 = incorrect number of args
@@ -27,11 +27,11 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	error = copy(argv[1], argv[2]);
-	return error;
+	exit_code = copy(argv[1], argv[2]);
+	return exit_code;
 }
 
-int copy(const char *source, const char *destination)
+int copy(char *source, char *destination)
 {
 	int fd_source;
 	int fd_destination;
@@ -49,8 +49,9 @@ int copy(const char *source, const char *destination)
 	}
 	
 	dest_flags = O_CREAT | O_WRONLY | O_TRUNC;
-	permissions = S_IRUSR | S_IRGRP | S_IROTH | S_IWUSR | S_IWGRP | S_IWOTH;
 	
+	permissions = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
+
 	fd_destination = open(destination, dest_flags, permissions);
 	if(fd_destination == -1)
 	{
