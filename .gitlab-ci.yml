@@ -2,3 +2,16 @@ test:
   stage: test
   script:
     - python3.6 -m py_compile btsoot.py
+    - cd copy
+    - make test
+    - cd ..
+
+build:
+  stage: build
+  script:
+    - cd copy
+    - make
+    - cd ..
+  artifacts:
+    paths:
+      - ./copy/copy
