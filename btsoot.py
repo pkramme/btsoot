@@ -407,9 +407,7 @@ def main():
 						print("Path would brick BTSOOT.")
 					else:
 						if line[4] == "-":
-							#print(f"REMOVING:{serverlocation}{line[0]}")
 							if line[2] == "directory":
-								#print(color.FAIL + "RMTREE" + color.ENDC)
 								try:
 									shutil.rmtree(f"{serverlocation}{line[0]}")
 								except FileNotFoundError:
@@ -423,10 +421,10 @@ def main():
 							if line[2] == "directory":
 								os.makedirs(f"{serverlocation}{line[0]}", exist_ok=True)
 							else:
-								status = os.system(f"/etc/btsoot/copy line[0] {serverlocation}{line[0]}")
+								status = os.system(f"/etc/btsoot/copy {line[0]} {serverlocation}{line[0]}")
 								exit_status = os.WEXITSTATUS(status)
 								if exit_status != 0:
-									print(f"Something went wrong. COPY EXIT: {exit_status}")
+									print(color.FAIL + f"COPY ERROR: {exit_status}"+ color.ENDC)
 								else:
 									pass
 						else:
