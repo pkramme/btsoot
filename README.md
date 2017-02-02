@@ -45,7 +45,7 @@ This software fixes that, as it will only copy the real changed data.
 2. Execute `make` and `sudo make install`
 4. Done
 
-BTSOOT is now in your path and can be used. If you want to uninstall it, run `sudo make uninstall`. This will delete all scans and your config, too.
+BTSOOT is now in `/usr/local/bin/` and can be used. The config or all scans are in `/etc/btsoot/`. If you want to uninstall it, run `sudo make uninstall`. This will delete all scans and your config, too.
 
 ### Create a block
 `./btsoot add <block-name> <path> <path-to-remote-dir`  
