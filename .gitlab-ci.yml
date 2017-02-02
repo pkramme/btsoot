@@ -12,3 +12,6 @@ build:
     - cd copy
     - make
     - cd ..
+  artifacts:
+    paths:
+      - ./copy/copy
