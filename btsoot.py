@@ -4,9 +4,11 @@
 #If these paths are empty, storage will be at default location
 ##############################################################
 
+#STORAGE CONFIG
 configpath = ""
 scanstorage = ""
 
+#SAFETY GUARD CONFIG
 safetyguard = True
 #Input min value for cloning file override safety guard. 
 #Backup will be aborted if change passes this value.
