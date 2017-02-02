@@ -423,8 +423,12 @@ def main():
 							if line[2] == "directory":
 								os.makedirs(f"{serverlocation}{line[0]}", exist_ok=True)
 							else:
-								shutil.copyfile(line[0], f"{serverlocation}{line[0]}")
-								shutil.copystat(line[0], f"{serverlocation}{line[0]}")
+								status = os.system(f"/etc/btsoot/copy line[0] {serverlocation}{line[0]")
+								exit_status = os.WEXITSTATUS(status)
+								if exit_status != 0:
+									print(f"Something went wrong. COPY EXIT: {exit_status}")
+								else:
+									pass
 						else:
 							print(color.WARNING + "Transmit corrupted at" + color.ENDC)
 							print(color.WARNING + line + color.ENDC)
@@ -442,12 +446,7 @@ def main():
 	except IndexError:
 		print(usage)
 		sys.exit()
-"""
-	except:
-		print(color.FAIL + "\nCRITICAL ERROR\n" + color.ENDC + " Please file a bug report at")
-		print("- https://git.paukra.com/open-source/btsoot or mail it to")
-		print("- pjkramme@gmail.com")
-"""
+
 
 if __name__ == "__main__":
 	try:
