@@ -1,7 +1,8 @@
 # BTSOOT [![build status](https://git.paukra.com/open-source/btsoot/badges/master/build.svg)](https://git.paukra.com/open-source/btsoot/commits/master)  
 ## How to get it
 Because of the hardness to create automated debian packages, i want to distribute BTSOOT over a piped shell script which gets loaded over cURL.
-This script is not developed by me. Until it's finished, please install it using 
+This script is not developed by me. Until it's finished, please install it using the repository and checking out your desired solution. 
+More information under [Installation](https://git.paukra.com/open-source/btsoot#installation).
 
 ---
 
@@ -40,7 +41,8 @@ This software fixes that, as it will only copy the real changed data.
 ## Usage
 ### Installation
 1. Clone the repository to the folder where you want it
-2. Execute `make` `sudo make install`
+2. Check out your desired release branch e.g. `0.4-stable`, so `git checkout 0.4-stable`
+2. Execute `make` and `sudo make install`
 4. Done
 
 BTSOOT is now in your path and can be used. If you want to uninstall it, run `sudo make uninstall`. This will delete all scans and your config, too.
