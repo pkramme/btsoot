@@ -22,18 +22,19 @@ import os, sys, time, shutil, zlib
 
 
 #STARTUP CODE
-if configpath == "":
-	configpath = "/etc/btsoot/btsoot.conf"
-if scanstorage == "":
-	scanstorage = "/etc/btsoot/scans/"
-if os.path.exists("/etc/btsoot") == True:
-	pass
-else:
-	try:
-		os.makedirs("/etc/btsoot/scans")
-	except PermissionError:
-		print("BTSOOT needs root permissions")
-		sys.exit()
+def starup():
+    if configpath == "":
+    	configpath = "/etc/btsoot/btsoot.conf"
+    if scanstorage == "":
+    	scanstorage = "/etc/btsoot/scans/"
+    if os.path.exists("/etc/btsoot") == True:
+    	pass
+    else:
+    	try:
+    		os.makedirs("/etc/btsoot/scans")
+    	except PermissionError:
+    		print("BTSOOT needs root permissions")
+    		sys.exit()
 
 
 class color:
@@ -450,6 +451,7 @@ def main():
 
 if __name__ == "__main__":
 	try:
+	    startup()
 		main()
 	except KeyboardInterrupt:
 		print("\nInterrupted by keyboard. Quitting.\n")
