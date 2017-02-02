@@ -7,6 +7,11 @@
 configpath = ""
 scanstorage = ""
 
+safetyguard = True
+#Input min value for cloning file override safety guard. 
+#Backup will be aborted if change passes this value.
+minwarningvalue = 75
+
 ##############################################################
 #DO NOT EDIT BELOW HERE!
 
@@ -39,7 +44,7 @@ class color:
 	BOLD = '\033[1m'
 	UNDERLINE = '\033[4m'
 
-
+#DEBUG FUNCTION AND SETVAR
 debug = False
 if "--debug" in sys.argv:
 	debug = True
@@ -47,6 +52,14 @@ def dprint(message):
 	if debug == True:
 		print(f"DEBUG: {message}") 
 
+def shouldcontinue(quit = True):
+	if input("Should i continue? (yes/no)") == "yes":
+		return 0
+	else:
+		if quit == True:
+			sys.exit()
+		else:
+			return 1
 
 def crc(filepath):
     previous = 0
@@ -325,7 +338,7 @@ def main():
 				file_new = 0
 				file_total_old = 0
 				file_total_latest = 0
-				oldline_total = 0 #DELETED LINES COUNTER
+				file_deleted = 0 #DELETED LINES COUNTER
 
 				#REMOVE DELETED OR CHANGED FILES
 				for oldline in previous_scan:
@@ -339,7 +352,7 @@ def main():
 						else:
 							transmit_list_fd.write(f"{oldline.rstrip()},-\n")
 							print(color.FAIL + f"- {oldline}" + color.ENDC, end='')
-							oldline_total = oldline_total + 1
+							file_deleted = file_deleted + 1
 					file_total_old = file_total_old + 1
 
 
@@ -362,13 +375,24 @@ def main():
 
 
 				#FILE STATS
-				block_change_percentage = int((file_total_old / file_total_latest) * 100)
+				#block_change_percentage = int((file_total_old / file_total_latest) * 100)
 				print(f"\nUnchanged files: {file_same}")
 				print(f"New/Changed files: {file_new}")
-				print(f"Deleted files: {oldline_total}")
+				print(f"Deleted files: {file_deleted}")
 				print(f"Total files in latest scan: {file_total_latest}")
 				print(f"Total files in previous scan: {file_total_old}")
-				#TODO: This is broken... Fix needed.
+
+				#SAFETY GUARD: SEE ISSUE #8
+				if safetyguard == True:
+					if file_deleted >= file_total_old / 100 * minwarningvalue:
+						print(f"SAFETY GUARD: MORE THAN {minwarningvalue}% DELETED")
+						shouldcontinue()
+					elif file_total_latest == 0:
+						print("SAFETY GUARD: NO FILES FOUND.")
+						print("This may be due to an umounted or destroyed drive.")
+						shouldcontinue()
+				else:
+					pass
 
 				#TRANSMITTER
 				print(color.OKBLUE + "Initializing Filetransfer" + color.ENDC)
@@ -378,7 +402,7 @@ def main():
 				for line in transmit:
 					transmit_list_linenumber = transmit_list_linenumber + 1
 					line = split(line.rstrip(), ",")
-					if len(line) > 4:
+					if len(line) > 5:
 						print(color.FAIL + f"Cannot backup file {line}." + color.ENDC)
 						print("Path would brick BTSOOT.")
 					else:
@@ -396,22 +420,13 @@ def main():
 								except FileNotFoundError:
 									pass
 						elif line[4] == "+":
-							#print(f"COPYING:{line[0]} -> {serverlocation}{line[0]}")
 							if line[2] == "directory":
-								#print(color.FAIL + "MAKEDIRS" + color.ENDC)
-								"""
-								path = split(line[0],"/")
-								lengh = len(line)
-								print(path[0:lengh-1])
-								input()
-								"""
 								os.makedirs(f"{serverlocation}{line[0]}", exist_ok=True)
 							else:
-								#print(f"PATH:{line[0]} to {serverlocation}{line[0]}")
 								shutil.copyfile(line[0], f"{serverlocation}{line[0]}")
 								shutil.copystat(line[0], f"{serverlocation}{line[0]}")
 						else:
-							print(color.WARNING + "transmit.list is corrupted" + color.ENDC)
+							print(color.WARNING + "Transmit corrupted at" + color.ENDC)
 							print(color.WARNING + line + color.ENDC)
 
 				previous_scan_fd.close() 
