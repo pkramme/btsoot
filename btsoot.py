@@ -423,7 +423,7 @@ def main():
 							if line[2] == "directory":
 								os.makedirs(f"{serverlocation}{line[0]}", exist_ok=True)
 							else:
-								status = os.system(f"/etc/btsoot/copy line[0] {serverlocation}{line[0]")
+								status = os.system(f"/etc/btsoot/copy line[0] {serverlocation}{line[0]}")
 								exit_status = os.WEXITSTATUS(status)
 								if exit_status != 0:
 									print(f"Something went wrong. COPY EXIT: {exit_status}")
