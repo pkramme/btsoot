@@ -10,7 +10,7 @@ test:copy:
     - make test
     - cd ..
 
-build:
+build:copy:
   stage: build
   script:
     - cd copy
