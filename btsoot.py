@@ -451,7 +451,7 @@ def main():
 
 if __name__ == "__main__":
 	try:
-	    startup()
+		startup()
 		main()
 	except KeyboardInterrupt:
 		print("\nInterrupted by keyboard. Quitting.\n")
