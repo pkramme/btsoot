@@ -25,7 +25,7 @@ Lets say you have
 I bet you do not change 90% of these files. You put movies one time on your server, 
 and then don't touch them anymore. Same goes for Music and Photos. Your files however,
 are daily used. You move a few gigabyte here, add a few megabytes there, delete something.
-However, if you want an offsite backup, your software doesn't care. It will still copy any file,
+However, if you want an offsite backup, most backup software doesn't care. It will still copy any file,
 every Movie, every single MP3, everything, even if only your "Files" folder changed, aside from 
 maybe 3 added Music files.  
 This software fixes that, as it will only copy the real changed data.
