@@ -1,5 +1,6 @@
 /*
 COPY RETURN CODES
+Return codes are incase of error displayed and handled by BTSOOT.
 
 return -1 = incorrect number of args
 return 0 = ok
