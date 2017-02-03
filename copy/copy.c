@@ -1,4 +1,6 @@
 /*
+COPY RETURN CODES
+
 return -1 = incorrect number of args
 return 0 = ok
 return 1 = couldnt open source fd
