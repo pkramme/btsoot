@@ -1,7 +1,5 @@
 # BTSOOT [![build status](https://git.paukra.com/open-source/btsoot/badges/master/build.svg)](https://git.paukra.com/open-source/btsoot/commits/master)  
 
----
-
 ## What is this
 `tl;dr: A backup/cloning tool`  
 First of: BTSOOT should only be used under very special circumstaces. If these requirements are
