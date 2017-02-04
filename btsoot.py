@@ -213,7 +213,11 @@ def main():
 							os.makedirs(f"{serverlocation}{line.rstrip()}")
 						else:
 							split_line = split(line, ",")
-							status = os.system(f"/etc/btsoot/copy {split_line[0].rstrip()} {serverlocation}{split_line[0].rstrip()}")
+							path = split_line[0]
+							path = path.replace(" ", "\ ")
+							path = path.replace("(", "\(")
+							path = path.replace(")", "\)")
+							status = os.system(f"/etc/btsoot/copy {path} {serverlocation}{path}")
 							exit_status = os.WEXITSTATUS(status)
 							if exit_status != 0:
 								print(f"COPY ERROR: {exit_status}")
