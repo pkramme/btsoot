@@ -364,8 +364,6 @@ def main():
 							exit_status = os.WEXITSTATUS(status)
 							if exit_status != 0:
 								print(color.FAIL + f"COPY ERROR: {exit_status}"+ color.ENDC)
-							else:
-								pass
 					else:
 						print(color.WARNING + "Transmit corrupted at" + color.ENDC)
 						print(color.WARNING + line + color.ENDC)
@@ -376,6 +374,78 @@ def main():
 			os.remove("transmit.list")
 			print(color.OKGREEN + "Done." + color.ENDC)
 
+		elif sys.argv[1] == "restore":
+			print(color.FAIL + "WARNING! This will remove all files from source.")
+			print("IF NO FILES ARE FOUND INSIDE THE BACKUP FOLDER, EVERYTHING IS LOST.")
+			print("Abort using CTRL+C within 15 seconds." + color.ENDC)
+			time.sleep(15)
+			print(color.OKBLUE + f"Restoring block {sys.argv[2]}" + color.ENDC)
+	
+			serverlocation = ""
+			sourcelocation = ""	
+
+			with open(configpath, "r") as conf:
+				for line in conf:
+					split_line = split(line, ",")
+					if split_line[0] == sys.argv[2]:
+						sourcelocation = split_line[2]
+						serverlocation = split_line[4]
+			print(color.OKBLUE + "Deleting source." + color.ENDC)
+			shutil.rmtree(sourcelocation)
+			print(color.OKBLUE + "Executing datatransfer." + color.ENDC)
+			print("This may take a long time.")
+
+			splitted_timestamp = []
+
+			#FIND LATEST TWO FILES
+			#SPLIT EVERY FILE NAME TO GAIN TIMESTAMP
+			for scanfile in scanfilelist:
+				temp = split(scanfile, "_")
+				splitted_timestamp.append(int(temp[0]))
+
+			#GETS LATEST SCANFILE'S TIMESTAMP
+			latest_timestamp = max(splitted_timestamp)
+
+			#SETS MAX VALUE TO -1 TO FIND SECOND HIGHEST VALUE
+			listcounter = 0
+			for timestamp in splitted_timestamp:
+				if timestamp == latest_timestamp:
+					splitted_timestamp[listcounter] = -1
+				listcounter = listcounter + 1
+
+			#GET PREVIOUS FILE'S TIMESTAMP
+			previous_timestamp = max(splitted_timestamp)
+
+			dircounter = 0
+			latest_scan_array_index = -1
+			previous_scan_array_index = -1
+			for singlefile in scanfilelist:
+				temp = split(singlefile, "_")
+				if int(temp[0]) == latest_timestamp:
+					latest_scan_array_index = dircounter
+				elif int(temp[0]) == previous_timestamp:
+					previous_scan_array_index = dircounter
+				dircounter = dircounter + 1
+
+			print("Latest scan: " + scanfilelist[latest_scan_array_index])
+			latest_scan_fd = open(f"{scanstorage}{scanfilelist[latest_scan_array_index]}", "r")
+			
+			for line in latest_scan_fd:
+				split_line = split(line, ",")
+				if split_line[2] == "directory":
+					os.makedirs(f"{serverlocation}{split_line[0]}", exist=ok)
+				else:
+					path = line[0]
+					path = path.replace(" ", "\ ")
+					path = path.replace("(", "\(")
+					path = path.replace(")", "\)")
+					status = os.system(f"/etc/btsoot/copy {serverlocation}{path} {path}")
+					exit_status = os.WEXITSTATUS(status)
+					if exit_status != 0:
+						print(color.FAIL + f"COPY ERROR: {exit_status}"+ color.ENDC)
+			latest_scan_fd.close()
+			print(color.OKGREEN + "Done." + color.ENDC)
+			
 
 		else:
 			print(usage)
