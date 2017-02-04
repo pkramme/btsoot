@@ -55,7 +55,7 @@ def dprint(message):
 		print(f"DEBUG: {message}") 
 
 def shouldcontinue(quit = True):
-	if input("Should i continue? (yes/no)") == "yes":
+	if input("Should i continue? (yes/No)") == "yes":
 		return 0
 	else:
 		if quit == True:
