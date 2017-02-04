@@ -1,12 +1,11 @@
 # BTSOOT [![build status](https://git.paukra.com/open-source/btsoot/badges/master/build.svg)](https://git.paukra.com/open-source/btsoot/commits/master)  
 
-## What is this
+## What is BTSOOT
 `tl;dr: A backup/cloning tool`  
 First of: BTSOOT should only be used under very special circumstaces. If these requirements are
 met, BTSOOT could be **your** backup/cloning solution. A list of this circumstaces:
 - You want to create offsite backups
-- You have much faster internal drive speed (in my case 400 - 600 MB/s) than your external connection (LAN/WAN/remote HDD etc...)
-- You have a slow connection to the remote device (far below your diskspeed) and/or
+- You have much faster internal drive speed (in my case 400 - 600 MB/s) than your external connection (LAN/WAN/remote HDD etc...) and/or
 - You have much unchanged data
 
 ### Practical Example
@@ -23,12 +22,20 @@ However, if you want an offsite backup, most backup software doesn't care. It wi
 every Movie, every single MP3, everything, even if only your "Files" folder changed, aside from 
 maybe 3 added Music files.  
 This software fixes that, as it will only copy the real changed data.
+BTSOOT now scans all files in that directory and gives them a checksum. I now knows, when it scans them again,
+if they have been changes, or if files have been added or removed. After that it copies the changed and new files to
+the remote directory, and deletes the non existing ones. This happens every scan + backup phase. If you want to do
+on a regular basis, and don't want to do this manualy, it might be a good idea to add the commands 
+`btsoot scan <blockname>` and `btsoot backup <blockname>` to your cron list.
+If, for some reason, no file is found at a new scan, the backup gets aborted to prevent corrupting your functioning
+backup. Same goes for Specific deletion levels, which can be configured.
 
 ---
 
 ## Dependencies
+- Linux OS (no specific distribution)
 - [Python 3.6](https://python.org) or above
-- Any Linux OS
+- build-essential
 
 ---
 
@@ -39,25 +46,33 @@ This software fixes that, as it will only copy the real changed data.
 2. Execute `make` and `sudo make install`
 4. Done
 
-BTSOOT is now in `/usr/local/bin/` and can be used. The config or all scans are in `/etc/btsoot/`. If you want to uninstall it, run `sudo make uninstall`. This will delete all scans and your config, too.
+BTSOOT is now in `/usr/local/bin/` and can be used. It needs root permissions to run. The config or all scans are in `/etc/btsoot/`. If you want to 
+uninstall it, run `sudo make uninstall`. This will delete all scans and your config, too.
+
+NOTE:  
+I am currently engaged in a project in which a [cURL package manager](https://github.com/eddyx9/install.paukra.com/) is developed. I'm hopeing it can be used to 
+distribute this project in the future. I am not a friend of `.deb` packages, as they are hard to create automatically
+without having to pay money for services like [packager.io](https://packager.io).
 
 ### Create a block
-`./btsoot add <block-name> <path> <path-to-remote-dir`  
+`btsoot add <block-name> <source-path> <path-to-remote-dir>`  
 This is written to a file named `btsoot.conf` which is created inside the directory where BTSOOT lies.
 
 ### Scan a block
-`./btsoot scan <block-name>`  
+`btsoot scan <block-name>`  
 This creates a scanfile at the folder where BTSOOT lies. The filename identifies the time the scan 
 where initiated, and the block name. The file ending is `.btscan`.
 
 ### Backup a block
-`./btsoot backup <block-name>`  
-The program will search for the latest two scanfiles, and compare them for changed files, which it then copyies to their
+`btsoot backup <block-name>`  
+The program will search for the latest two scanfiles, and compare them for changed files, which it then copyies to their 
 paths on the remote location.  
-**This also means that you MUST NOT change the remote files per hand. BTSOOT will not know about any changed file that it didn't changed itself.**
+**This also means that you MUST NOT change the remote files per hand. BTSOOT will not know about any changed file that 
+it didn't changed itself.** BTSOOT does not check the remote files for integrity. It is your responsibility that they 
+are not broken
 
 ### Restore a block
-This is not implemented yet. Incase of a dataloss, you have to copy them manually back to the source folder.
+This is not implemented yet. In case of a dataloss, you have to copy them manually back to the source folder.
 
 ---
 
@@ -121,6 +136,8 @@ As BTSOOT is currently, as of 52a445fa, single threaded, the performance is not 
 - Slow disk speed
 - Many little files, which slow down the CRC algorithm
 
+The table below might get you an impression of speed.
+
 |  COMMIT  | Data   |  Time             |  
 | -------- | :----- | :---------------- |  
 | 52a445fa | 1,9TB  |  187 Min, 22 Secs |  
@@ -128,7 +145,7 @@ As BTSOOT is currently, as of 52a445fa, single threaded, the performance is not 
 ---
 
 ## Project Information
-I am currently trying to enforce GitLab Flow, with semantic versioning in release channels.
+I am currently trying to enforce GitLab Flow, with [semantic versioning](http://semver.com) in release channels.
 
 ## Error Codes
 ### Copy Error
