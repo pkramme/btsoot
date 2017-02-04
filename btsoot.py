@@ -153,8 +153,8 @@ def main():
 					for line in conf:
 						split_line = split(line, ",")
 						print(f"BLOCKNAME: {split_line[0]}")
-						print(f"\n\tSRC:  {split_line[2]}")
-						print(f"\n\tDEST: {split_line[4]}")
+						print(f"\tSRC:  {split_line[2]}")
+						print(f"\tDEST: {split_line[4]}")
 			except FileNotFoundError:
 				print(color.FAIL + "Configfile not found." + color.ENDC)
 				print("Create one with 'add'.")
