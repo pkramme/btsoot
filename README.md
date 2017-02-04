@@ -1,6 +1,6 @@
 # BTSOOT [![build status](https://git.paukra.com/open-source/btsoot/badges/master/build.svg)](https://git.paukra.com/open-source/btsoot/commits/master)  
 
-## What is this
+## What is BTSOOT
 `tl;dr: A backup/cloning tool`  
 First of: BTSOOT should only be used under very special circumstaces. If these requirements are
 met, BTSOOT could be **your** backup/cloning solution. A list of this circumstaces:
@@ -33,8 +33,9 @@ backup. Same goes for Specific deletion levels, which can be configured.
 ---
 
 ## Dependencies
+- Linux OS (no specific distribution)
 - [Python 3.6](https://python.org) or above
-- Any Linux OS
+- build-essential
 
 ---
 
@@ -135,7 +136,7 @@ As BTSOOT is currently, as of 52a445fa, single threaded, the performance is not 
 - Slow disk speed
 - Many little files, which slow down the CRC algorithm
 
-The table might get you an impression of speed.
+The table below might get you an impression of speed.
 
 |  COMMIT  | Data   |  Time             |  
 | -------- | :----- | :---------------- |  
