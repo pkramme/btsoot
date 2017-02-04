@@ -46,6 +46,7 @@ class color:
 	UNDERLINE = '\033[4m'
 
 #DEBUG FUNCTION AND SETVAR
+
 debug = False
 if "--debug" in sys.argv:
 	debug = True
