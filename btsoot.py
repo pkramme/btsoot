@@ -210,7 +210,7 @@ def main():
 			serverlocation = ""
 			sourcelocation = ""
 				
-			with open(confpath, "r") as conf:
+			with open(configpath, "r") as conf:
 				for line in conf:
 					split_line = split(line, ",")
 					if split_line[0] == sys.argv[2]:
