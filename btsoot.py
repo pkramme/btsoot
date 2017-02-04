@@ -123,7 +123,6 @@ def main():
 				sys.exit()
 			with open(configpath, "a") as conf:
 				conf.write(f"{name},{path},{server}\n")
-			print(color.OKGREEN + "Done." + color.ENDC)
 
 
 		elif sys.argv[1] == "rm":
@@ -175,7 +174,7 @@ def main():
 						split_line = split(line, ",")
 						path = split_line[2].rstrip()
 
-				print(color.BOLD + f"Executing scan for block {sys.argv[2]}" + color.ENDC)
+				print(color.OKBLUE + f"Executing scan for block {sys.argv[2]}" + color.ENDC)
 
 			except FileNotFoundError:
 				print(color.FAIL + "Configfile not found." + color.ENDC)
@@ -218,11 +217,10 @@ def main():
 						print(color.FAIL + f"No block {sys.argv[2]} found." + color.ENDC)
 
 			if number_of_files == 1:
-				print("Only one scanfile found. A complete backup of ALL data will be created.")
-				print("This may take a long time.")
+				print("One scan found. Complete backup of ALL data will be created.")
+				print(color.OKBLUE + "Executing datatransfer." + color.ENDC)
 
 
-				
 				#COPY ANYTHING
 				shutil.copytree(sourcelocation, f"{serverlocation}{sourcelocation}")
 				print(color.OKGREEN + "Done." + color.ENDC)
@@ -331,13 +329,12 @@ def main():
 					shouldcontinue()
 				elif file_total_latest == 0:
 					print("SAFETY GUARD: NO FILES FOUND.")
-					print("This may be due to an umounted or destroyed drive.")
 					shouldcontinue()
 			else:
 				pass
 
 			#TRANSMITTER
-			print(color.OKBLUE + "Initializing Filetransfer" + color.ENDC)
+			print(color.OKBLUE + "Executing datatransfer." + color.ENDC)
 			transmit_list_fd.seek(0) #SET FILE POINTER TO START
 			transmit = transmit_list_fd.readlines()
 			transmit_list_linenumber = 0
