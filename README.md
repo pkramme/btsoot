@@ -61,14 +61,15 @@ This is written to a file named `btsoot.conf` which is created inside the direct
 ### Backup a block
 `btsoot backup <block-name>`  
 The program will search for the latest changes, and compare them with the previous, which it then copyies to their 
-paths on the remote location. Previous to 0.5 there were two commands `scan` and `backup`. This were not practical, 
-as both were used together while one on its own were unecessary.
+paths on the remote location.  
+Prior to 0.5 there were two commands `scan` and `backup`. This wasn't practical, 
+as both were used together while one on its own was unecessary, so they got removed.
 **This also means that you MUST NOT change the remote files per hand. BTSOOT will not know about any changed file that 
 it didn't changed itself.** BTSOOT does not check the remote files for integrity. It is your responsibility that they 
 are not broken
 
 ### Restore a block
-This is not implemented yet. In case of a dataloss, you have to copy them manually back to the source folder.
+This is not implemented yet. In case of a data loss, you would have to copy them manually back to the source folder.
 
 ---
 
