@@ -3,7 +3,7 @@
 #CONFIGURATION################################################
 
 #STORAGE CONFIG
-configpath = "btsoot.conf"
+configpath = ""
 scanstorage = ""
 
 #SAFETY GUARD CONFIG
