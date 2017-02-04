@@ -220,7 +220,7 @@ def main():
 							status = os.system(f"/etc/btsoot/copy {path} {serverlocation}{path}")
 							exit_status = os.WEXITSTATUS(status)
 							if exit_status != 0:
-								print(f"COPY ERROR: {exit_status}")
+								print(color.FAIL + f"COPY ERROR: {exit_status}" + color.ENDC)
 
 				sys.exit()
 
@@ -356,7 +356,11 @@ def main():
 						if line[2] == "directory":
 							os.makedirs(f"{serverlocation}{line[0]}", exist_ok=True)
 						else:
-							status = os.system(f"/etc/btsoot/copy {line[0]} {serverlocation}{line[0]}")
+							path = line[0]
+							path = path.replace(" ", "\ ")
+							path = path.replace("(", "\(")
+							path = path.replace(")", "\)")
+							status = os.system(f"/etc/btsoot/copy {path} {serverlocation}{path}")
 							exit_status = os.WEXITSTATUS(status)
 							if exit_status != 0:
 								print(color.FAIL + f"COPY ERROR: {exit_status}"+ color.ENDC)
