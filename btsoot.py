@@ -3,7 +3,7 @@
 #CONFIGURATION################################################
 
 #STORAGE CONFIG
-configpath = ""
+configpath = "./btsoot.conf"
 scanstorage = ""
 
 #SAFETY GUARD CONFIG
@@ -159,7 +159,8 @@ def main():
 				print(color.FAIL + "Configfile not found." + color.ENDC)
 				print("Create one with 'add'.")
 
-		elif sys.argv[1] == "scan":
+
+		elif sys.argv[1] == "backup":
 			#REMOVE ENTREE FROM BTSOOT CONFIG
 			searched_path = None
 			try:
@@ -174,19 +175,16 @@ def main():
 						split_line = split(line, ",")
 						path = split_line[2].rstrip()
 
-				print(f"Initializing scan for block {sys.argv[2]}")
-				print("This may take a long time.")
+				print(color.BOLD + f"Executing scan for block {sys.argv[2]}" + color.ENDC)
 
 			except FileNotFoundError:
 				print(color.FAIL + "Configfile not found." + color.ENDC)
 				print("Create one with 'add'.")
 			
+			#SCAN
 			scandirectory(path, f"{scanstorage}{scanfilename}", False)
-			
-			print(color.OKGREEN + "Done." + color.ENDC)
 
 
-		elif sys.argv[1] == "backup":
 			#LIST FILES TO FIND SCANFILES
 			#SORT OUT ANY UNINTERESTING FILES
 			scanfilelist = []
@@ -218,11 +216,8 @@ def main():
 						serverlocation = split_line[4].rstrip() #Last entree has nline
 					else:
 						print(color.FAIL + f"No block {sys.argv[2]} found." + color.ENDC)
-			if number_of_files == 0:
-				print("There aren't any scan files.")
-				print(f"Create one by using\n{sys.argv[0]} scan <block name>.")
 
-			elif number_of_files == 1:
+			if number_of_files == 1:
 				print("Only one scanfile found. A complete backup of ALL data will be created.")
 				print("This may take a long time.")
 
@@ -231,157 +226,158 @@ def main():
 				#COPY ANYTHING
 				shutil.copytree(sourcelocation, f"{serverlocation}{sourcelocation}")
 				print(color.OKGREEN + "Done." + color.ENDC)
-
-			else:
-				print("Sufficient number of scan files were found.")
-				splitted_timestamp = []
-
-				#FIND LATEST TWO FILES
-				#SPLIT EVERY FILE NAME TO GAIN TIMESTAMP
-				for scanfile in scanfilelist:
-					temp = split(scanfile, "_")
-					splitted_timestamp.append(int(temp[0]))
-
-				#GETS LATEST SCANFILE'S TIMESTAMP
-				latest_timestamp = max(splitted_timestamp)
-
-				#SETS MAX VALUE TO -1 TO FIND SECOND HIGHEST VALUE
-				listcounter = 0
-				for timestamp in splitted_timestamp:
-					if timestamp == latest_timestamp:
-						splitted_timestamp[listcounter] = -1
-					listcounter = listcounter + 1
-
-				#GET PREVIOUS FILE'S TIMESTAMP
-				previous_timestamp = max(splitted_timestamp)
-
-				dircounter = 0
-				latest_scan_array_index = -1
-				previous_scan_array_index = -1
-				for singlefile in scanfilelist:
-					temp = split(singlefile, "_")
-					#print(f"Check {temp[0]} against {latest_timestamp} and {previous_timestamp}")
-					if int(temp[0]) == latest_timestamp:
-						latest_scan_array_index = dircounter
-					elif int(temp[0]) == previous_timestamp:
-						previous_scan_array_index = dircounter
-					else:
-						pass
-					dircounter = dircounter + 1
-
-				print("Latest scan: " + scanfilelist[latest_scan_array_index])
-				print("Previous scan: " + scanfilelist[previous_scan_array_index] + "\n")
-
-				#COMPARE THE TWO FILES AGAINST EACH OTHER
-				latest_scan_fd = open(f"{scanstorage}{scanfilelist[latest_scan_array_index]}", "r")
-				previous_scan_fd = open(f"{scanstorage}{scanfilelist[previous_scan_array_index]}", "r")
-				transmit_list_fd = open("transmit.list", "w+")
-
-				latest_scan = latest_scan_fd.readlines()
-				previous_scan = previous_scan_fd.readlines()
-
-				file_same = 0
-				file_new = 0
-				file_total_old = 0
-				file_total_latest = 0
-				file_deleted = 0 #DELETED LINES COUNTER
-
-				#REMOVE DELETED OR CHANGED FILES
-				for oldline in previous_scan:
-					if oldline not in latest_scan:
-						checkifdir = split(oldline, ",")
-						if len(checkifdir) == 1:
-							#IF DIRECTORY, HASH WILL BE "directory".
-							#THAT IS NEEDED DURING DIRECTORY REMOVAL
-							transmit_list_fd.write(f"{oldline.rstrip()},directory,-\n")
-							print(color.FAIL + f"- {oldline}" + color.ENDC, end='')
-						else:
-							transmit_list_fd.write(f"{oldline.rstrip()},-\n")
-							print(color.FAIL + f"- {oldline}" + color.ENDC, end='')
-							file_deleted = file_deleted + 1
-					file_total_old = file_total_old + 1
+				sys.exit()
 
 
-				#FIND OUT CHANGED OR NEW FILES
-				for line in latest_scan:
-					if line in previous_scan:
-						file_same = file_same + 1
-					else:
-						checkifdir = split(line, ",")
-						if len(checkifdir) == 1:
-							#IF DIRECTORY, HASH WILL BE "directory".
-							#THAT IS NEEDED DURING DIRECTORY CREATION
-							transmit_list_fd.write(f"{line.rstrip()},directory,+\n")
-							print(color.OKGREEN + f"+ {line}" + color.ENDC, end='')
-						else:
-							transmit_list_fd.write(f"{line.rstrip()},+\n")
-							print(color.OKGREEN + f"+ {line}" + color.ENDC, end='')
-							file_new = file_new + 1
-					file_total_latest = file_total_latest + 1
+			print("Sufficient number of scan files were found.")
+			splitted_timestamp = []
 
+			#FIND LATEST TWO FILES
+			#SPLIT EVERY FILE NAME TO GAIN TIMESTAMP
+			for scanfile in scanfilelist:
+				temp = split(scanfile, "_")
+				splitted_timestamp.append(int(temp[0]))
 
-				#FILE STATS
-				#block_change_percentage = int((file_total_old / file_total_latest) * 100)
-				print(f"\nUnchanged files: {file_same}")
-				print(f"New/Changed files: {file_new}")
-				print(f"Deleted files: {file_deleted}")
-				print(f"Total files in latest scan: {file_total_latest}")
-				print(f"Total files in previous scan: {file_total_old}")
+			#GETS LATEST SCANFILE'S TIMESTAMP
+			latest_timestamp = max(splitted_timestamp)
 
-				#SAFETY GUARD: SEE ISSUE #8
-				if safetyguard == True:
-					if file_deleted >= file_total_old / 100 * minwarningvalue:
-						print(f"SAFETY GUARD: MORE THAN {minwarningvalue}% DELETED")
-						shouldcontinue()
-					elif file_total_latest == 0:
-						print("SAFETY GUARD: NO FILES FOUND.")
-						print("This may be due to an umounted or destroyed drive.")
-						shouldcontinue()
+			#SETS MAX VALUE TO -1 TO FIND SECOND HIGHEST VALUE
+			listcounter = 0
+			for timestamp in splitted_timestamp:
+				if timestamp == latest_timestamp:
+					splitted_timestamp[listcounter] = -1
+				listcounter = listcounter + 1
+
+			#GET PREVIOUS FILE'S TIMESTAMP
+			previous_timestamp = max(splitted_timestamp)
+
+			dircounter = 0
+			latest_scan_array_index = -1
+			previous_scan_array_index = -1
+			for singlefile in scanfilelist:
+				temp = split(singlefile, "_")
+				#print(f"Check {temp[0]} against {latest_timestamp} and {previous_timestamp}")
+				if int(temp[0]) == latest_timestamp:
+					latest_scan_array_index = dircounter
+				elif int(temp[0]) == previous_timestamp:
+					previous_scan_array_index = dircounter
 				else:
 					pass
+				dircounter = dircounter + 1
 
-				#TRANSMITTER
-				print(color.OKBLUE + "Initializing Filetransfer" + color.ENDC)
-				transmit_list_fd.seek(0) #SET FILE POINTER TO START
-				transmit = transmit_list_fd.readlines()
-				transmit_list_linenumber = 0
-				for line in transmit:
-					transmit_list_linenumber = transmit_list_linenumber + 1
-					line = split(line.rstrip(), ",")
-					if len(line) > 5:
-						print(color.FAIL + f"Cannot backup file {line}." + color.ENDC)
-						print("Path would brick BTSOOT.")
+			print("Latest scan: " + scanfilelist[latest_scan_array_index])
+			print("Previous scan: " + scanfilelist[previous_scan_array_index] + "\n")
+
+			#COMPARE THE TWO FILES AGAINST EACH OTHER
+			latest_scan_fd = open(f"{scanstorage}{scanfilelist[latest_scan_array_index]}", "r")
+			previous_scan_fd = open(f"{scanstorage}{scanfilelist[previous_scan_array_index]}", "r")
+			transmit_list_fd = open("transmit.list", "w+")
+
+			latest_scan = latest_scan_fd.readlines()
+			previous_scan = previous_scan_fd.readlines()
+
+			file_same = 0
+			file_new = 0
+			file_total_old = 0
+			file_total_latest = 0
+			file_deleted = 0 #DELETED LINES COUNTER
+
+			#REMOVE DELETED OR CHANGED FILES
+			for oldline in previous_scan:
+				if oldline not in latest_scan:
+					checkifdir = split(oldline, ",")
+					if len(checkifdir) == 1:
+						#IF DIRECTORY, HASH WILL BE "directory".
+						#THAT IS NEEDED DURING DIRECTORY REMOVAL
+						transmit_list_fd.write(f"{oldline.rstrip()},directory,-\n")
+						print(color.FAIL + f"- {oldline}" + color.ENDC, end='')
 					else:
-						if line[4] == "-":
-							if line[2] == "directory":
-								try:
-									shutil.rmtree(f"{serverlocation}{line[0]}")
-								except FileNotFoundError:
-									pass
-							else:
-								try:
-									os.remove(f"{serverlocation}{line[0]}")
-								except FileNotFoundError:
-									pass
-						elif line[4] == "+":
-							if line[2] == "directory":
-								os.makedirs(f"{serverlocation}{line[0]}", exist_ok=True)
-							else:
-								status = os.system(f"/etc/btsoot/copy {line[0]} {serverlocation}{line[0]}")
-								exit_status = os.WEXITSTATUS(status)
-								if exit_status != 0:
-									print(color.FAIL + f"COPY ERROR: {exit_status}"+ color.ENDC)
-								else:
-									pass
-						else:
-							print(color.WARNING + "Transmit corrupted at" + color.ENDC)
-							print(color.WARNING + line + color.ENDC)
+						transmit_list_fd.write(f"{oldline.rstrip()},-\n")
+						print(color.FAIL + f"- {oldline}" + color.ENDC, end='')
+						file_deleted = file_deleted + 1
+				file_total_old = file_total_old + 1
 
-				previous_scan_fd.close() 
-				latest_scan_fd.close()
-				transmit_list_fd.close()
-				os.remove("transmit.list")
-				print(color.OKGREEN + "Done." + color.ENDC)
+
+			#FIND OUT CHANGED OR NEW FILES
+			for line in latest_scan:
+				if line in previous_scan:
+					file_same = file_same + 1
+				else:
+					checkifdir = split(line, ",")
+					if len(checkifdir) == 1:
+						#IF DIRECTORY, HASH WILL BE "directory".
+						#THAT IS NEEDED DURING DIRECTORY CREATION
+						transmit_list_fd.write(f"{line.rstrip()},directory,+\n")
+						print(color.OKGREEN + f"+ {line}" + color.ENDC, end='')
+					else:
+						transmit_list_fd.write(f"{line.rstrip()},+\n")
+						print(color.OKGREEN + f"+ {line}" + color.ENDC, end='')
+						file_new = file_new + 1
+				file_total_latest = file_total_latest + 1
+
+
+			#FILE STATS
+			#block_change_percentage = int((file_total_old / file_total_latest) * 100)
+			print(f"\nUnchanged files: {file_same}")
+			print(f"New/Changed files: {file_new}")
+			print(f"Deleted files: {file_deleted}")
+			print(f"Total files in latest scan: {file_total_latest}")
+			print(f"Total files in previous scan: {file_total_old}")
+
+			#SAFETY GUARD: SEE ISSUE #8
+			if safetyguard == True:
+				if file_deleted >= file_total_old / 100 * minwarningvalue:
+					print(f"SAFETY GUARD: MORE THAN {minwarningvalue}% DELETED")
+					shouldcontinue()
+				elif file_total_latest == 0:
+					print("SAFETY GUARD: NO FILES FOUND.")
+					print("This may be due to an umounted or destroyed drive.")
+					shouldcontinue()
+			else:
+				pass
+
+			#TRANSMITTER
+			print(color.OKBLUE + "Initializing Filetransfer" + color.ENDC)
+			transmit_list_fd.seek(0) #SET FILE POINTER TO START
+			transmit = transmit_list_fd.readlines()
+			transmit_list_linenumber = 0
+			for line in transmit:
+				transmit_list_linenumber = transmit_list_linenumber + 1
+				line = split(line.rstrip(), ",")
+				if len(line) > 5:
+					print(color.FAIL + f"Cannot backup file {line}." + color.ENDC)
+					print("Path would brick BTSOOT.")
+				else:
+					if line[4] == "-":
+						if line[2] == "directory":
+							try:
+								shutil.rmtree(f"{serverlocation}{line[0]}")
+							except FileNotFoundError:
+								pass
+						else:
+							try:
+								os.remove(f"{serverlocation}{line[0]}")
+							except FileNotFoundError:
+								pass
+					elif line[4] == "+":
+						if line[2] == "directory":
+							os.makedirs(f"{serverlocation}{line[0]}", exist_ok=True)
+						else:
+							status = os.system(f"/etc/btsoot/copy {line[0]} {serverlocation}{line[0]}")
+							exit_status = os.WEXITSTATUS(status)
+							if exit_status != 0:
+								print(color.FAIL + f"COPY ERROR: {exit_status}"+ color.ENDC)
+							else:
+								pass
+					else:
+						print(color.WARNING + "Transmit corrupted at" + color.ENDC)
+						print(color.WARNING + line + color.ENDC)
+
+			previous_scan_fd.close() 
+			latest_scan_fd.close()
+			transmit_list_fd.close()
+			os.remove("transmit.list")
+			print(color.OKGREEN + "Done." + color.ENDC)
 
 
 		else:
