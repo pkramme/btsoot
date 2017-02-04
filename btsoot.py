@@ -3,7 +3,7 @@
 #CONFIGURATION################################################
 
 #STORAGE CONFIG
-configpath = ""
+configpath = "btsoot.conf"
 scanstorage = ""
 
 #SAFETY GUARD CONFIG
@@ -102,14 +102,10 @@ def scandirectory(walk_dir, scanfile, verbose = False):
 					checksum = crc(file_path)
 					if verbose == True:
 						print(file_path, checksum, end="\n")
-					else:
-						pass
 					f.write(file_path + "," + checksum + "\n")
 	except FileNotFoundError:
 		if verbose == True:
 			print(color.FAIL + "File not found." + color.ENDC)
-		else:
-			pass
 
 
 def main():
@@ -188,8 +184,6 @@ def main():
 					if blockname[4] == "btsscan" and blockname[2] == sys.argv[2]:
 						number_of_files = number_of_files + 1
 						scanfilelist.append(singlefile)
-					else:
-						pass
 				except IndexError:
 					pass
 			
@@ -211,8 +205,46 @@ def main():
 				print(color.OKBLUE + "Executing datatransfer." + color.ENDC)
 
 
+
+				with open(f"{scanstorage}{scanfilename}", "r") as scan:
+					for line in scan:
+						checkifdir = split(line, ",")
+						if len(checkifdir) == 1:
+							#IF DIRECTORY, HASH WILL BE "directory".
+							#THAT IS NEEDED DURING DIRECTORY REMOVAL
+							os.makedirs(f"{serverlocation}{line.rstrip()}")
+						else:
+							split_line = split(line, ",")
+							status = os.system(f"/etc/btsoot/copy {split_line[0].rstrip()} {serverlocation}{split_line[0].rstrip()}")
+							exit_status = os.WEXITSTATUS(status)
+							if exit_status != 0:
+								print(f"COPY ERROR: {exit_status}")
+
+
+
+
+
+
+
+
+
+
+
+
+
 				#COPY ANYTHING
-				shutil.copytree(sourcelocation, f"{serverlocation}{sourcelocation}")
+				with open(f"{scanstorage}{scanfilename}", "r") as scan:
+					for line in scan:
+						split_line = split(line, ",")
+						if len(split_line) > 4:
+							pass
+						else:
+							print(split_line[0])
+							print(f"{serverlocation}{split_line[0]}")
+							status = os.system(f"/etc/btsoot/copy {split_line[0]} {serverlocation}{split_line[0]}")
+							exit_status = os.WEXITSTATUS(status)
+							if exit_status != 0:
+								print(f"COPY ERROR: {exit_status}")
 				print(color.OKGREEN + "Done." + color.ENDC)
 				sys.exit()
 
@@ -249,8 +281,6 @@ def main():
 					latest_scan_array_index = dircounter
 				elif int(temp[0]) == previous_timestamp:
 					previous_scan_array_index = dircounter
-				else:
-					pass
 				dircounter = dircounter + 1
 
 			print("Latest scan: " + scanfilelist[latest_scan_array_index])
