@@ -236,27 +236,6 @@ def main():
 				print("Sufficient number of scan files were found.")
 				splitted_timestamp = []
 
-				# FIND SERVER ADDRESS
-				searched_row = None
-				f = open(configpath, "r")
-				row = 0
-				beginning_path = -1
-				indentifier = "name=" + sys.argv[2] + '\n'
-				lines = f.readlines()
-				f.close()
-
-				for line in lines:
-					row = row + 1
-					if line == indentifier:
-						beginning_row = row
-					if row == beginning_row + 2:
-						searched_path = line
-					else:
-						pass
-
-				serverstring = split(searched_path.rstrip(), "=")
-				serverlocation = serverstring[2]
-
 				#FIND LATEST TWO FILES
 				#SPLIT EVERY FILE NAME TO GAIN TIMESTAMP
 				for scanfile in scanfilelist:
@@ -418,8 +397,4 @@ if __name__ == "__main__":
 		main()
 	except KeyboardInterrupt:
 		print("\nInterrupted by keyboard. Quitting.\n")
-		#CLOSING ANY OPEN FD's
-		previous_scan_fd.close()
-		latest_scan_fd.close()
-		transmit_list_fd.close()
 		sys.exit()
