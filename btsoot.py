@@ -204,8 +204,6 @@ def main():
 				print("One scan found. Complete backup of ALL data will be created.")
 				print(color.OKBLUE + "Executing datatransfer." + color.ENDC)
 
-
-
 				with open(f"{scanstorage}{scanfilename}", "r") as scan:
 					for line in scan:
 						checkifdir = split(line, ",")
@@ -220,32 +218,6 @@ def main():
 							if exit_status != 0:
 								print(f"COPY ERROR: {exit_status}")
 
-
-
-
-
-
-
-
-
-
-
-
-
-				#COPY ANYTHING
-				with open(f"{scanstorage}{scanfilename}", "r") as scan:
-					for line in scan:
-						split_line = split(line, ",")
-						if len(split_line) > 4:
-							pass
-						else:
-							print(split_line[0])
-							print(f"{serverlocation}{split_line[0]}")
-							status = os.system(f"/etc/btsoot/copy {split_line[0]} {serverlocation}{split_line[0]}")
-							exit_status = os.WEXITSTATUS(status)
-							if exit_status != 0:
-								print(f"COPY ERROR: {exit_status}")
-				print(color.OKGREEN + "Done." + color.ENDC)
 				sys.exit()
 
 
