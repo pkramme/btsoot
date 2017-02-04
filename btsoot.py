@@ -115,23 +115,15 @@ def scandirectory(walk_dir, scanfile, verbose = False):
 def main():
 	try:
 		if sys.argv[1] == "add":
-			try:
-				name = sys.argv[2]
-				path = sys.argv[3]
-				server = sys.argv[4]
-			except IndexError:
-				print(usage)
-				sys.exit()
+			name = sys.argv[2]
+			path = sys.argv[3]
+			server = sys.argv[4]
 			with open(configpath, "a") as conf:
 				conf.write(f"{name},{path},{server}\n")
 
 
 		elif sys.argv[1] == "rm":
-			try:
-				name = sys.argv[2]
-			except IndexError:
-				print("Usage: " + sys.argv[0] + "rm name")
-				exit()
+			name = sys.argv[2]
 			try:
 				lines = []
 				with open(configpath, "r") as conf:
@@ -163,11 +155,8 @@ def main():
 		elif sys.argv[1] == "backup":
 			#REMOVE ENTREE FROM BTSOOT CONFIG
 			searched_path = None
-			try:
-				name = sys.argv[2]
-				scanfilename = "{}_{}.btsscan".format(int(time.time()), name)
-			except IndexError:
-				print("Usage: " + sys.argv[0] + "scan name")
+			name = sys.argv[2]
+			scanfilename = "{}_{}.btsscan".format(int(time.time()), name)
 			try:
 				path = ""
 				with open(configpath, "r") as conf:
@@ -390,5 +379,5 @@ if __name__ == "__main__":
 	try:
 		main()
 	except KeyboardInterrupt:
-		print("\nInterrupted by keyboard. Quitting.\n")
+		print("\nQuitting.\n")
 		sys.exit()
