@@ -20,19 +20,19 @@ import os, sys, time, shutil, zlib
 
 
 #STARTUP CODE
-def startup():
-	if configpath == "":
-		configpath = "/etc/btsoot/btsoot.conf"
-	if scanstorage == "":
-		scanstorage = "/etc/btsoot/scans/"
-	if os.path.exists("/etc/btsoot") == True:
-		pass
-	else:
-		try:
-			os.makedirs("/etc/btsoot/scans")
-		except PermissionError:
-			print("BTSOOT needs root permissions")
-			sys.exit()
+
+if configpath == "":
+	configpath = "/etc/btsoot/btsoot.conf"
+if scanstorage == "":
+	scanstorage = "/etc/btsoot/scans/"
+if os.path.exists("/etc/btsoot") == True:
+	pass
+else:
+	try:
+		os.makedirs("/etc/btsoot/scans")
+	except PermissionError:
+		print("BTSOOT needs root permissions")
+		sys.exit()
 
 
 class color:
@@ -86,8 +86,8 @@ def split(string, splitters): #MAY RESOLVE ALL PROBLEMS WITH CSV
 			if x in s and x != s:
 				left, right = s.split(x, 1)
 				final[i] = left
-				final.insert(i+1, x)
-				final.insert(i+2, right)
+				final.insert(i + 1, x)
+				final.insert(i + 2, right)
 	return final
 
 
@@ -121,10 +121,8 @@ def main():
 			except IndexError:
 				print(usage)
 				sys.exit()
-			with open(configpath, "a") as f:
-				f.write("name=" + name + '\n')
-				f.write("path=" + path + '\n')
-				f.write("server=" + server + '\n')
+			with open(configpath, "a") as conf:
+				conf.write(f"{name},{path},{server}\n")
 			print(color.OKGREEN + "Done." + color.ENDC)
 
 
@@ -135,23 +133,15 @@ def main():
 				print("Usage: " + sys.argv[0] + "rm name")
 				exit()
 			try:
-				f = open(configpath, "r")
-				row = 0
-				beginning_row = -10
-				indentifier = "name=" + name + '\n'
-				lines = f.readlines()
-				f.close()
-				f = open(configpath, "w")
-				for line in lines:
-					row = row + 1
-					if line == indentifier:
-						beginning_row = row
-					elif row == beginning_row + 1 or row == beginning_row + 2:
-						pass
-					else:
-						f.write(line)
-				f.close()
-				print(color.OKGREEN + "Done." + color.ENDC)
+				lines = []
+				with open(configpath, "r") as conf:
+					lines = conf.readlines()
+				with open(configpath, "w") as conf:
+					for line in lines:
+						split_line = split(line, ",")
+						if split_line[0] != name:
+							conf.write(line)
+
 			except FileNotFoundError:
 				print(color.FAIL + "Configfile not found." + color.ENDC)
 				print("Create one with 'add'.")
@@ -159,25 +149,15 @@ def main():
 
 		elif sys.argv[1] == "list":
 			try:
-				f = open(configpath, "r")
-				row = 0
-				beginning_row = -10
-				lines = f.readlines()
-				f.close()
-				namerow = 1
-				for line in lines:
-					#row = row + 1
-					if row % 3 == 0 or row == 0:
-						rawname = split(line, "=")
-						rawname = rawname[2]
-						print(f"NAME: {rawname.rstrip()}")
-					elif row % 3 == 1 or row == 1:
-						print(f"\t{line.rstrip()}")
-					elif row % 3 == 2 or row == 2:
-						print(f"\t{line.rstrip()}")
-					row = row + 1
+				with open(configpath, "r") as conf:
+					for line in conf:
+						split_line = split(line, ",")
+						print(f"BLOCKNAME: {split_line[0]}")
+						print(f"\tSRC:  {split_line[2]}")
+						print(f"\tDEST: {split_line[4]}")
 			except FileNotFoundError:
-				print("not yet created")
+				print(color.FAIL + "Configfile not found." + color.ENDC)
+				print("Create one with 'add'.")
 
 		elif sys.argv[1] == "scan":
 			#REMOVE ENTREE FROM BTSOOT CONFIG
@@ -188,29 +168,21 @@ def main():
 			except IndexError:
 				print("Usage: " + sys.argv[0] + "scan name")
 			try:
-				f = open(configpath, "r")
-				row = 0
-				beginning_row = -1 #set counter to a negative state so it won't find any rows
-				identifier = "name=" + name + '\n'
-				lines = f.readlines()
-				f.close()
-				for line in lines:
-					row = row + 1
-					if line == identifier:
-						beginning_row = row
-					elif row == beginning_row + 1:
-						searched_path = line
-						break
-					else:
-						pass
-				path_with_newline = split(searched_path, "=")
-				tempstring = path_with_newline[2]
-				path = tempstring.rstrip() #GETS RID OF NEWLINE
-				print(f"Initializing scan for {path}")
+				path = ""
+				with open(configpath, "r") as conf:
+					for line in conf:
+						split_line = split(line, ",")
+						path = split_line[2].rstrip()
+
+				print(f"Initializing scan for block {sys.argv[2]}")
+				print("This may take a long time.")
 
 			except FileNotFoundError:
-				print("Configfile not found. Create one with 'add'.")
+				print(color.FAIL + "Configfile not found." + color.ENDC)
+				print("Create one with 'add'.")
+			
 			scandirectory(path, f"{scanstorage}{scanfilename}", False)
+			
 			print(color.OKGREEN + "Done." + color.ENDC)
 
 
@@ -218,8 +190,11 @@ def main():
 			#LIST FILES TO FIND SCANFILES
 			#SORT OUT ANY UNINTERESTING FILES
 			scanfilelist = []
+			#LIST DIRS
 			dirs = os.listdir(scanstorage)
 			number_of_files = 0
+			
+			#SEARCH FOR SCANFILES
 			for singlefile in dirs:
 				blockname = split(singlefile, ["_", "."])
 				try:
@@ -230,7 +205,19 @@ def main():
 						pass
 				except IndexError:
 					pass
-
+			
+			#LIST CONFIG ENTREES
+			serverlocation = ""
+			sourcelocation = ""
+				
+			with open(configpath, "r") as conf:
+				for line in conf:
+					split_line = split(line, ",")
+					if split_line[0] == sys.argv[2]:
+						sourcelocation = split_line[2]
+						serverlocation = split_line[4].rstrip() #Last entree has nline
+					else:
+						print(color.FAIL + f"No block {sys.argv[2]} found." + color.ENDC)
 			if number_of_files == 0:
 				print("There aren't any scan files.")
 				print(f"Create one by using\n{sys.argv[0]} scan <block name>.")
@@ -239,28 +226,7 @@ def main():
 				print("Only one scanfile found. A complete backup of ALL data will be created.")
 				print("This may take a long time.")
 
-				searched_row = None
-				source_location = None
-				f = open(configpath, "r")
-				row = 0
-				beginning_path = -1
-				identifier = "name=" + sys.argv[2] + '\n'
-				lines = f.readlines()
-				f.close()
-				for line in lines:
-					row = row + 1
-					if line == identifier:
-						beginning_row = row
-					if row == beginning_row + 1:
-						sourcelocation = line
-					if row == beginning_row + 2:
-						searched_path = line
-					else:
-						pass
-				serverstring = split(searched_path.rstrip(), "=")
-				serverlocation = serverstring[2]
-				sourcelocation = split(sourcelocation.rstrip(), "=")
-				sourcelocation = sourcelocation[2]
+
 				
 				#COPY ANYTHING
 				shutil.copytree(sourcelocation, f"{serverlocation}{sourcelocation}")
@@ -269,27 +235,6 @@ def main():
 			else:
 				print("Sufficient number of scan files were found.")
 				splitted_timestamp = []
-
-				# FIND SERVER ADDRESS
-				searched_row = None
-				f = open(configpath, "r")
-				row = 0
-				beginning_path = -1
-				indentifier = "name=" + sys.argv[2] + '\n'
-				lines = f.readlines()
-				f.close()
-
-				for line in lines:
-					row = row + 1
-					if line == indentifier:
-						beginning_row = row
-					if row == beginning_row + 2:
-						searched_path = line
-					else:
-						pass
-
-				serverstring = split(searched_path.rstrip(), "=")
-				serverlocation = serverstring[2]
 
 				#FIND LATEST TWO FILES
 				#SPLIT EVERY FILE NAME TO GAIN TIMESTAMP
@@ -449,12 +394,7 @@ def main():
 
 if __name__ == "__main__":
 	try:
-		startup()
 		main()
 	except KeyboardInterrupt:
 		print("\nInterrupted by keyboard. Quitting.\n")
-		#CLOSING ANY OPEN FD's
-		previous_scan_fd.close()
-		latest_scan_fd.close()
-		transmit_list_fd.close()
 		sys.exit()
