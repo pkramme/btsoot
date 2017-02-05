@@ -457,7 +457,7 @@ def main():
 					path = path.replace(" ", "\ ")
 					path = path.replace("(", "\(")
 					path = path.replace(")", "\)")
-					status = os.system(f"/etc/btsoot/copy {serverlocation}{path} /")
+					status = os.system(f"/etc/btsoot/copy {serverlocation}{path} {path}")
 					exit_status = os.WEXITSTATUS(status)
 					if exit_status != 0:
 						print(color.FAIL + f"COPY ERROR: {exit_status}"+ color.ENDC)
