@@ -378,20 +378,20 @@ def main():
 			print(color.FAIL + "WARNING! This will remove all files from source.")
 			print("IF NO FILES ARE FOUND INSIDE THE BACKUP FOLDER, EVERYTHING IS LOST.")
 			print("Abort using CTRL+C within 15 seconds." + color.ENDC)
-			time.sleep(15)
-			print(color.OKBLUE + f"Restoring block {sys.argv[2]}" + color.ENDC)
+			if not "--override" in sys.argv:
+				time.sleep(15)
 	
 			serverlocation = ""
-			sourcelocation = ""	
+			sourcelocation = ""
 
 			with open(configpath, "r") as conf:
 				for line in conf:
 					split_line = split(line, ",")
 					if split_line[0] == sys.argv[2]:
 						sourcelocation = split_line[2]
-						serverlocation = split_line[4]
+						serverlocation = split_line[4].rstrip()
 			print(color.OKBLUE + "Deleting source." + color.ENDC)
-			shutil.rmtree(f"{sourcelocation}")
+			shutil.rmtree(sourcelocation)
 			os.makedirs(sourcelocation)
 			print(color.OKBLUE + "Executing datatransfer." + color.ENDC)
 			print("This may take a long time.")
@@ -424,15 +424,6 @@ def main():
 			#GETS LATEST SCANFILE'S TIMESTAMP
 			latest_timestamp = max(splitted_timestamp)
 
-			#SETS MAX VALUE TO -1 TO FIND SECOND HIGHEST VALUE
-			listcounter = 0
-			for timestamp in splitted_timestamp:
-				if timestamp == latest_timestamp:
-					splitted_timestamp[listcounter] = -1
-				listcounter = listcounter + 1
-
-			#GET PREVIOUS FILE'S TIMESTAMP
-			previous_timestamp = max(splitted_timestamp)
 
 			dircounter = 0
 			latest_scan_array_index = -1
@@ -441,28 +432,29 @@ def main():
 				temp = split(singlefile, "_")
 				if int(temp[0]) == latest_timestamp:
 					latest_scan_array_index = dircounter
-				elif int(temp[0]) == previous_timestamp:
-					previous_scan_array_index = dircounter
 				dircounter = dircounter + 1
 
 			print("Latest scan: " + scanfilelist[latest_scan_array_index])
 			latest_scan_fd = open(f"{scanstorage}{scanfilelist[latest_scan_array_index]}", "r")
-			print("Execute?")
+
 			for line in latest_scan_fd:
 				split_line = split(line, ",")
 				if len(split_line) == 1:
-					os.makedirs(f"{serverlocation}{split_line[0]}", exist_ok=True)
+					path = split_line[0]
+					path = path.rstrip()
+					os.makedirs(path, exist_ok=True)
 				elif len(split_line) == 3:
-					path = line[0]
+					path = split_line[0]
 					path = path.replace(" ", "\ ")
 					path = path.replace("(", "\(")
 					path = path.replace(")", "\)")
+					#print(f"cpy {serverlocation}{path} {path}")
 					status = os.system(f"/etc/btsoot/copy {serverlocation}{path} {path}")
 					exit_status = os.WEXITSTATUS(status)
 					if exit_status != 0:
 						print(color.FAIL + f"COPY ERROR: {exit_status}"+ color.ENDC)
 			else:
-				print("Not possible")
+				pass
 			latest_scan_fd.close()
 			print(color.OKGREEN + "Done." + color.ENDC)
 			
