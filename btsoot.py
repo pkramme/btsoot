@@ -391,10 +391,28 @@ def main():
 						sourcelocation = split_line[2]
 						serverlocation = split_line[4]
 			print(color.OKBLUE + "Deleting source." + color.ENDC)
-			shutil.rmtree(sourcelocation)
+			shutil.rmtree(f"{sourcelocation}")
+			os.makedirs(sourcelocation)
 			print(color.OKBLUE + "Executing datatransfer." + color.ENDC)
 			print("This may take a long time.")
 
+			#LIST FILES TO FIND SCANFILES
+			#SORT OUT ANY UNINTERESTING FILES
+			scanfilelist = []
+			#LIST DIRS
+			dirs = os.listdir(scanstorage)
+			number_of_files = 0
+			
+			#SEARCH FOR SCANFILES
+			for singlefile in dirs:
+				blockname = split(singlefile, ["_", "."])
+				try:
+					if blockname[4] == "btsscan" and blockname[2] == sys.argv[2]:
+						number_of_files = number_of_files + 1
+						scanfilelist.append(singlefile)
+				except IndexError:
+					pass
+			
 			splitted_timestamp = []
 
 			#FIND LATEST TWO FILES
@@ -429,20 +447,22 @@ def main():
 
 			print("Latest scan: " + scanfilelist[latest_scan_array_index])
 			latest_scan_fd = open(f"{scanstorage}{scanfilelist[latest_scan_array_index]}", "r")
-			
+			print("Execute?")
 			for line in latest_scan_fd:
 				split_line = split(line, ",")
-				if split_line[2] == "directory":
-					os.makedirs(f"{serverlocation}{split_line[0]}", exist=ok)
-				else:
+				if len(split_line) == 1:
+					os.makedirs(f"{serverlocation}{split_line[0]}", exist_ok=True)
+				elif len(split_line) == 3:
 					path = line[0]
 					path = path.replace(" ", "\ ")
 					path = path.replace("(", "\(")
 					path = path.replace(")", "\)")
-					status = os.system(f"/etc/btsoot/copy {serverlocation}{path} {path}")
+					status = os.system(f"/etc/btsoot/copy {serverlocation}{path} /")
 					exit_status = os.WEXITSTATUS(status)
 					if exit_status != 0:
 						print(color.FAIL + f"COPY ERROR: {exit_status}"+ color.ENDC)
+			else:
+				print("Not possible")
 			latest_scan_fd.close()
 			print(color.OKGREEN + "Done." + color.ENDC)
 			
@@ -450,7 +470,9 @@ def main():
 		else:
 			print(usage)
 
-	except IndexError:
+
+	except PermissionError:
+		print("INDEX ERROR")
 		print(usage)
 		sys.exit()
 
