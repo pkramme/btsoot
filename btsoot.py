@@ -64,10 +64,13 @@ def shouldcontinue(quit = True):
 			return 1
 
 def crc(filepath):
-    previous = 0
-    for line in open(filepath,"rb"):
-        previous = zlib.crc32(line, previous)
-    return "%X"%(previous & 0xFFFFFFFF)
+	previous = 0
+	try:
+		for line in open(filepath,"rb"):
+			previous = zlib.crc32(line, previous)
+	except OSError:
+		print("CRC ERROR: OSERROR")
+	return "%X"%(previous & 0xFFFFFFFF)
 
 
 usage = f"""USAGE: {sys.argv[0]} <commands>
