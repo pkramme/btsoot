@@ -58,15 +58,12 @@ without having to pay money for services like [packager.io](https://packager.io)
 `btsoot add <block-name> <source-path> <path-to-remote-dir>`  
 This is written to a file named `btsoot.conf` which is created inside the directory where BTSOOT lies.
 
-### Scan a block
-`btsoot scan <block-name>`  
-This creates a scanfile at the folder where BTSOOT lies. The filename identifies the time the scan 
-where initiated, and the block name. The file ending is `.btscan`.
-
 ### Backup a block
 `btsoot backup <block-name>`  
-The program will search for the latest two scanfiles, and compare them for changed files, which it then copyies to their 
+The program will search for the latest changes, and compare them with the previous, which it then copyies to their 
 paths on the remote location.  
+Prior to 0.5 there were two commands `scan` and `backup`. This wasn't practical, 
+as both were used together while one on its own was unecessary, so they got removed.
 **This also means that you MUST NOT change the remote files per hand. BTSOOT will not know about any changed file that 
 it didn't changed itself.** BTSOOT does not check the remote files for integrity. It is your responsibility that they 
 are not broken
