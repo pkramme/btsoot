@@ -210,11 +210,10 @@ def main():
 				with open(f"{scanstorage}{scanfilename}", "r") as scan:
 					for line in scan:
 						checkifdir = split(line, ",")
+						#print(checkifdir)
 						if len(checkifdir) == 1:
-							#IF DIRECTORY, HASH WILL BE "directory".
-							#THAT IS NEEDED DURING DIRECTORY REMOVAL
-							os.makedirs(f"{serverlocation}{line.rstrip()}")
-						else:
+							os.makedirs(f"{serverlocation}{line.rstrip()}", exist_ok=True)
+						elif len(checkifdir) == 3:
 							split_line = split(line, ",")
 							path = split_line[0]
 							path = path.replace(" ", "\ ")
@@ -224,7 +223,8 @@ def main():
 							exit_status = os.WEXITSTATUS(status)
 							if exit_status != 0:
 								print(color.FAIL + f"COPY ERROR: {exit_status}" + color.ENDC)
-
+						else:
+							print(color.FAIL + "Corrupt: " + line + color.ENDC)
 				sys.exit()
 
 
@@ -466,7 +466,7 @@ def main():
 			print(usage)
 
 
-	except PermissionError:
+	except IndexError:
 		print("INDEX ERROR")
 		print(usage)
 		sys.exit()
