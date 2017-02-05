@@ -72,7 +72,10 @@ it didn't changed itself.** BTSOOT does not check the remote files for integrity
 are not broken
 
 ### Restore a block
-This is not implemented yet. In case of a dataloss, you have to copy them manually back to the source folder.
+`btsoot restore <block-name>`  
+The program will delete the entire source folder, and then reload the files from the latest scan. If no files are
+found, everything is lost. Fortunately there is no scanning involved, so its just copying, and this is fast.  
+`--override` will override the safety time, so the restoring will begin immediately. Use with caution.
 
 ---
 
