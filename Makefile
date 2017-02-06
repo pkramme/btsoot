@@ -6,6 +6,7 @@ install:
 	cp ./copy/copy /usr/local/bin/copy
 uninstall:
 	rm /usr/local/bin/btsoot
+	rm /usr/local/bin/copy
 	rm -rf /etc/btsoot
 clean:
 	cd ./copy/ && $(MAKE) clean
