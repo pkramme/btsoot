@@ -3,5 +3,5 @@ all:
 test:
 	clang copy.c -Weverything -ansi -o btsoot-copy_test
 clean:
-	rm copy
+	rm btsoot-copy
 
