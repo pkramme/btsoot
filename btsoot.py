@@ -12,6 +12,9 @@ safetyguard = True
 #Backup will be aborted if change counter passes this value.
 minwarningvalue = 75
 
+#COPY CONFIG
+copypath = ""
+
 ##############################################################
 #DO NOT EDIT BELOW HERE!
 
@@ -25,6 +28,8 @@ if configpath == "":
 	configpath = "/etc/btsoot/btsoot.conf"
 if scanstorage == "":
 	scanstorage = "/etc/btsoot/scans/"
+if copypath == "":
+	copypath = "/usr/local/bin/copy"
 if os.path.exists("/etc/btsoot") == True:
 	pass
 else:
@@ -219,7 +224,7 @@ def main():
 							path = path.replace(" ", "\ ")
 							path = path.replace("(", "\(")
 							path = path.replace(")", "\)")
-							status = os.system(f"/etc/btsoot/copy {path} {serverlocation}{path}")
+							status = os.system(f"{copypath} {path} {serverlocation}{path}")
 							exit_status = os.WEXITSTATUS(status)
 							if exit_status != 0:
 								print(color.FAIL + f"COPY ERROR: {exit_status}" + color.ENDC)
@@ -363,7 +368,7 @@ def main():
 							path = path.replace(" ", "\ ")
 							path = path.replace("(", "\(")
 							path = path.replace(")", "\)")
-							status = os.system(f"/etc/btsoot/copy {path} {serverlocation}{path}")
+							status = os.system(f"{copypath} {path} {serverlocation}{path}")
 							exit_status = os.WEXITSTATUS(status)
 							if exit_status != 0:
 								print(color.FAIL + f"COPY ERROR: {exit_status}"+ color.ENDC)
