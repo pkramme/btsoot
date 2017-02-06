@@ -2,6 +2,7 @@ all:
 	cd ./copy/ && $(MAKE) all
 install:
 	cp btsoot.py /usr/local/bin/btsoot
+	mkdir /etc/btsoot
 	cp ./copy/copy /etc/btsoot/
 uninstall:
 	rm /usr/local/bin/btsoot
