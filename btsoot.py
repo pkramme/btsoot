@@ -29,7 +29,7 @@ if configpath == "":
 if scanstorage == "":
 	scanstorage = "/etc/btsoot/scans/"
 if copypath == "":
-	copypath = "/usr/local/bin/copy"
+	copypath = "/usr/local/bin/btsoot-copy"
 if os.path.exists("/etc/btsoot") == True:
 	pass
 else:
