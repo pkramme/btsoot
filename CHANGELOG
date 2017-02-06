@@ -1,3 +1,9 @@
+v0.5
+- Restore a block
+- Config is now CSV
+- Scan and Backup are now one command Backup
+- Shutil is now completely replaced by own copy program
+
 v0.4
 - Safety Guard to prevent accidentally destroying backups
 - Faster Copying using costum written c program
