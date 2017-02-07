@@ -177,7 +177,6 @@ def main():
 			#SCAN
 			scandirectory(path, f"{scanstorage}{scanfilename}", False)
 
-
 			#LIST FILES TO FIND SCANFILES
 			#SORT OUT ANY UNINTERESTING FILES
 			scanfilelist = []
@@ -213,14 +212,13 @@ def main():
 				print(color.OKBLUE + "Executing datatransfer." + color.ENDC)
 
 				with open(f"{scanstorage}{scanfilename}", "r") as scan:
-					for line in scan:
-						checkifdir = split(line, ",")
-						#print(checkifdir)
-						if len(checkifdir) == 1:
+					lines = scan.readlines()
+					for line in lines:
+						path = split(line, ",")
+						if len(path) == 1:
 							os.makedirs(f"{serverlocation}{line.rstrip()}", exist_ok=True)
-						elif len(checkifdir) == 3:
-							split_line = split(line, ",")
-							path = split_line[0]
+						elif len(path) == 3:
+							path = path[0]
 							path = path.replace(" ", "\ ")
 							path = path.replace("(", "\(")
 							path = path.replace(")", "\)")
@@ -260,7 +258,6 @@ def main():
 			previous_scan_array_index = -1
 			for singlefile in scanfilelist:
 				temp = split(singlefile, "_")
-				#print(f"Check {temp[0]} against {latest_timestamp} and {previous_timestamp}")
 				if int(temp[0]) == latest_timestamp:
 					latest_scan_array_index = dircounter
 				elif int(temp[0]) == previous_timestamp:
@@ -273,7 +270,7 @@ def main():
 			#COMPARE THE TWO FILES AGAINST EACH OTHER
 			latest_scan_fd = open(f"{scanstorage}{scanfilelist[latest_scan_array_index]}", "r")
 			previous_scan_fd = open(f"{scanstorage}{scanfilelist[previous_scan_array_index]}", "r")
-			transmit_list_fd = open("transmit.list", "w+")
+			transmit_list = []
 
 			latest_scan = latest_scan_fd.readlines()
 			previous_scan = previous_scan_fd.readlines()
@@ -291,10 +288,10 @@ def main():
 					if len(checkifdir) == 1:
 						#IF DIRECTORY, HASH WILL BE "directory".
 						#THAT IS NEEDED DURING DIRECTORY REMOVAL
-						transmit_list_fd.write(f"{oldline.rstrip()},directory,-\n")
+						transmit_list.extend([f"{oldline.rstrip()},directory,-\n"])
 						print(color.FAIL + f"- {oldline}" + color.ENDC, end='')
 					else:
-						transmit_list_fd.write(f"{oldline.rstrip()},-\n")
+						transmit_list.extend([f"{oldline.rstrip()},-\n"])
 						print(color.FAIL + f"- {oldline}" + color.ENDC, end='')
 						file_deleted = file_deleted + 1
 				file_total_old = file_total_old + 1
@@ -309,11 +306,11 @@ def main():
 					if len(checkifdir) == 1:
 						#IF DIRECTORY, HASH WILL BE "directory".
 						#THAT IS NEEDED DURING DIRECTORY CREATION
-						transmit_list_fd.write(f"{line.rstrip()},directory,+\n")
-						print(color.OKGREEN + f"+ {line}" + color.ENDC, end='')
+						transmit_list.extend([f"{line.rstrip()},directory,+\n"])
+						#print(color.OKGREEN + f"+ {line}" + color.ENDC, end='')
 					else:
-						transmit_list_fd.write(f"{line.rstrip()},+\n")
-						print(color.OKGREEN + f"+ {line}" + color.ENDC, end='')
+						transmit_list.extend([f"{line.rstrip()},+\n"])
+						#print(color.OKGREEN + f"+ {line}" + color.ENDC, end='')
 						file_new = file_new + 1
 				file_total_latest = file_total_latest + 1
 
@@ -339,11 +336,7 @@ def main():
 
 			#TRANSMITTER
 			print(color.OKBLUE + "Executing datatransfer." + color.ENDC)
-			transmit_list_fd.seek(0) #SET FILE POINTER TO START
-			transmit = transmit_list_fd.readlines()
-			transmit_list_linenumber = 0
-			for line in transmit:
-				transmit_list_linenumber = transmit_list_linenumber + 1
+			for line in transmit_list:
 				line = split(line.rstrip(), ",")
 				if len(line) > 5:
 					print(color.FAIL + f"Cannot backup file {line}." + color.ENDC)
@@ -378,8 +371,6 @@ def main():
 
 			previous_scan_fd.close() 
 			latest_scan_fd.close()
-			transmit_list_fd.close()
-			os.remove("transmit.list")
 			print(color.OKGREEN + "Done." + color.ENDC)
 
 		elif sys.argv[1] == "restore":
@@ -456,7 +447,7 @@ def main():
 					path = path.replace(" ", "\ ")
 					path = path.replace("(", "\(")
 					path = path.replace(")", "\)")
-					#print(f"cpy {serverlocation}{path} {path}")
+
 					status = os.system(f"/etc/btsoot/copy {serverlocation}{path} {path}")
 					exit_status = os.WEXITSTATUS(status)
 					if exit_status != 0:
