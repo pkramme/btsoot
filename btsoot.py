@@ -104,13 +104,11 @@ def scandirectory(walk_dir, scanfile, verbose = False):
 	try:
 		current_scan = []
 		for root, subdirs, files in os.walk(walk_dir):
-			#f.write(root + "\n")
 			current_scan.extend([f"{root}\n"])
 			for filename in files:
 				file_path = os.path.join(root, filename)
 				checksum = crc(file_path)
 				current_scan.extend([f"{file_path},{checksum}\n"])
-				#f.write(file_path + "," + checksum + "\n")
 		with open(scanfile, "w") as current_scan_file:
 			current_scan_file.writelines(current_scan)			
 	except FileNotFoundError:
