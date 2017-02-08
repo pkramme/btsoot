@@ -152,7 +152,7 @@ def main():
 						split_line = split(line, ",")
 						print(f"BLOCKNAME: {split_line[0]}")
 						print(f"\tSRC:  {split_line[2]}")
-						print(f"\tDEST: {split_line[4]}")
+						print(f"\tDEST: {split_line[4].rsplit()}")
 			except FileNotFoundError:
 				print(color.FAIL + "Configfile not found." + color.ENDC)
 				print("Create one with 'add'.")
@@ -309,16 +309,13 @@ def main():
 						#IF DIRECTORY, HASH WILL BE "directory".
 						#THAT IS NEEDED DURING DIRECTORY CREATION
 						transmit_list.extend([f"{line.rstrip()},directory,+\n"])
-						#print(color.OKGREEN + f"+ {line}" + color.ENDC, end='')
 					else:
 						transmit_list.extend([f"{line.rstrip()},+\n"])
-						#print(color.OKGREEN + f"+ {line}" + color.ENDC, end='')
 						file_new = file_new + 1
 				file_total_latest = file_total_latest + 1
 
 
 			#FILE STATS
-			#block_change_percentage = int((file_total_old / file_total_latest) * 100)
 			print(f"\nUnchanged files: {file_same}")
 			print(f"New/Changed files: {file_new}")
 			print(f"Deleted files: {file_deleted}")
@@ -368,7 +365,7 @@ def main():
 							if exit_status != 0:
 								print(color.FAIL + f"COPY ERROR: {exit_status}"+ color.ENDC)
 					else:
-						print(color.WARNING + "Transmit corrupted at" + color.ENDC)
+						print(color.WARNING + "TRANSMIT CORRUPTION:" + color.ENDC)
 						print(color.WARNING + line + color.ENDC)
 
 			previous_scan_fd.close() 
