@@ -62,17 +62,14 @@ int copy(char *source, char *destination)
 	{
 		return 2;
 	}
-	
-	while(temp_offset = sendfile(fd_destination, fd_source, read_check, BUFSIZ))
-	{
-		read_check += temp_offset;
-	}
-	if(read_check == -1)
-	{
-		return 4;
-	}
+
+	struct stat stat_source;
+	fstat(fd_source, &stat_source);
+
+	sendfile(fd_destination, fd_source, 0, stat_source.st_size);
 	
 	/*close fds*/
+	
 	if(close(fd_source) == -1)
 	{
 		return 5;
