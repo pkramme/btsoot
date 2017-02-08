@@ -102,18 +102,18 @@ def split(string, splitters): #MAY RESOLVE ALL PROBLEMS WITH CSV
 
 def scandirectory(walk_dir, scanfile, verbose = False):
 	try:
-		with open(scanfile, "w") as f:
-			for root, subdirs, files in os.walk(walk_dir):
-				f.write(root + "\n")
-				for filename in files:
-					file_path = os.path.join(root, filename)
-					checksum = crc(file_path)
-					if verbose == True:
-						print(file_path, checksum, end="\n")
-					f.write(file_path + "," + checksum + "\n")
+		current_scan = []
+		for root, subdirs, files in os.walk(walk_dir):
+			current_scan.extend([f"{root}\n"])
+			for filename in files:
+				file_path = os.path.join(root, filename)
+				checksum = crc(file_path)
+				current_scan.extend([f"{file_path},{checksum}\n"])
+		with open(scanfile, "w") as current_scan_file:
+			current_scan_file.writelines(current_scan)			
 	except FileNotFoundError:
 		if verbose == True:
-			print(color.FAIL + "File not found." + color.ENDC)
+			print(color.FAIL + "SCAN ERROR: FILE NOT FOUND" + color.ENDC)
 
 
 def main():
@@ -150,7 +150,7 @@ def main():
 						split_line = split(line, ",")
 						print(f"BLOCKNAME: {split_line[0]}")
 						print(f"\tSRC:  {split_line[2]}")
-						print(f"\tDEST: {split_line[4]}")
+						print(f"\tDEST: {split_line[4].rsplit()}")
 			except FileNotFoundError:
 				print(color.FAIL + "Configfile not found." + color.ENDC)
 				print("Create one with 'add'.")
@@ -176,7 +176,6 @@ def main():
 			
 			#SCAN
 			scandirectory(path, f"{scanstorage}{scanfilename}", False)
-
 
 			#LIST FILES TO FIND SCANFILES
 			#SORT OUT ANY UNINTERESTING FILES
@@ -213,14 +212,13 @@ def main():
 				print(color.OKBLUE + "Executing datatransfer." + color.ENDC)
 
 				with open(f"{scanstorage}{scanfilename}", "r") as scan:
-					for line in scan:
-						checkifdir = split(line, ",")
-						#print(checkifdir)
-						if len(checkifdir) == 1:
+					lines = scan.readlines()
+					for line in lines:
+						path = split(line, ",")
+						if len(path) == 1:
 							os.makedirs(f"{serverlocation}{line.rstrip()}", exist_ok=True)
-						elif len(checkifdir) == 3:
-							split_line = split(line, ",")
-							path = split_line[0]
+						elif len(path) == 3:
+							path = path[0]
 							path = path.replace(" ", "\ ")
 							path = path.replace("(", "\(")
 							path = path.replace(")", "\)")
@@ -260,7 +258,6 @@ def main():
 			previous_scan_array_index = -1
 			for singlefile in scanfilelist:
 				temp = split(singlefile, "_")
-				#print(f"Check {temp[0]} against {latest_timestamp} and {previous_timestamp}")
 				if int(temp[0]) == latest_timestamp:
 					latest_scan_array_index = dircounter
 				elif int(temp[0]) == previous_timestamp:
@@ -273,7 +270,7 @@ def main():
 			#COMPARE THE TWO FILES AGAINST EACH OTHER
 			latest_scan_fd = open(f"{scanstorage}{scanfilelist[latest_scan_array_index]}", "r")
 			previous_scan_fd = open(f"{scanstorage}{scanfilelist[previous_scan_array_index]}", "r")
-			transmit_list_fd = open("transmit.list", "w+")
+			transmit_list = []
 
 			latest_scan = latest_scan_fd.readlines()
 			previous_scan = previous_scan_fd.readlines()
@@ -291,10 +288,10 @@ def main():
 					if len(checkifdir) == 1:
 						#IF DIRECTORY, HASH WILL BE "directory".
 						#THAT IS NEEDED DURING DIRECTORY REMOVAL
-						transmit_list_fd.write(f"{oldline.rstrip()},directory,-\n")
+						transmit_list.extend([f"{oldline.rstrip()},directory,-\n"])
 						print(color.FAIL + f"- {oldline}" + color.ENDC, end='')
 					else:
-						transmit_list_fd.write(f"{oldline.rstrip()},-\n")
+						transmit_list.extend([f"{oldline.rstrip()},-\n"])
 						print(color.FAIL + f"- {oldline}" + color.ENDC, end='')
 						file_deleted = file_deleted + 1
 				file_total_old = file_total_old + 1
@@ -309,17 +306,14 @@ def main():
 					if len(checkifdir) == 1:
 						#IF DIRECTORY, HASH WILL BE "directory".
 						#THAT IS NEEDED DURING DIRECTORY CREATION
-						transmit_list_fd.write(f"{line.rstrip()},directory,+\n")
-						print(color.OKGREEN + f"+ {line}" + color.ENDC, end='')
+						transmit_list.extend([f"{line.rstrip()},directory,+\n"])
 					else:
-						transmit_list_fd.write(f"{line.rstrip()},+\n")
-						print(color.OKGREEN + f"+ {line}" + color.ENDC, end='')
+						transmit_list.extend([f"{line.rstrip()},+\n"])
 						file_new = file_new + 1
 				file_total_latest = file_total_latest + 1
 
 
 			#FILE STATS
-			#block_change_percentage = int((file_total_old / file_total_latest) * 100)
 			print(f"\nUnchanged files: {file_same}")
 			print(f"New/Changed files: {file_new}")
 			print(f"Deleted files: {file_deleted}")
@@ -339,11 +333,7 @@ def main():
 
 			#TRANSMITTER
 			print(color.OKBLUE + "Executing datatransfer." + color.ENDC)
-			transmit_list_fd.seek(0) #SET FILE POINTER TO START
-			transmit = transmit_list_fd.readlines()
-			transmit_list_linenumber = 0
-			for line in transmit:
-				transmit_list_linenumber = transmit_list_linenumber + 1
+			for line in transmit_list:
 				line = split(line.rstrip(), ",")
 				if len(line) > 5:
 					print(color.FAIL + f"Cannot backup file {line}." + color.ENDC)
@@ -373,13 +363,11 @@ def main():
 							if exit_status != 0:
 								print(color.FAIL + f"COPY ERROR: {exit_status}"+ color.ENDC)
 					else:
-						print(color.WARNING + "Transmit corrupted at" + color.ENDC)
+						print(color.WARNING + "TRANSMIT CORRUPTION:" + color.ENDC)
 						print(color.WARNING + line + color.ENDC)
 
 			previous_scan_fd.close() 
 			latest_scan_fd.close()
-			transmit_list_fd.close()
-			os.remove("transmit.list")
 			print(color.OKGREEN + "Done." + color.ENDC)
 
 		elif sys.argv[1] == "restore":
@@ -456,7 +444,7 @@ def main():
 					path = path.replace(" ", "\ ")
 					path = path.replace("(", "\(")
 					path = path.replace(")", "\)")
-					#print(f"cpy {serverlocation}{path} {path}")
+
 					status = os.system(f"/etc/btsoot/copy {serverlocation}{path} {path}")
 					exit_status = os.WEXITSTATUS(status)
 					if exit_status != 0:

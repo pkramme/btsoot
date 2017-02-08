@@ -132,15 +132,22 @@ were to nice to ignore them) and copies changed files to a mounted network folde
 ---
 
 ## Performance
-As BTSOOT is currently, as of 52a445fa, single threaded, the performance is not as good as it could be. Limiting factors include, but are not limited to:
+As BTSOOT is currently, as of 52a445fa, single threaded, the performance is not as good as it could be. I am currently 
+trying to eliminate bottlenecks, like the random writing to disk, to improve performance with small files. This, 
+however, drasticly raises RAM usage. The worst case is <number-of-files> * (256 + 8 + 2) * 2 (256 path lengh; 8 CRC  
+Hash; 2 Escape and Comma; 2 scanfiles). Limiting factors include, but are not limited to:
 - Slow disk speed
-- Many little files, which slow down the CRC algorithm
+- Many little files, which slow down the CRC algorithm and arrays which hold the data
 
 The table below might get you an impression of speed.
 
 |  COMMIT  | Data   |  Time             |  
 | -------- | :----- | :---------------- |  
 | 52a445fa | 1,9TB  |  187 Min, 22 Secs |  
+
+I will rewrite most of the python performance parts in C, as i did with the copy code. This alone gave promising
+results. For better or worse, there will be a C backend, python as a frontend, which only launches the backend pipeline.
+The key is to reduce as much disk writing as possible.
 
 ---
 
