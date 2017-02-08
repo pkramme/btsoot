@@ -62,7 +62,7 @@ int copy(char *source, char *destination)
 		return 2;
 	}
 	
-	while((tempoffset = sendfile(fd_destination, fd_source, read_check, BUFSIZ))
+	while(tempoffset = sendfile(fd_destination, fd_source, read_check, BUFSIZ))
 	{
 		read_check += tempoffset;
 	}
