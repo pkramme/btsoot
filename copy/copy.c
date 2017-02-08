@@ -40,10 +40,12 @@ int copy(char *source, char *destination)
 	int dest_flags;
 	mode_t permissions;
 	ssize_t read_check;
+	ssize_t temp_offset;
 
-    /*compiler complains...*/
+	/*compiler complains...*/
 	read_check = 0;
-
+	temp_offset = 0;
+	
 	fd_source = open(source, O_RDONLY);
 	if(fd_source == -1)
 	{
@@ -60,12 +62,9 @@ int copy(char *source, char *destination)
 		return 2;
 	}
 	
-	while((read_check = read(fd_source, buffer, BUFSIZ)) > 0)
+	while((tempoffset = sendfile(fd_destination, fd_source, read_check, BUFSIZ))
 	{
-		if(write(fd_destination, buffer, read_check) != read_check)
-		{
-			return 3;
-		}
+		read_check += tempoffset;
 	}
 	if(read_check == -1)
 	{
