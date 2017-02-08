@@ -16,6 +16,7 @@ return 6 = couldnt close dest fd
 #include<fcntl.h>
 #include<sys/stat.h>
 #include<unistd.h>
+#include<sys/sendfile.h>
 
 int copy(char *source, char *destination);
 
@@ -62,9 +63,9 @@ int copy(char *source, char *destination)
 		return 2;
 	}
 	
-	while(tempoffset = sendfile(fd_destination, fd_source, read_check, BUFSIZ))
+	while(temp_offset = sendfile(fd_destination, fd_source, read_check, BUFSIZ))
 	{
-		read_check += tempoffset;
+		read_check += temp_offset;
 	}
 	if(read_check == -1)
 	{
