@@ -16,6 +16,7 @@ return 6 = couldnt close dest fd
 #include<fcntl.h>
 #include<sys/stat.h>
 #include<unistd.h>
+#include<sys/sendfile.h>
 
 int copy(char *source, char *destination);
 
@@ -40,10 +41,12 @@ int copy(char *source, char *destination)
 	int dest_flags;
 	mode_t permissions;
 	ssize_t read_check;
+	ssize_t temp_offset;
 
-    /*compiler complains...*/
+	/*compiler complains...*/
 	read_check = 0;
-
+	temp_offset = 0;
+	
 	fd_source = open(source, O_RDONLY);
 	if(fd_source == -1)
 	{
@@ -59,20 +62,14 @@ int copy(char *source, char *destination)
 	{
 		return 2;
 	}
-	
-	while((read_check = read(fd_source, buffer, BUFSIZ)) > 0)
-	{
-		if(write(fd_destination, buffer, read_check) != read_check)
-		{
-			return 3;
-		}
-	}
-	if(read_check == -1)
-	{
-		return 4;
-	}
+
+	struct stat stat_source;
+	fstat(fd_source, &stat_source);
+
+	sendfile(fd_destination, fd_source, 0, stat_source.st_size);
 	
 	/*close fds*/
+	
 	if(close(fd_source) == -1)
 	{
 		return 5;
