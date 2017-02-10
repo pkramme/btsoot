@@ -36,5 +36,7 @@ dpkg:
     - cp btsoot-copy ./btsoot_$CI_BUILD_TAG/usr/local/bin/btsoot-copy
     - cp btsoot.py ./btsoot_$CI_BUILD_TAG/usr/local/bin/btsoot
     - dpkg-deb --build ./btsoot_$CI_BUILD_TAG
+  artifacts:
+    - btsoot_$CI_BUILD_TAG.deb
   only:
     - tags
