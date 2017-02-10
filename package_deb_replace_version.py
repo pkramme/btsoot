@@ -3,7 +3,7 @@ import sys
 def split(string, splitters):
 	final = [string]
 	for x in splitters:
-	for i,s in enumerate(final):
+		for i,s in enumerate(final):
 			if x in s and x != s:
 				left, right = s.split(x, 1)
 				final[i] = left
