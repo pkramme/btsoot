@@ -31,5 +31,5 @@ dpkg:
     - mkdir ./btsoot
     - mkdir ./btsoot/DEBIAN/
     - touch ./btsoot/DEBIAN/control
-    - echo "CI_BUILD_TAG" > ./btsoot/DEBIAN/control
+    - echo git describe --exact-match --tags $(git log -n1 --pretty='%h') > ./btsoot/DEBIAN/control
     - cat ./btsoot/DEBIAN/control
