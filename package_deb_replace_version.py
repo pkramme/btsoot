@@ -11,8 +11,8 @@ def split(string, splitters):
 				final.insert(i + 2, right)
 	return final
 
-path = "btsoot/DEBIAN/control"
 fullversion = sys.argv[1]
+path = f"btsoot_{fullversion}/DEBIAN/control"
 version = split(fullversion, "v")
 version = version[1]
 control_content = f"""Package: btsoot
