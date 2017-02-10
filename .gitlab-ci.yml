@@ -29,6 +29,7 @@ dpkg:
   stage: package
   environment: Production
   script:
+    - make
     - mkdir -p btsoot_$CI_BUILD_TAG/DEBIAN/
     - python3.6 package_deb_replace_version.py $CI_BUILD_TAG
     - mkdir -p btsoot_$CI_BUILD_TAG/usr/local/bin
