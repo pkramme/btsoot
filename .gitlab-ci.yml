@@ -24,3 +24,8 @@ build:copy:
   artifacts:
     paths:
       - ./copy/copy
+
+deploy:dpkg:
+  stage: deploy
+  script:
+    - print "hello"
