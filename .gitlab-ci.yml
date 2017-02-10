@@ -30,7 +30,7 @@ dpkg:
   environment: Testing
   script:
     - mkdir -p ./btsoot_$CI_BUILD_TAG/DEBIAN/
-    - touch ./btsoot/DEBIAN/control
+    - cp ./control ./btsoot/DEBIAN/control
     - mkdir -p ./btsoot_$CI_BUILD_TAG/usr/local/bin
     - mkdir -p ./btsoot_$CI_BUILD_TAG/etc/btsoot/scans
     - cp btsoot-copy ./btsoot_$CI_BUILD_TAG/usr/local/bin/btsoot-copy
