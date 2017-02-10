@@ -29,10 +29,11 @@ dpkg:
   stage: package
   environment: Testing
   script:
-    - mkdir ./btsoot
-    - mkdir ./btsoot/DEBIAN/
+    - mkdir -p ./btsoot_$CI_BUILD_TAG/DEBIAN/
     - touch ./btsoot/DEBIAN/control
-    - echo $CI_BUILD_TAG > ./btsoot/DEBIAN/control
-    - cat ./btsoot/DEBIAN/control
+    - mkdir -p ./btsoot_$CI_BUILD_TAG/usr/local/bin
+    - mkdir -p ./btsoot_$CI_BUILD_TAG/etc/btsoot/scans
+    - cp btsoot-copy ./btsoot_$CI_BUILD_TAG/usr/local/bin/btsoot-copy
+    - cp btsoot.py ./btsoot_$CI_BUILD_TAG/usr/local/bin/btsoot
   only:
-    - stable
+    - tags
