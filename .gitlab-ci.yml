@@ -34,7 +34,7 @@ dpkg:
     - python3.6 package_deb_replace_version.py $CI_BUILD_TAG
     - mkdir -p btsoot_$CI_BUILD_TAG/usr/local/bin
     - mkdir -p btsoot_$CI_BUILD_TAG/etc/btsoot/scans
-    - cp btsoot-copy btsoot_$CI_BUILD_TAG/usr/local/bin/btsoot-copy
+    - cp copy/btsoot-copy btsoot_$CI_BUILD_TAG/usr/local/bin/btsoot-copy
     - cp btsoot.py btsoot_$CI_BUILD_TAG/usr/local/bin/btsoot
     - dpkg-deb --build btsoot_$CI_BUILD_TAG
   artifacts:
