@@ -6,6 +6,7 @@ Version: {version}
 Section: base
 Priority: optional
 Architecture: i386
+Depends: build-essential
 Maintainer: Paul Kramme <pjkramme@gmail.com>
 Description: BTSOOT
  Folder redundancy offsite-backup utility.
