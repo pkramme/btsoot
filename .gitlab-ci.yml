@@ -27,6 +27,7 @@ copy_build:
 
 dpkg:
   stage: package
+  deploy: Testing
   script:
     - mkdir ./btsoot
     - mkdir ./btsoot/DEBIAN/
