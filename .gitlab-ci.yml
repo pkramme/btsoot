@@ -33,5 +33,6 @@ dpkg:
     - mkdir ./btsoot/DEBIAN/
     - touch ./btsoot/DEBIAN/control
     - echo $CI_BUILD_TAG > ./btsoot/DEBIAN/control
-    - echo $CI_BUILD_REF > ./btsoot/DEBIAN/control
     - cat ./btsoot/DEBIAN/control
+  only:
+    - stable
