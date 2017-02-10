@@ -28,4 +28,5 @@ build:copy:
 deploy:dpkg:
   stage: deploy
   script:
-    - print "hello"
+    - ls
+    - echo $PWD
