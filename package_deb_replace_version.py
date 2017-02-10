@@ -1,5 +1,5 @@
 import sys
-path = "./btsoot/DEBIAN/control"
+path = "btsoot/DEBIAN/control"
 version = sys.argv[1]
 control_content = f"""Package: btsoot
 Version: {version}
