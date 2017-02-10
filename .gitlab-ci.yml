@@ -23,7 +23,7 @@ copy_build:
     - cd ..
   artifacts:
     paths:
-      - ./copy/copy
+      - ./copy/btsoot-copy
 
 dpkg:
   stage: package
