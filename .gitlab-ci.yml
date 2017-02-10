@@ -28,5 +28,9 @@ copy_build:
 dpkg:
   stage: package
   script:
-    - ls
-    - echo $PWD
+    - mkdir ./btsoot
+    - mkdir ./btsoot/DEBIAN/
+    - touch ./btsoot/DEBIAN/control
+    - echo "CI_BUILD_TAG" > ./btsoot/DEBIAN/control
+  only:
+    - *-stable
