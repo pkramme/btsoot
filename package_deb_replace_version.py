@@ -1,19 +1,8 @@
 import sys
 
-def split(string, splitters):
-	final = [string]
-	for x in splitters:
-		for i,s in enumerate(final):
-			if x in s and x != s:
-				left, right = s.split(x, 1)
-				final[i] = left
-				final.insert(i + 1, x)
-				final.insert(i + 2, right)
-	return final
-
 fullversion = sys.argv[1]
 path = f"btsoot_{fullversion}/DEBIAN/control"
-version = split(fullversion, "v")
+version = fullversion[1:]
 version = version[1]
 control_content = f"""Package: btsoot
 Version: {version}
