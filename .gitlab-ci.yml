@@ -1,21 +1,21 @@
 stages:
   - test
   - build
-  - deploy
+  - package
 
-test:btsoot:
+btsoot_test:
   stage: test
   script:
     - python3.6 -m py_compile btsoot.py
 
-test:copy:
+copy_test:
   stage: test
   script:
     - cd copy
     - scan-build make test
     - cd ..
 
-build:copy:
+copy_build:
   stage: build
   script:
     - cd copy
@@ -23,4 +23,21 @@ build:copy:
     - cd ..
   artifacts:
     paths:
-      - ./copy/copy
+      - ./copy/btsoot-copy
+
+dpkg:
+  stage: package
+  environment: Testing
+  script:
+    - mkdir -p ./btsoot_$CI_BUILD_TAG/DEBIAN/
+    - touch ./btsoot/DEBIAN/control
+    - mkdir -p ./btsoot_$CI_BUILD_TAG/usr/local/bin
+    - mkdir -p ./btsoot_$CI_BUILD_TAG/etc/btsoot/scans
+    - cp btsoot-copy ./btsoot_$CI_BUILD_TAG/usr/local/bin/btsoot-copy
+    - cp btsoot.py ./btsoot_$CI_BUILD_TAG/usr/local/bin/btsoot
+    - dpkg-deb --build ./btsoot_$CI_BUILD_TAG
+  artifacts:
+    paths:
+      - btsoot_$CI_BUILD_TAG.deb
+  only:
+    - tags
