@@ -1,8 +1,0 @@
-Package: btsoot
-Version: REPLACE_VERSION
-Section: base
-Priority: optional
-Architecture: i386
-Maintainer: Paul Kramme <pjkramme@gmail.com>
-Description: BTSOOT
- Folder redundancy offsite-backup utility.
