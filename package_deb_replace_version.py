@@ -13,7 +13,7 @@ Description: BTSOOT
 """
 print("DEB PACKAGE VERSION REPLACER")
 # yes, i wrote a tool for this...
-with open(path, "w") as f:
+with open(path, "a") as f:
 	f.write(control_content)
 print("Done.")
 
