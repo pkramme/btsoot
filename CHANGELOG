@@ -1,3 +1,7 @@
+v0.6
+- Performance improvements through limiting disk writes
+- More efficient copy function through sendfile
+
 v0.5
 - Restore a block
 - Config is now CSV
