@@ -1,20 +1,8 @@
 import sys
 
-def split(string, splitters): #MAY RESOLVE ALL PROBLEMS WITH CSV
-	final = [string]
-	for x in splitters:
-		for i,s in enumerate(final):
-			if x in s and x != s:
-				left, right = s.split(x, 1)
-				final[i] = left
-				final.insert(i + 1, x)
-				final.insert(i + 2, right)
-	return final
-
-path = "btsoot/DEBIAN/control"
 fullversion = sys.argv[1]
-version = split(fullversion, "v")
-version = version[1]
+path = f"btsoot_{fullversion}/DEBIAN/control"
+version = fullversion[1:]
 control_content = f"""Package: btsoot
 Version: {version}
 Section: base
@@ -30,4 +18,3 @@ print("DEB PACKAGE VERSION REPLACER")
 with open(path, "a") as f:
 	f.write(control_content)
 print("Done.")
-
