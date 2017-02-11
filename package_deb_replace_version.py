@@ -7,7 +7,7 @@ control_content = f"""Package: btsoot
 Version: {version}
 Section: base
 Priority: optional
-Architecture: i386
+Architecture: amd64
 Depends: build-essential
 Maintainer: Paul Kramme <pjkramme@gmail.com>
 Description: BTSOOT
