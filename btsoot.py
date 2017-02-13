@@ -307,8 +307,10 @@ def main():
 						#IF DIRECTORY, HASH WILL BE "directory".
 						#THAT IS NEEDED DURING DIRECTORY CREATION
 						transmit_list.extend([f"{line.rstrip()},directory,+\n"])
+						print(color.OKGREEN + f"+ {line}" + color.ENDC, end='')
 					else:
 						transmit_list.extend([f"{line.rstrip()},+\n"])
+						print(color.OKGREEN + f"+ {line}" + color.ENDC, end='')
 						file_new = file_new + 1
 				file_total_latest = file_total_latest + 1
 
