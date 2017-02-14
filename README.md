@@ -32,6 +32,16 @@ backup. Same goes for Specific deletion levels, which can be configured.
 
 ---
 
+## Current project status
+BTSOOT is still under heavy development, thus it is only in 0.x release. The project has left its prototyping implementation
+in Python, and will be rewritten in C with the currently anticipated features, that are (partly) available in 0.6-stable.
+The 0.6-stable release will be maintained with bugfixes, but no new features will be added. 0.7-stable release will be the
+first C implementation of BTSOOT and will hopefully be faster and better executed than the prototype.  
+Altough it's a prototype, 0.6-stable is totally usable for the public, and I am encouraging you to use it, as it is a good
+product.
+
+---
+
 ## Dependencies
 - Linux OS (no specific distribution)
 - [Python 3.6](https://python.org) or above
@@ -51,8 +61,8 @@ uninstall it, run `sudo make uninstall`. This will delete all scans and your con
 
 NOTE:  
 I am currently engaged in a project in which a [cURL package manager](https://github.com/eddyx9/install.paukra.com/) is developed. I'm hopeing it can be used to 
-distribute this project in the future. I am not a friend of `.deb` packages, as they are hard to create automatically
-without having to pay money for services like [packager.io](https://packager.io).
+distribute this project in the future. There are `.deb` packages available, but it is recommended to build the project yourself, as it will give you the best 
+possible performance.
 
 ### Create a block
 `btsoot add <block-name> <source-path> <path-to-remote-dir>`  
