@@ -1,15 +1,13 @@
 all:
-	cd ./copy/ && $(MAKE) all
+	cd ./src/ && $(MAKE) all && cp btsoot ../btsoot
 install:
-	cp btsoot.py /usr/local/bin/btsoot
-	mkdir /etc/btsoot
-	cp ./copy/btsoot-copy /usr/local/bin/btsoot-copy
+	cp btsoot /usr/local/bin/btsoot
+	mkdir -p /etc/btsoot/scans
 update:
-	cp btsoot.py /usr/local/bin/btsoot
-	cp ./copy/btsoot-copy /usr/local/bin/btsoot-copy
+	cp btsoot /usr/local/bin/btsoot
 uninstall:
 	rm /usr/local/bin/btsoot
-	rm /usr/local/bin/btsoot-copy
 	rm -rf /etc/btsoot
 clean:
-	cd ./copy/ && $(MAKE) clean
+	cd ./src/ && $(MAKE) clean
+	rm btsoot

@@ -1,29 +1,20 @@
 stages:
-  - test
   - build
+  - test
   - package
 
-btsoot_test:
-  stage: test
-  script:
-    - python3.6 -m py_compile btsoot.py
-
-copy_test:
-  stage: test
-  script:
-    - cd copy
-    - scan-build make test
-    - cd ..
-
-copy_build:
+build:
   stage: build
   script:
-    - cd copy
     - make
-    - cd ..
   artifacts:
     paths:
-      - ./copy/btsoot-copy
+      - btsoot
+
+test:
+  stage: test
+  script:
+    - check-build make
 
 dpkg:
   stage: package
@@ -34,8 +25,7 @@ dpkg:
     - python3.6 package_deb_replace_version.py $CI_BUILD_TAG
     - mkdir -p btsoot_$CI_BUILD_TAG/usr/local/bin
     - mkdir -p btsoot_$CI_BUILD_TAG/etc/btsoot/scans
-    - cp copy/btsoot-copy btsoot_$CI_BUILD_TAG/usr/local/bin/btsoot-copy
-    - cp btsoot.py btsoot_$CI_BUILD_TAG/usr/local/bin/btsoot
+    - cp src/btsoot btsoot_$CI_BUILD_TAG/usr/local/bin/btsoot
     - dpkg-deb --build btsoot_$CI_BUILD_TAG
   artifacts:
     paths:
