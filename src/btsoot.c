@@ -6,6 +6,7 @@
  */
 
 #include<stdio.h>
+#include<stdlib.h>
 #include<string.h>
 
 #include"copy.h"
@@ -20,7 +21,11 @@ int main(int argc, char *argv[])
 	{
 		puts("USAGE");
 	}
-
+	else
+	{
+		exit(0);
+	}
+	
 	if(strcmp(argv[1], "add") == 0 && argc >= 5)
 	{
 		printf("Adding %s with src=%s and dest=%s\n", argv[2], argv[3], argv[4]);
