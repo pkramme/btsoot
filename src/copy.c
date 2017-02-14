@@ -18,21 +18,6 @@ return 6 = couldnt close dest fd
 #include<unistd.h>
 #include<sys/sendfile.h>
 
-int copy(char *source, char *destination);
-
-int main(int argc, char *argv[])
-{
-	int exit_code;
-
-	if(argc != 3)
-	{
-		return -1;
-	}
-
-	exit_code = copy(argv[1], argv[2]);
-	return exit_code;
-}
-
 int copy(char *source, char *destination)
 {
 	int fd_source;
