@@ -9,4 +9,6 @@
 
 int copy(char *source, char *destination);
 
+int copy_fallback(char *source, char *destination);
+
 #endif
