@@ -11,8 +11,14 @@
 
 #include"copy.h"
 
+#define PIP_PURP_ID_BACKUP 1
+#define PIP_PURP_ID_RESTORE 2
+
+#define CONFIG_PATH "btsoot.conf"
+
 int main(int argc, char *argv[])
 {
+
 	/* 
 	 * Argument resolving code
 	 */
@@ -22,6 +28,13 @@ int main(int argc, char *argv[])
 		puts("USAGE");
 	}
 	
+	struct job {
+		char block_name[256];
+		int pip_purp_id;
+		char src_path[256];
+		char dest_path[256];
+	} *job;
+
 	if(argc >= 5)
 	{
 		if(strcmp(argv[1], "add") == 0)
@@ -42,10 +55,15 @@ int main(int argc, char *argv[])
 			printf("Listing %s\n", argv[2]);
 			/*TODO: Add code for config listing*/
 		}
+
+		/*
+		 * HERE COME THE REAL PIPELINES...
+		 */
+
 		else if(strcmp(argv[1], "backup") == 0)
 		{
-			printf("Backing up %s\n", argv[2]);
-			/*TODO: Add code for starting backup pipeline routine*/
+			job->pip_purp_id = PIP_PURP_ID_BACKUP;
+			
 		}
 		else if(strcmp(argv[1], "restore") == 0)
 		{
