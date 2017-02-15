@@ -22,15 +22,8 @@ int copy(char *source, char *destination)
 {
 	int fd_source;
 	int fd_destination;
-	char buffer[BUFSIZ];
 	int dest_flags;
 	mode_t permissions;
-	ssize_t read_check;
-	ssize_t temp_offset;
-
-	/*compiler complains...*/
-	read_check = 0;
-	temp_offset = 0;
 	
 	fd_source = open(source, O_RDONLY);
 	if(fd_source == -1)
