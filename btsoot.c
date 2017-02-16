@@ -18,6 +18,11 @@
 
 int main(int argc, char *argv[])
 {
+	/*
+	 * CONFIG FILE ACCESS
+	 */
+	FILE *config;
+	config = fopen(CONFIG_PATH, "a+");
 
 	/* 
 	 * Argument resolving code
@@ -39,8 +44,8 @@ int main(int argc, char *argv[])
 	{
 		if(strcmp(argv[1], "add") == 0)
 		{
-			printf("Adding %s with src=%s and dest=%s\n", argv[2], argv[3], argv[4]);
-			/*TODO: Add code for config creation, adding*/
+			puts("The string should not be suffixed by a slash (/)");
+			fprintf(config, "%s,%s,%s\n", argv[2], argv[3], argv[4]);
 		}
 	}
 	else if(argc >= 3)
@@ -79,6 +84,7 @@ int main(int argc, char *argv[])
 	{
 		puts("Not enough args given");
 	}
+	fclose(config);
 	return 0;
 }
 
