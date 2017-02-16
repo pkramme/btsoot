@@ -18,34 +18,12 @@ return 6 = couldnt close dest fd
 #include<unistd.h>
 #include<sys/sendfile.h>
 
-int copy(char *source, char *destination);
-
-int main(int argc, char *argv[])
-{
-	int exit_code;
-
-	if(argc != 3)
-	{
-		return -1;
-	}
-
-	exit_code = copy(argv[1], argv[2]);
-	return exit_code;
-}
-
 int copy(char *source, char *destination)
 {
 	int fd_source;
 	int fd_destination;
-	char buffer[BUFSIZ];
 	int dest_flags;
 	mode_t permissions;
-	ssize_t read_check;
-	ssize_t temp_offset;
-
-	/*compiler complains...*/
-	read_check = 0;
-	temp_offset = 0;
 	
 	fd_source = open(source, O_RDONLY);
 	if(fd_source == -1)
@@ -70,6 +48,59 @@ int copy(char *source, char *destination)
 	
 	/*close fds*/
 	
+	if(close(fd_source) == -1)
+	{
+		return 5;
+	}
+	if(close(fd_destination) == -1)
+	{
+		return 6;
+	}
+	
+	return 0;
+}
+
+int copy_fallback(char *source, char *destination)
+{
+	int fd_source;
+	int fd_destination;
+	char buffer[BUFSIZ];
+	int dest_flags;
+	mode_t permissions;
+	ssize_t read_check;
+
+	/*compiler complains...*/
+	read_check = 0;
+
+	fd_source = open(source, O_RDONLY);
+	if(fd_source == -1)
+	{
+		return 1;
+	}
+	
+	dest_flags = O_CREAT | O_WRONLY | O_TRUNC;
+	
+	permissions = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
+
+	fd_destination = open(destination, dest_flags, permissions);
+	if(fd_destination == -1)
+	{
+		return 2;
+	}
+	
+	while((read_check = read(fd_source, buffer, BUFSIZ)) > 0)
+	{
+		if(write(fd_destination, buffer, read_check) != read_check)
+		{
+			return 3;
+		}
+	}
+	if(read_check == -1)
+	{
+		return 4;
+	}
+	
+	/*close fds*/
 	if(close(fd_source) == -1)
 	{
 		return 5;
