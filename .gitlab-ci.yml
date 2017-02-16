@@ -25,7 +25,7 @@ dpkg:
     - python3.6 package_deb_replace_version.py $CI_BUILD_TAG
     - mkdir -p btsoot_$CI_BUILD_TAG/usr/local/bin
     - mkdir -p btsoot_$CI_BUILD_TAG/etc/btsoot/scans
-    - cp src/btsoot btsoot_$CI_BUILD_TAG/usr/local/bin/btsoot
+    - cp btsoot btsoot_$CI_BUILD_TAG/usr/local/bin/btsoot
     - dpkg-deb --build btsoot_$CI_BUILD_TAG
   artifacts:
     paths:

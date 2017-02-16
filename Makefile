@@ -1,13 +1,12 @@
 all:
-	cd ./src/ && $(MAKE) all && cp btsoot ../btsoot
+	gcc -Wall -ansi -O3 -march=native btsoot.c backup.c copy.c -o btsoot
 install:
 	cp btsoot /usr/local/bin/btsoot
 	mkdir -p /etc/btsoot/scans
 update:
 	cp btsoot /usr/local/bin/btsoot
-uninstall:
+remove:
 	rm /usr/local/bin/btsoot
 	rm -rf /etc/btsoot
 clean:
-	cd ./src/ && $(MAKE) clean
 	rm btsoot
