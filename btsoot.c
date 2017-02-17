@@ -16,8 +16,15 @@
 
 #define CONFIG_PATH "btsoot.conf"
 
+int test_last_char(const char *string)
+{
+	return (string && *string && string[strlen(string) - 1] == '/') ? 0 : 1;
+}
+
 int main(int argc, char *argv[])
 {
+	char argv2_copy[256];
+	char argv3_copy[256];
 	/*
 	 * CONFIG FILE ACCESS
 	 */
@@ -44,7 +51,13 @@ int main(int argc, char *argv[])
 	{
 		if(strcmp(argv[1], "add") == 0)
 		{
-			puts("The string should not be suffixed by a slash (/)");
+			strcpy(argv2_copy, argv[2]);
+			strcpy(argv3_copy, argv[3]);
+			if(test_last_char((const char *)argv2_copy) == 0 || test_last_char((const char *)argv3_copy) == 0)
+			{
+				puts("Please remove suffixed slash from paths!");
+				return 1;
+			}
 			fprintf(config, "%s,%s,%s\n", argv[2], argv[3], argv[4]);
 		}
 	}
