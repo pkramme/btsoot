@@ -53,7 +53,8 @@ int main(int argc, char *argv[])
 		{
 			strcpy(argv2_copy, argv[2]);
 			strcpy(argv3_copy, argv[3]);
-			if(test_last_char((const char *)argv2_copy) == 0 || test_last_char((const char *)argv3_copy) == 0)
+			if(	test_last_char((const char *)argv2_copy) == 0 || 
+				test_last_char((const char *)argv3_copy) == 0)
 			{
 				puts("Please remove suffixed slash from paths!");
 				return 1;
