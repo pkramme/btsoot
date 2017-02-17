@@ -23,18 +23,11 @@ int test_last_char(const char *string)
 
 int main(int argc, char *argv[])
 {
-	char argv2_copy[256];
-	char argv3_copy[256];
-	/*
-	 * CONFIG FILE ACCESS
-	 */
+	/* Config filestreams */
 	FILE *config;
 	config = fopen(CONFIG_PATH, "a+");
 
-	/* 
-	 * Argument resolving code
-	 */
-
+	/* Argument resolving code */
 	if(argc < 2)
 	{
 		puts("USAGE");
@@ -51,10 +44,8 @@ int main(int argc, char *argv[])
 	{
 		if(strcmp(argv[1], "add") == 0)
 		{
-			strcpy(argv2_copy, argv[2]);
-			strcpy(argv3_copy, argv[3]);
-			if(	test_last_char((const char *)argv2_copy) == 0 || 
-				test_last_char((const char *)argv3_copy) == 0)
+			if(	test_last_char((const char *)argv[2]) == 0 || 
+				test_last_char((const char *)argv[3]) == 0)
 			{
 				puts("Please remove suffixed slash from paths!");
 				return 1;
