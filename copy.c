@@ -12,11 +12,7 @@ return 5 = couldnt close source fd
 return 6 = couldnt close dest fd
 */
 
-#include<stdio.h>
-#include<fcntl.h>
-#include<sys/stat.h>
-#include<unistd.h>
-#include<sys/sendfile.h>
+#include"copy.h"
 
 int copy(char *source, char *destination)
 {
@@ -90,7 +86,7 @@ int copy_fallback(char *source, char *destination)
 	
 	while((read_check = read(fd_source, buffer, BUFSIZ)) > 0)
 	{
-		if(write(fd_destination, buffer, read_check) != read_check)
+		if(write(fd_destination, buffer, (size_t)read_check) != read_check)
 		{
 			return 3;
 		}
