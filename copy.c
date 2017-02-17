@@ -44,7 +44,7 @@ int copy(char *source, char *destination)
 	struct stat stat_source;
 	fstat(fd_source, &stat_source);
 
-	sendfile(fd_destination, fd_source, 0, stat_source.st_size);
+	sendfile(fd_destination, fd_source, 0, (size_t)stat_source.st_size);
 	
 	/*close fds*/
 	
