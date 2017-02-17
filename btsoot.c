@@ -16,6 +16,8 @@
 
 #define CONFIG_PATH "btsoot.conf"
 
+int test_last_char(const char *string);
+
 int test_last_char(const char *string)
 {
 	return (string && *string && string[strlen(string) - 1] == '/') ? 0 : 1;
@@ -38,7 +40,9 @@ int main(int argc, char *argv[])
 		int pip_purp_id;
 		char src_path[256];
 		char dest_path[256];
-	} *job;
+	};
+
+	struct job *job = NULL;
 
 	if(argc >= 5)
 	{
