@@ -52,6 +52,7 @@ int main(int argc, char *argv[])
 				test_last_char((const char *)argv[3]) == 0)
 			{
 				puts("Please remove suffixed slash from paths!");
+				fclose(config);
 				return 1;
 			}
 			fprintf(config, "%s,%s,%s\n", argv[2], argv[3], argv[4]);
@@ -61,8 +62,7 @@ int main(int argc, char *argv[])
 	{
 		if(strcmp(argv[1], "rm") == 0)
 		{
-			printf("Removing %s\n", argv[2]);
-			/*TODO: Add code for config deletion*/
+			printf("Removing %s", argv[2]);
 		}
 		else if(strcmp(argv[1], "list") == 0)
 		{
@@ -77,12 +77,10 @@ int main(int argc, char *argv[])
 		else if(strcmp(argv[1], "backup") == 0)
 		{
 			job->pip_purp_id = PIP_PURP_ID_BACKUP;
-			
 		}
 		else if(strcmp(argv[1], "restore") == 0)
 		{
-			printf("Restoring %s\n", argv[2]);
-			/*TODO: Add code for starting restore pipeline routine*/
+			job->pip_purp_id = PIP_PURP_ID_RESTORE;
 		}
 		else
 		{
