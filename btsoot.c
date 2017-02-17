@@ -16,13 +16,18 @@
 
 #define CONFIG_PATH "btsoot.conf"
 
+int test_last_char(const char *string)
+{
+	return (string && *string && string[strlen(string) - 1] == '/') ? 0 : 1;
+}
+
 int main(int argc, char *argv[])
 {
+	/* Config filestreams */
+	FILE *config;
+	config = fopen(CONFIG_PATH, "a+");
 
-	/* 
-	 * Argument resolving code
-	 */
-
+	/* Argument resolving code */
 	if(argc < 2)
 	{
 		puts("USAGE");
@@ -39,8 +44,13 @@ int main(int argc, char *argv[])
 	{
 		if(strcmp(argv[1], "add") == 0)
 		{
-			printf("Adding %s with src=%s and dest=%s\n", argv[2], argv[3], argv[4]);
-			/*TODO: Add code for config creation, adding*/
+			if(	test_last_char((const char *)argv[2]) == 0 || 
+				test_last_char((const char *)argv[3]) == 0)
+			{
+				puts("Please remove suffixed slash from paths!");
+				return 1;
+			}
+			fprintf(config, "%s,%s,%s\n", argv[2], argv[3], argv[4]);
 		}
 	}
 	else if(argc >= 3)
@@ -79,6 +89,7 @@ int main(int argc, char *argv[])
 	{
 		puts("Not enough args given");
 	}
+	fclose(config);
 	return 0;
 }
 
