@@ -1,7 +1,7 @@
 # BTSOOT [![build status](https://git.paukra.com/open-source/btsoot/badges/master/build.svg)](https://git.paukra.com/open-source/btsoot/commits/master)  
 
 ## What is BTSOOT
-`tl;dr: A backup/cloning tool`  
+`tl;dr: A data selective backup/cloning tool that only manipulates changed data`  
 First of: BTSOOT should only be used under very special circumstaces. If these requirements are
 met, BTSOOT could be **your** backup/cloning solution. A list of this circumstaces:
 - You want to create offsite backups
