@@ -1,5 +1,5 @@
 all:
-	gcc -Wall -ansi -O3 -march=native btsoot.c backup.c copy.c -o btsoot
+	gcc -Wall -O3 -march=native btsoot.c crc.c backup.c copy.c -o btsoot
 install:
 	cp btsoot /usr/local/bin/btsoot
 	mkdir -p /etc/btsoot/scans
