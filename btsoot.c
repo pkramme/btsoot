@@ -15,7 +15,7 @@
 #define PIP_PURP_ID_RESTORE 2
 
 #define CONFIG_PATH "btsoot.conf"
-#define COPY_CONFIG_PATH "btsoot.conf.copy"
+#define COPY_CONFIG_PATH "CONFIG_PATH.copy"
 
 int test_last_char(const char *string);
 
