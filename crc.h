@@ -13,8 +13,8 @@
  *    ReflectOut    = True
  *    Algorithm     = table-driven
  *****************************************************************************/
-#ifndef __CRC_H__
-#define __CRC_H__
+#ifndef CRC_H_INCLUDED
+#define CRC_H_INCLUDED
 
 #include <stdlib.h>
 #include <stdint.h>
