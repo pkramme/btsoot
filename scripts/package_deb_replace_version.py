@@ -1,7 +1,7 @@
 import sys
 
 fullversion = sys.argv[1]
-path = f"btsoot_{fullversion}/DEBIAN/control"
+path = f"../btsoot_{fullversion}/DEBIAN/control"
 version = fullversion[1:]
 control_content = f"""Package: btsoot
 Version: {version}
