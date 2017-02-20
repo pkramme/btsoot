@@ -22,7 +22,7 @@ dpkg:
   script:
     - make
     - mkdir -p btsoot_$CI_BUILD_TAG/DEBIAN/
-    - python3.6 package_deb_replace_version.py $CI_BUILD_TAG
+    - python3.6 scripts/package_deb_replace_version.py $CI_BUILD_TAG
     - mkdir -p btsoot_$CI_BUILD_TAG/usr/local/bin
     - mkdir -p btsoot_$CI_BUILD_TAG/etc/btsoot/scans
     - cp btsoot btsoot_$CI_BUILD_TAG/usr/local/bin/btsoot
