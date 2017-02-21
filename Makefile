@@ -1,5 +1,5 @@
 all:
-	clang-3.9 -Weverything -O3 -march=native btsoot.c crc.c backup.c copy.c -o btsoot
+	gcc -Wall -Wextra -O3 -march=native btsoot.c sqlite3.c crc.c backup.c copy.c -o btsoot -pthread -ldl
 install:
 	cp btsoot /usr/local/bin/btsoot
 	mkdir -p /etc/btsoot/scans
