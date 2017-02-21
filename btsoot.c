@@ -5,17 +5,7 @@
  * Licensed under MIT License
  */
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-
-#include"copy.h"
-
-#define PIP_PURP_ID_BACKUP 1
-#define PIP_PURP_ID_RESTORE 2
-
-#define CONFIG_PATH "btsoot.conf"
-#define COPY_CONFIG_PATH "btsoot.conf.temp"
+#include"btsoot.h"
 
 int test_last_char(const char *string);
 
@@ -26,23 +16,14 @@ int test_last_char(const char *string)
 
 int main(int argc, char *argv[])
 {
+	job j;
+	job *jptr = &j;
+
 	/* Argument resolving code */
 	if(argc < 2)
 	{
 		puts("USAGE");
 	}
-	
-	struct job {
-		char block_name[256];
-		int pip_purp_id;
-		char src_path[4096];
-		char dest_path[4096];
-		char db_path[4096];
-	};
-
-	struct job job;
-
-	job.pip_purp_id = 30;
 
 	if(argc >= 5)
 	{
@@ -89,8 +70,8 @@ int main(int argc, char *argv[])
 		}
 		else if(strcmp(argv[1], "backup") == 0)
 		{
-			job.pip_purp_id = PIP_PURP_ID_BACKUP;
-			strcpy(job.block_name, argv[2]);
+			j.pip_purp_id = PIP_PURP_ID_BACKUP;
+			strcpy(j.block_name, argv[2]);
 
 			FILE *config = fopen(CONFIG_PATH, "r");
 			char buffer[8448];
@@ -98,22 +79,20 @@ int main(int argc, char *argv[])
 			{
 				if(strstr(buffer, argv[2]))
 				{
-					strcpy(job.block_name, strtok(buffer, ","));
-					strcpy(job.src_path, strtok(NULL, ","));
-					strcpy(job.dest_path, strtok(NULL, ","));
+					strcpy(j.block_name, strtok(buffer, ","));
+					strcpy(j.src_path, strtok(NULL, ","));
+					strcpy(j.dest_path, strtok(NULL, ","));
 
-					strcpy(job.dest_path, strtok(job.dest_path, (char *) "\n"));
+					strcpy(j.dest_path, strtok(j.dest_path, (char *) "\n"));
 
-					puts(job.block_name);
-					puts(job.src_path);
-					puts(job.dest_path);
+					backup(jptr);
 				}
 			}
 			fclose(config);
 		}
 		else if(strcmp(argv[1], "restore") == 0)
 		{
-			job.pip_purp_id = PIP_PURP_ID_RESTORE;
+			j.pip_purp_id = PIP_PURP_ID_RESTORE;
 		}
 		else
 		{

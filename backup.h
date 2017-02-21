@@ -1,7 +1,11 @@
 #ifndef BACKUP_H_INCLUDED
 #define BACKUP_H_INCLUDED
 
-int backup(void);
+#include<stdio.h>
+
+#include"btsoot.h"
+
+int backup(job *job_import);
 
 #endif
 
