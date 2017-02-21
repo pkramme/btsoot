@@ -15,7 +15,7 @@
 #define PIP_PURP_ID_RESTORE 2
 
 #define CONFIG_PATH "btsoot.conf"
-#define COPY_CONFIG_PATH "CONFIG_PATH.temp"
+#define COPY_CONFIG_PATH "btsoot.conf.temp"
 
 int test_last_char(const char *string);
 
@@ -35,11 +35,14 @@ int main(int argc, char *argv[])
 	struct job {
 		char block_name[256];
 		int pip_purp_id;
-		char src_path[256];
-		char dest_path[256];
+		char src_path[4096];
+		char dest_path[4096];
+		char db_path[4096];
 	};
 
-	struct job *job = NULL;
+	struct job job;
+
+	job.pip_purp_id = 30;
 
 	if(argc >= 5)
 	{
@@ -63,7 +66,7 @@ int main(int argc, char *argv[])
 		{
 			FILE *config = fopen(CONFIG_PATH, "r");
 			FILE *copyconfig = fopen(COPY_CONFIG_PATH, "w");
-			char buffer[256];
+			char buffer[8448];
 			while(fgets(buffer, sizeof(buffer), config) != NULL)
 			{
 				if(strstr(buffer, argv[2]))
@@ -82,20 +85,35 @@ int main(int argc, char *argv[])
 		else if(strcmp(argv[1], "list") == 0)
 		{
 			printf("Listing %s\n", argv[2]);
-			/*TODO: Add code for config listing*/
+			/*TODO: Add code for config listing blocks*/
 		}
-
-		/*
-		 * HERE COME THE REAL PIPELINES...
-		 */
-
 		else if(strcmp(argv[1], "backup") == 0)
 		{
-			job->pip_purp_id = PIP_PURP_ID_BACKUP;
+			job.pip_purp_id = PIP_PURP_ID_BACKUP;
+			strcpy(job.block_name, argv[2]);
+
+			FILE *config = fopen(CONFIG_PATH, "r");
+			char buffer[8448];
+			while(fgets(buffer, sizeof(buffer), config) != NULL)
+			{
+				if(strstr(buffer, argv[2]))
+				{
+					strcpy(job.block_name, strtok(buffer, ","));
+					strcpy(job.src_path, strtok(NULL, ","));
+					strcpy(job.dest_path, strtok(NULL, ","));
+
+					strcpy(job.dest_path, strtok(job.dest_path, (char *) "\n"));
+
+					puts(job.block_name);
+					puts(job.src_path);
+					puts(job.dest_path);
+				}
+			}
+			fclose(config);
 		}
 		else if(strcmp(argv[1], "restore") == 0)
 		{
-			job->pip_purp_id = PIP_PURP_ID_RESTORE;
+			job.pip_purp_id = PIP_PURP_ID_RESTORE;
 		}
 		else
 		{
