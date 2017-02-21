@@ -4,6 +4,7 @@
 #include<stdio.h>
 
 #include"btsoot.h"
+#include"sqlite3.h"
 
 int backup(job *job_import);
 
