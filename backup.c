@@ -2,7 +2,6 @@
 
 int backup(job *job_import)
 {
-	puts(job_import->block_name);
 	/* BACKUP PIPELINE
 	 * 
 	 * Needed functions:
