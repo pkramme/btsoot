@@ -1,8 +1,8 @@
 /**
- * \file crc4.h
+ * \file crc.h
  * Functions and types for CRC checks.
  *
- * Generated on Wed Feb 22 18:32:58 2017,
+ * Generated on Wed Feb 22 18:42:57 2017,
  * by pycrc v0.9, https://pycrc.org
  * using the configuration:
  *    Width         = 32
@@ -14,8 +14,8 @@
  *    Algorithm     = table-driven
  *    SliceBy       = 16
  *****************************************************************************/
-#ifndef __CRC4_H__
-#define __CRC4_H__
+#ifndef __CRC_H__
+#define __CRC_H__
 
 #include <stdlib.h>
 #include <stdint.h>
@@ -80,4 +80,4 @@ static inline crc_t crc_finalize(crc_t crc)
 }           /* closing brace for extern "C" */
 #endif
 
-#endif      /* __CRC4_H__ */
+#endif      /* __CRC_H__ */

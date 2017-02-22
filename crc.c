@@ -1,8 +1,8 @@
 /**
- * \file crc4.c
+ * \file crc.c
  * Functions and types for CRC checks.
  *
- * Generated on Wed Feb 22 18:33:05 2017,
+ * Generated on Wed Feb 22 18:42:51 2017,
  * by pycrc v0.9, https://pycrc.org
  * using the configuration:
  *    Width         = 32
@@ -14,7 +14,7 @@
  *    Algorithm     = table-driven
  *    SliceBy       = 16
  *****************************************************************************/
-#include "crc4.h"     /* include the header file generated with pycrc */
+#include "crc.h"     /* include the header file generated with pycrc */
 #include <stdlib.h>
 #include <stdint.h>
 #include <endian.h>
