@@ -1,8 +1,8 @@
 #ifndef BACKUP_H_INCLUDED
 #define BACKUP_H_INCLUDED
 
-#include<stdio.h>
 #define _XOPEN_SOURCE 500
+#include<stdio.h>
 #include<ftw.h>
 #include<stdint.h>
 
