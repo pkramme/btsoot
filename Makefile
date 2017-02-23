@@ -1,5 +1,5 @@
 all:
-	gcc -Wall -Wextra -O3 btsoot.c sqlite3.c crc.c backup.c copy.c -o btsoot -pthread -ldl
+	gcc -Wall -Wextra -O3 btsoot.c crc.c backup.c copy.c sqlite3.c -o btsoot -pthread -ldl
 install:
 	cp btsoot /usr/local/bin/btsoot
 	mkdir -p /etc/btsoot/scans
