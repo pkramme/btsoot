@@ -11,7 +11,6 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 		ftwbuf->level, (intmax_t) sb->st_size,
 		fpath, ftwbuf->base, fpath + ftwbuf->base);
 	fclose(scanfile);
-	printf("%d", ftwbuf->base);
 	return 0;
 }
 
@@ -39,7 +38,6 @@ int backup(job *job_import)
 	recall = sqlite3_open(db_name, &database);
 
 	/*FILEWALKER*/
-	printf("%s\n", job_import->src_path);
 	if(nftw(job_import->src_path, filewalk_info_callback, 20, 0) == -1)
 	{
 		fprintf(stderr, "ERROR NFTW\n");
@@ -50,9 +48,6 @@ int backup(job *job_import)
 
 	/*EXECUTOR*/
 
-
-
-
 	/* BACKUP PIPELINE
 	 * 
 	 * Needed functions:
@@ -61,6 +56,7 @@ int backup(job *job_import)
 	 *  - diff this scan with the last
 	 *  - execute all necessary changes
 	 */
+
 	sqlite3_close(database);
 	return 0;
 }
