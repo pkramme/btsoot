@@ -2,14 +2,38 @@
 
 static int filewalk_info_callback(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf)
 {
-	FILE *scanfile = fopen("scan.scan", "a");
-	fprintf(scanfile, "%-3s %2d %7jd   %-40s %d %s\n",
+	puts(fpath);
+	FILE *fp = fopen(fpath, "rb");
+	crc_t checksum;
+	char buffer[BUFSIZ];
+	int total_read = 0;
+	puts("1");
+
+	if(tflag == FTW_F)
+	{
+		checksum = crc_init();
+		while((total_read = fread(buffer, BUFSIZ, 1, fp)) > 0)
+		{
+			checksum = crc_update(checksum, buffer, sizeof(buffer));
+		}
+		checksum = crc_finalize(checksum);
+		puts("2");
+	}
+	else
+	{
+		checksum = 0;
+	}
+	FILE *scanfile = fopen("test.scan", "a");
+	fprintf(scanfile, "%-3s %2d %7jd %-40s %llx\n",
 		(tflag == FTW_D) ?   "d"   : (tflag == FTW_DNR) ? "dnr" :
 		(tflag == FTW_DP) ?  "dp"  : (tflag == FTW_F) ?   "f" :
 		(tflag == FTW_NS) ?  "ns"  : (tflag == FTW_SL) ?  "sl" :
 		(tflag == FTW_SLN) ? "sln" : "???",
 		ftwbuf->level, (intmax_t) sb->st_size,
-		fpath, ftwbuf->base, fpath + ftwbuf->base);
+		fpath, (unsigned long long int) checksum);
+	
+	puts("3");
+	fclose(fp);
 	fclose(scanfile);
 	printf("%d", ftwbuf->base);
 	return 0;
