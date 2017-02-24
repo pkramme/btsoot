@@ -2,12 +2,13 @@
 
 static int filewalk_info_callback(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf)
 {
+	/*
 	puts(fpath);
+	*/
 	FILE *fp = fopen(fpath, "rb");
 	crc_t checksum;
 	char buffer[BUFSIZ];
 	int total_read = 0;
-	puts("1");
 
 	if(tflag == FTW_F)
 	{
@@ -17,12 +18,12 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 			checksum = crc_update(checksum, buffer, sizeof(buffer));
 		}
 		checksum = crc_finalize(checksum);
-		puts("2");
 	}
 	else
 	{
 		checksum = 0;
 	}
+
 	FILE *scanfile = fopen("test.scan", "a");
 	fprintf(scanfile, "%-3s %2d %7jd %-40s %llx\n",
 		(tflag == FTW_D) ?   "d"   : (tflag == FTW_DNR) ? "dnr" :
@@ -30,12 +31,11 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 		(tflag == FTW_NS) ?  "ns"  : (tflag == FTW_SL) ?  "sl" :
 		(tflag == FTW_SLN) ? "sln" : "???",
 		ftwbuf->level, (intmax_t) sb->st_size,
-		fpath, (unsigned long long int) checksum);
+		fpath, (unsigned long long int) checksum
+	);
 	
-	puts("3");
 	fclose(fp);
 	fclose(scanfile);
-	printf("%d", ftwbuf->base);
 	return 0;
 }
 
@@ -61,6 +61,40 @@ int backup(job *job_import)
 	strcpy(db_name, job_import->block_name); 
 	strcat(db_name, ".dat");
 	recall = sqlite3_open(db_name, &database);
+
+	/*	TABLE CREATION*/
+	sqlite3_exec(database, 
+		"CREATE TABLE files(filename TEXT, type TEXT, crc TEXT)", 
+		sqlite_callback, 
+		0, 
+		&errormessage
+	);
+	if(errormessage != NULL)
+	{
+		printf("%s\n", errormessage);
+	}
+	else
+	{
+		puts("SUCCESS");
+	}
+
+	sqlite3_free(errormessage);
+
+	/*	TEST*/
+	sqlite3_exec(database,
+		"INSERT INTO files(filename, type, crc) VALUES(tefwest, fileif, 0xfwe0)", 
+		sqlite_callback,
+		0,
+		&errormessage
+	);
+	if(errormessage != NULL)
+	{
+		printf("%s", errormessage);
+	}
+	else
+	{
+		puts("SUCCESS");
+	}
 
 	/*FILEWALKER*/
 	printf("%s\n", job_import->src_path);
