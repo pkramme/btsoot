@@ -8,6 +8,7 @@
 
 #include"sqlite3.h"
 #include"btsoot.h"
+#include"crc.h"
 
 int backup(job *job_import);
 
