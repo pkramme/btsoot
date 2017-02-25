@@ -29,14 +29,6 @@ char db_init(char blockname[256])
 		0, 
 		&errormessage
 	);
-	if(errormessage != NULL)
-	{
-		printf("%s\n", errormessage);
-	}
-	else
-	{
-		puts("SUCCESS");
-	}
 
 	return &errormessage;
 }
