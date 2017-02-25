@@ -36,62 +36,13 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 	return 0;
 }
 
-static int sqlite_callback(void *notused, int argc, char **argv, char **azcolumnname)
-{
-	int i;
-	for(i = 0; i < argc; i++)
-	{
-		printf("%s = %s\n", azcolumnname[i], argv[i] ? argv[i] : "NULL");
-	}
-	printf("\n");
-	return 0;
-}
 
 int backup(job *job_import)
 {
 	/*DATABASE INIT*/
-	sqlite3 *database;
-	char *errormessage = 0;
-	int recall;
-
-	char db_name[256];
-	strcpy(db_name, job_import->block_name); 
-	strcat(db_name, ".dat");
-	recall = sqlite3_open(db_name, &database);
-
-	/*	TABLE CREATION*/
-	sqlite3_exec(database, 
-		"CREATE TABLE IF NOT EXISTS files(filename TEXT, type TEXT, crc TEXT)", 
-		sqlite_callback, 
-		0, 
-		&errormessage
-	);
-	if(errormessage != NULL)
-	{
-		printf("%s\n", errormessage);
-	}
-	else
-	{
-		puts("SUCCESS");
-	}
-
-	sqlite3_free(errormessage);
-
-	/*	TEST*/
-	sqlite3_exec(database,
-		"INSERT INTO files(filename, type, crc) VALUES(tefwest, fileif, 0xfwe0)", 
-		sqlite_callback,
-		0,
-		&errormessage
-	);
-	if(errormessage != NULL)
-	{
-		printf("%s", errormessage);
-	}
-	else
-	{
-		puts("SUCCESS");
-	}
+	char *error;
+	error = db_init(job_import->block_name);
+	printf("%s", error);
 
 	/*FILEWALKER*/
 	printf("%s\n", job_import->src_path);
@@ -108,7 +59,8 @@ int backup(job *job_import)
 
 
 
-	/* BACKUP PIPELINE
+	/**
+	 * BACKUP PIPELINE
 	 * 
 	 * Needed functions:
 	 *  - scan for files and directories, record size of files
@@ -116,7 +68,6 @@ int backup(job *job_import)
 	 *  - diff this scan with the last
 	 *  - execute all necessary changes
 	 */
-	sqlite3_close(database);
 	return 0;
 }
 
