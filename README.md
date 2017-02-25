@@ -43,8 +43,7 @@ product.
 ---
 
 ## Dependencies
-- Linux OS (no specific distribution)
-- [Python 3.6](https://python.org) or above
+- make
 - build-essential
 
 ---
