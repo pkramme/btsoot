@@ -2,9 +2,6 @@
 
 static int filewalk_info_callback(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf)
 {
-	/*
-	puts(fpath);
-	*/
 	FILE *fp = fopen(fpath, "rb");
 	crc_t checksum;
 	char buffer[BUFSIZ];
@@ -64,7 +61,7 @@ int backup(job *job_import)
 
 	/*	TABLE CREATION*/
 	sqlite3_exec(database, 
-		"CREATE TABLE files(filename TEXT, type TEXT, crc TEXT)", 
+		"CREATE TABLE IF NOT EXISTS files(filename TEXT, type TEXT, crc TEXT)", 
 		sqlite_callback, 
 		0, 
 		&errormessage
