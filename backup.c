@@ -21,7 +21,7 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 		checksum = 0;
 	}
 
-	/*
+
 	FILE *scanfile = fopen("test.scan", "a");
 	fprintf(scanfile, "%-3s %2d %7jd %-40s %llx\n",
 		(tflag == FTW_D) ?   "d"   : (tflag == FTW_DNR) ? "dnr" :
@@ -31,9 +31,9 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 		ftwbuf->level, (intmax_t) sb->st_size,
 		fpath, (unsigned long long int) checksum
 	);
-	*/
+
 	fclose(fp);
-	//fclose(scanfile);
+	fclose(scanfile);
 	return 0;
 }
 
@@ -41,8 +41,8 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 int backup(job *job_import)
 {
 	/*DATABASE INIT*/
-	char *error;
-	error = db_init(job_import->block_name);
+	int *error;
+	error = (int) db_init(job_import->block_name);
 	if(error != NULL)
 	{
 		printf("%s\n", error);
