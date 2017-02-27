@@ -1,36 +1,41 @@
 #include"backup.h"
 
+static sqlite3 *database = NULL;
+
 static int filewalk_info_callback(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf)
 {
 	FILE *fp = fopen(fpath, "rb");
+	FILE *scanfile = fopen("test.scan", "a");
+
 	crc_t checksum;
 	char buffer[BUFSIZ];
 	int total_read = 0;
 
 	if(tflag == FTW_F)
 	{
+		printf("WHOPPY\n");
 		checksum = crc_init();
 		while((total_read = fread(buffer, BUFSIZ, 1, fp)) > 0)
 		{
 			checksum = crc_update(checksum, buffer, sizeof(buffer));
 		}
 		checksum = crc_finalize(checksum);
+
+		printf("0x%llx\n", checksum);
+		fprintf(scanfile, "%-3s %2d %7jd %-40s 0x%llx\n",
+			(tflag == FTW_D) ?   "d"   : (tflag == FTW_DNR) ? "dnr" :
+			(tflag == FTW_DP) ?  "dp"  : (tflag == FTW_F) ?   "f" :
+			(tflag == FTW_NS) ?  "ns"  : (tflag == FTW_SL) ?  "sl" :
+			(tflag == FTW_SLN) ? "sln" : "???",
+			ftwbuf->level, (intmax_t) sb->st_size,
+			fpath, (unsigned long long int) checksum
+		);
 	}
 	else
 	{
 		checksum = 0;
 	}
 
-
-	FILE *scanfile = fopen("test.scan", "a");
-	fprintf(scanfile, "%-3s %2d %7jd %-40s %llx\n",
-		(tflag == FTW_D) ?   "d"   : (tflag == FTW_DNR) ? "dnr" :
-		(tflag == FTW_DP) ?  "dp"  : (tflag == FTW_F) ?   "f" :
-		(tflag == FTW_NS) ?  "ns"  : (tflag == FTW_SL) ?  "sl" :
-		(tflag == FTW_SLN) ? "sln" : "???",
-		ftwbuf->level, (intmax_t) sb->st_size,
-		fpath, (unsigned long long int) checksum
-	);
 
 	fclose(fp);
 	fclose(scanfile);
@@ -40,13 +45,18 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 
 int backup(job *job_import)
 {
-	/*DATABASE INIT*/
+	/*DATABASE CREATE*/
 	int *error;
 	error = (int) db_init(job_import->block_name);
 	if(error != NULL)
 	{
+		sqlite3_free(error);
 		printf("%s\n", error);
 	}
+
+	/*CURRENT DATABASE INIT*/
+		/*USE CLEAR FROM CREATE*/
+	sqlite3_open(job_import->block_name, &database);
 
 	/*FILEWALKER*/
 	printf("%s\n", job_import->src_path);
@@ -72,6 +82,7 @@ int backup(job *job_import)
 	 *  - diff this scan with the last
 	 *  - execute all necessary changes
 	 */
+	sqlite3_close(database);
 	return 0;
 }
 
