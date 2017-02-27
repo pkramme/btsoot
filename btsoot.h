@@ -5,6 +5,8 @@
 #include<stdlib.h>
 #include<string.h>
 
+#include"color.h"
+
 #define MAX_PATH_LEN 4096
 
 #define PIP_PURP_ID_BACKUP 1
