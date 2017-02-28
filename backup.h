@@ -9,6 +9,7 @@
 #include"sqlite3.h"
 #include"btsoot.h"
 #include"crc.h"
+#include"xxhash.h"
 #include"db.h"
 
 int backup(job *job_import);
