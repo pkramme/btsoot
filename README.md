@@ -1,5 +1,7 @@
 # BTSOOT [![build status](https://git.paukra.com/open-source/btsoot/badges/master/build.svg)](https://git.paukra.com/open-source/btsoot/commits/master)  
 
+THIS SOFTWARE USES xxhash, which is distributed under BSD license.
+
 ## What is BTSOOT
 `tl;dr: A data selective backup/cloning tool that only manipulates changed data`  
 First of: BTSOOT should only be used under very special circumstaces. If these requirements are
