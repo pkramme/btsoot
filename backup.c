@@ -13,13 +13,13 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 
 	if(tflag == FTW_F)
 	{
-		while((total_read = fread(buffer, strlen(buffer), 1, fp)) > 0)
+		while((total_read = fread(buffer, sizeof(buffer), 1, fp)) > 0)
 		{
-			checksum = crc_update(checksum, buffer, strlen(buffer));
+			checksum = crc_update(checksum, (void *)buffer, strlen(buffer));
 		}
 		checksum = crc_finalize(checksum);
 
-		printf("0x%llx\t%s\n", (unsigned long long int) checksum, fpath);
+		printf("0x%llx %s\n", (unsigned long long int) checksum, fpath);
 		fprintf(scanfile, "%-3s %2d %7jd %-40s 0x%llx\n",
 			(tflag == FTW_D) ?   "d"   : (tflag == FTW_DNR) ? "dnr" :
 			(tflag == FTW_DP) ?  "dp"  : (tflag == FTW_F) ?   "f" :
