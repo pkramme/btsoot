@@ -99,6 +99,36 @@ int main(int argc, char *argv[])
 			puts("USAGE");
 		}
 	}
+	else if(argc == 2)
+	{
+		if(strcmp("license", argv[1]) == 0)
+		{
+			puts("BTSOOT is licensed under MIT License.");
+			puts("\nBelow are licenses for dependencies\n");
+
+			puts("xxHash Library");
+			puts("Copyright (c) 2012-2014, Yann Collet");
+			puts("All rights reserved.\n");	
+			puts("Redistribution and use in source and binary forms, with or without modification,");
+			puts("are permitted provided that the following conditions are met:\n");
+
+			puts("* Redistributions of source code must retain the above copyright notice, this");
+			puts("  list of conditions and the following disclaimer.\n");
+			puts("* Redistributions in binary form must reproduce the above copyright notice, this");
+			puts("  list of conditions and the following disclaimer in the documentation and/or");
+			puts("  other materials provided with the distribution.\n");
+			puts("THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND");
+			puts("ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED");
+			puts("WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE");
+			puts("DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR");
+			puts("ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES");
+			puts("(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;");
+			puts("LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON");
+			puts("ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT");
+			puts("(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS");
+			puts("SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.");
+		}
+	}
 	else
 	{
 		puts("Not enough args given");
