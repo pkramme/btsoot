@@ -4,40 +4,50 @@ static sqlite3 *database = NULL;
 
 static int filewalk_info_callback(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf)
 {
-	FILE *fp = fopen(fpath, "rb");
-	FILE *scanfile = fopen("test.scan", "a");
+	//FILE *fp = fopen(fpath, "rb");
+	//FILE *scanfile = fopen("test.scan", "a");
 
-	//crc_t checksum = crc_init();
-	long long int checksum;
-	char buffer[BUFSIZ];
-	int total_read = 0;
+	int fd = open(fpath, O_RDONLY);
+
+	XXH64_state_t state64;
+	char buffer[1];
+	uint64_t total_read = 1;
 
 	if(tflag == FTW_F)
 	{
-		while((total_read = fread(buffer, sizeof(buffer), 1, fp)) > 0)
+		XXH64_reset(&state64, 0);
+		while(total_read)
 		{
-			//checksum = crc_update(checksum, (void *)buffer, strlen(buffer));
+			//total_read = fread(buffer, 1, 1, fp);
+			total_read = read(fd, buffer, 1);
+			XXH64_update(&state64, buffer, strlen(buffer));
+			//printf("%i\n", state64);
 		}
-		//checksum = crc_finalize(checksum);
+		uint64_t h64 = XXH64_digest(&state64);
 
-		printf("0x%llx %s\n", (unsigned long long int) checksum, fpath);
+		printf("%" PRIx64 "\n", h64);
+		printf("%s\n", fpath);
+		/*
 		fprintf(scanfile, "%-3s %2d %7jd %-40s 0x%llx\n",
 			(tflag == FTW_D) ?   "d"   : (tflag == FTW_DNR) ? "dnr" :
 			(tflag == FTW_DP) ?  "dp"  : (tflag == FTW_F) ?   "f" :
 			(tflag == FTW_NS) ?  "ns"  : (tflag == FTW_SL) ?  "sl" :
 			(tflag == FTW_SLN) ? "sln" : "???",
 			ftwbuf->level, (intmax_t) sb->st_size,
-			fpath, (unsigned long long int) checksum
+			fpath, state64
 		);
+		*/
 	}
 	else
 	{
-		checksum = 0;
+		printf("Not a file\n");
 	}
 
 
-	fclose(fp);
-	fclose(scanfile);
+	close(fd);
+
+	//fclose(fp);
+	//fclose(scanfile);
 	return 0;
 }
 
