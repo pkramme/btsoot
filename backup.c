@@ -7,7 +7,8 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 	FILE *fp = fopen(fpath, "rb");
 	FILE *scanfile = fopen("test.scan", "a");
 
-	crc_t checksum = crc_init();
+	//crc_t checksum = crc_init();
+	long long int checksum;
 	char buffer[BUFSIZ];
 	int total_read = 0;
 
@@ -15,9 +16,9 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 	{
 		while((total_read = fread(buffer, sizeof(buffer), 1, fp)) > 0)
 		{
-			checksum = crc_update(checksum, (void *)buffer, strlen(buffer));
+			//checksum = crc_update(checksum, (void *)buffer, strlen(buffer));
 		}
-		checksum = crc_finalize(checksum);
+		//checksum = crc_finalize(checksum);
 
 		printf("0x%llx %s\n", (unsigned long long int) checksum, fpath);
 		fprintf(scanfile, "%-3s %2d %7jd %-40s 0x%llx\n",
