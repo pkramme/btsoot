@@ -4,13 +4,13 @@ static sqlite3 *database = NULL;
 
 static int filewalk_info_callback(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf)
 {
-	//FILE *fp = fopen(fpath, "rb");
+	FILE *fp = fopen(fpath, "rb");
 	//FILE *scanfile = fopen("test.scan", "a");
 
-	int fd = open(fpath, O_RDONLY);
+	//int fd = open(fpath, O_RDONLY);
 
 	XXH64_state_t state64;
-	char buffer[1];
+	char buffer[45000];
 	uint64_t total_read = 1;
 
 	if(tflag == FTW_F)
@@ -18,15 +18,14 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 		XXH64_reset(&state64, 0);
 		while(total_read)
 		{
-			//total_read = fread(buffer, 1, 1, fp);
-			total_read = read(fd, buffer, 1);
-			XXH64_update(&state64, buffer, strlen(buffer));
-			//printf("%i\n", state64);
+			total_read = fread(buffer, 1, 45000, fp);
+			//total_read = read(fd, buffer, 1);
+			XXH64_update(&state64, buffer, sizeof(buffer));
 		}
 		uint64_t h64 = XXH64_digest(&state64);
 
-		printf("%" PRIx64 "\n", h64);
 		printf("%s\n", fpath);
+		printf("%" PRIx64 "\n", h64);
 		/*
 		fprintf(scanfile, "%-3s %2d %7jd %-40s 0x%llx\n",
 			(tflag == FTW_D) ?   "d"   : (tflag == FTW_DNR) ? "dnr" :
@@ -44,10 +43,9 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 	}
 
 
-	close(fd);
+	//close(fd);
 
-	//fclose(fp);
-	//fclose(scanfile);
+	fclose(fp);
 	return 0;
 }
 
