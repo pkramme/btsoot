@@ -42,7 +42,7 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 	}
 	else
 	{
-		printf("Not a file\n");
+		//printf("Not a file\n");
 	}
 
 
