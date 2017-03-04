@@ -23,7 +23,7 @@ struct job {
 	char db_path[MAX_PATH_LEN];
 };
 
-typedef struct job job;
+typedef struct job job_t;
 
 #include"copy.h"
 #include"backup.h"

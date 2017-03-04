@@ -16,8 +16,8 @@ int test_last_char(const char *string)
 
 int main(int argc, char *argv[])
 {
-	job j;
-	job *jptr = &j;
+	job_t j;
+	job_t *jptr = &j;
 
 	/* Argument resolving code */
 	if(argc < 2)

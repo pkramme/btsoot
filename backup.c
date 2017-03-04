@@ -5,9 +5,6 @@ static sqlite3 *database = NULL;
 static int filewalk_info_callback(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf)
 {
 	FILE *fp = fopen(fpath, "rb");
-	//FILE *scanfile = fopen("test.scan", "a");
-
-	//int fd = open(fpath, O_RDONLY);
 
 	XXH64_state_t state64;
 	char buffer[45000];
@@ -19,15 +16,9 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 		while(total_read)
 		{
 			total_read = fread(buffer, 1, 45000, fp);
-			//total_read = read(fd, buffer, 1);
 			XXH64_update(&state64, buffer, sizeof(buffer));
 		}
 		uint64_t h64 = XXH64_digest(&state64);
-
-		/*
-		printf("%s\n", fpath);
-		printf("%" PRIx64 "\n", h64);
-		*/
 
 		/*
 		fprintf(scanfile, "%-3s %2d %7jd %-40s 0x%llx\n",
@@ -44,16 +35,12 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 	{
 		//printf("Not a file\n");
 	}
-
-
-	//close(fd);
-
 	fclose(fp);
 	return 0;
 }
 
 
-int backup(job *job_import)
+int backup(job_t *job_import)
 {
 	/*DATABASE CREATE*/
 	int *error;

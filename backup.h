@@ -18,7 +18,7 @@
 #include"xxhash.h"
 #include"db.h"
 
-int backup(job *job_import);
+int backup(job_t *job_import);
 
 #endif
 #endif
