@@ -24,8 +24,11 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 		}
 		uint64_t h64 = XXH64_digest(&state64);
 
+		/*
 		printf("%s\n", fpath);
 		printf("%" PRIx64 "\n", h64);
+		*/
+
 		/*
 		fprintf(scanfile, "%-3s %2d %7jd %-40s 0x%llx\n",
 			(tflag == FTW_D) ?   "d"   : (tflag == FTW_DNR) ? "dnr" :
