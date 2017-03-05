@@ -1,5 +1,7 @@
-all:
-	gcc -Wall -Wextra -O3 btsoot.c backup.c db.c copy.c xxhash.c sqlite3.c -o btsoot -pthread -ldl
+btsoot:	sqlite3.o btsoot.o xxhash.o db.o backup.o copy.o
+	gcc -Wall -Wextra -O3 btsoot.o backup.o db.o copy.o xxhash.o sqlite3.o -o btsoot -pthread -ldl
+sql:
+	gcc -c sqlite3.c
 install:
 	cp btsoot /usr/local/bin/btsoot
 	mkdir -p /etc/btsoot/scans
