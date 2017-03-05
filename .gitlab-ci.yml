@@ -1,6 +1,5 @@
 stages:
   - build
-  - test
   - package
 
 build:
@@ -11,10 +10,6 @@ build:
     paths:
       - btsoot
 
-test:
-  stage: test
-  script:
-    - scan-build make
 
 dpkg:
   stage: package
