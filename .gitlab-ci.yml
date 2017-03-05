@@ -10,7 +10,6 @@ build:
     paths:
       - btsoot
 
-
 dpkg:
   stage: package
   environment: Production
