@@ -10,11 +10,6 @@ build:
     paths:
       - btsoot
 
-web:
-  stage: package
-  script:
-    - make
-    - cp btsoot /home/paul/dl-paukra-com/btsoot/btsoot-$CI_BUILD_TAG
 
 dpkg:
   stage: package
