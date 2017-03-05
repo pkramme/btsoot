@@ -16,6 +16,13 @@ test:
   script:
     - scan-build make
 
+web:
+  stage: package
+  environment: Production
+  script:
+    - make
+    - cp btsoot /home/paul/dl-paukra-com/btsoot/btsoot-$CI_BUILD_TAG
+
 dpkg:
   stage: package
   environment: Production
