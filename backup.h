@@ -13,7 +13,6 @@
 
 #include"sqlite3.h"
 #include"btsoot.h"
-#include"crc.h"
 
 #define XXH_STATIC_LINKING_ONLY
 #include"xxhash.h"
