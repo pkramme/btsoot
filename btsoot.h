@@ -5,6 +5,8 @@
 #include<stdlib.h>
 #include<string.h>
 
+#include"color.h"
+
 #define MAX_PATH_LEN 4096
 
 #define PIP_PURP_ID_BACKUP 1
@@ -21,7 +23,7 @@ struct job {
 	char db_path[MAX_PATH_LEN];
 };
 
-typedef struct job job;
+typedef struct job job_t;
 
 #include"copy.h"
 #include"backup.h"
