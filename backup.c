@@ -1,20 +1,40 @@
 #include"backup.h"
+
 static sqlite3 *database = NULL;
+
 static int filewalk_info_callback(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf)
 {
 	FILE *fp = fopen(fpath, "rb");
 	XXH64_state_t state64;
 	char buffer[45000];
 	uint64_t total_read = 1;
-	if(tflag == FTW_F)
+	char type[256];
+
+	switch(tflag)
 	{
-		XXH64_reset(&state64, 0);
-		while(total_read)
-		{
-			total_read = fread(buffer, 1, 45000, fp);
-			XXH64_update(&state64, buffer, sizeof(buffer));
-		}
-		uint64_t h64 = XXH64_digest(&state64);
+		case FTW_D:
+			strcpy(type, "directory");
+		case FTW_F:
+			strcpy(type, "file");
+		default:
+			return 0;
+	}
+
+	XXH64_reset(&state64, 0);
+	while(total_read)
+	{
+		total_read = fread(buffer, 1, 45000, fp);
+		XXH64_update(&state64, buffer, sizeof(buffer));
+	}
+	uint64_t h64 = XXH64_digest(&state64);
+
+	printf("%i\n", h64);
+		
+	char *sql_statement = sqlite3_mprintf(
+		"INSERT INTO files(filename, path, type, size, level, crc) VALUES ('%q', '%q', '%q', '%i', '%i', '%q')", ftwbuf->base, fpath, type, sb->st_size, ftwbuf->level, h64);
+
+	sqlite_exec(&database, sql_statement, NULL, NULL, NULL);
+
 		/*
 		fprintf(scanfile, "%-3s %2d %7jd %-40s 0x%llx\n",
 			(tflag == FTW_D) ?   "d"   : (tflag == FTW_DNR) ? "dnr" :
@@ -25,14 +45,10 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 			fpath, state64
 		);
 		*/
-	}
-	else
-	{
-		//printf("Not a file\n");
-	}
 	fclose(fp);
 	return 0;
 }
+
 int backup(job_t *job_import)
 {
 	/*DATABASE CREATE*/
@@ -46,8 +62,12 @@ int backup(job_t *job_import)
 	/*CURRENT DATABASE INIT*/
 		/*USE CLEAR FROM CREATE*/
 	sqlite3_open(job_import->block_name, &database);
-	/*FILEWALKER*/
+	
+	/**
+	 * FILEWALKER
+	 */
 	printf("%s\n", job_import->src_path);
+	
 	if(nftw(job_import->src_path, filewalk_info_callback, 20, 0) == -1)
 	{
 		fprintf(stderr, "ERROR NFTW\n");
@@ -57,7 +77,7 @@ int backup(job_t *job_import)
 	/*CRC CHECK*/
 
 	/*EXECUTOR*/
-	
+
 	/**
 	 * BACKUP PIPELINE
 	 * 
