@@ -9,16 +9,26 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 	char buffer[45000];
 	uint64_t total_read = 1;
 	char type[256];
+	char sql_statement[4096];
+
+	puts("1");
 
 	switch(tflag)
 	{
 		case FTW_D:
+		{
 			strcpy(type, "directory");
+		}
 		case FTW_F:
+		{
 			strcpy(type, "file");
+		}
 		default:
-			return 0;
+		{
+			strcpy(type, "ERROR");
+		}
 	}
+	puts("2");
 
 	XXH64_reset(&state64, 0);
 	while(total_read)
@@ -27,13 +37,22 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 		XXH64_update(&state64, buffer, sizeof(buffer));
 	}
 	uint64_t h64 = XXH64_digest(&state64);
+	puts("3");
 
 	printf("%i\n", h64);
-		
-	char *sql_statement = sqlite3_mprintf(
-		"INSERT INTO files(filename, path, type, size, level, crc) VALUES ('%q', '%q', '%q', '%i', '%i', '%q')", ftwbuf->base, fpath, type, sb->st_size, ftwbuf->level, h64);
+	puts("4");
 
-	sqlite_exec(&database, sql_statement, NULL, NULL, NULL);
+	sqlite3_snprintf(sizeof(sql_statement), sql_statement,
+		"INSERT INTO files [(filename, path, type, size, level, crc)] VALUES ('%q', '%q', '%q', '%i', '%i', '%i')"
+		, ftwbuf->base, fpath, type, sb->st_size, ftwbuf->level, h64);
+	puts("5");
+
+
+	int rc = sqlite3_exec(&database, sql_statement, NULL, NULL, NULL);
+	if(rc != SQLITE_OK)
+	{
+		puts("ERROR");
+	}
 
 		/*
 		fprintf(scanfile, "%-3s %2d %7jd %-40s 0x%llx\n",
