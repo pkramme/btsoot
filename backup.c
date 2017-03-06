@@ -47,7 +47,7 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 	}
 	if(errormessage != NULL)
 	{
-		printf("%s\n", errormessage);
+		printf("%d\n", errormessage);
 	}
 	sqlite3_free(zsql);
 
@@ -74,7 +74,7 @@ int backup(job_t *job_import)
 	if(error != NULL)
 	{
 		sqlite3_free(error);
-		printf("%s\n", error);
+		printf("%d\n", *error);
 	}
 	/*CURRENT DATABASE INIT*/
 		/*USE CLEAR FROM CREATE*/
