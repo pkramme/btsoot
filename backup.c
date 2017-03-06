@@ -9,9 +9,6 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 	char buffer[45000];
 	uint64_t total_read = 1;
 	char type[256];
-	char sql_statement[4096];
-
-	puts("1");
 
 	switch(tflag)
 	{
@@ -28,7 +25,6 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 			strcpy(type, "ERROR");
 		}
 	}
-	puts("2");
 
 	XXH64_reset(&state64, 0);
 	while(total_read)
@@ -37,21 +33,20 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 		XXH64_update(&state64, buffer, sizeof(buffer));
 	}
 	uint64_t h64 = XXH64_digest(&state64);
-	puts("3");
 
-	printf("%i\n", h64);
-	puts("4");
+	char *zsql = sqlite3_mprintf(
+	"INSERT INTO files [(filename, path, type, size, level, crc)] VALUES ('%q', '%q', '%q', '%i', '%i', '%i')"
+		, "test", fpath, type, sb->st_size, ftwbuf->level, h64);
 
-	sqlite3_snprintf(sizeof(sql_statement), sql_statement,
-		"INSERT INTO files [(filename, path, type, size, level, crc)] VALUES ('%q', '%q', '%q', '%i', '%i', '%i')"
-		, ftwbuf->base, fpath, type, sb->st_size, ftwbuf->level, h64);
-	puts("5");
-
-
-	int rc = sqlite3_exec(&database, sql_statement, NULL, NULL, NULL);
-	if(rc != SQLITE_OK)
+	char *errormessage = 0;
+	int rc = sqlite3_exec(&database, zsql, NULL, NULL, &errormessage);
+	if(rc == SQLITE_OK)
 	{
 		puts("ERROR");
+	}
+	if(errormessage != NULL)
+	{
+		printf("%s", errormessage);
 	}
 
 		/*

@@ -23,12 +23,16 @@ char db_init(char blockname[256])
 	recall = sqlite3_open(blockname, &database);
 
 	/*	TABLE CREATION*/
-	sqlite3_exec(database, 
+	recall = sqlite3_exec(database, 
 		"CREATE TABLE IF NOT EXISTS files(filename TEXT, path TEXT, type TEXT, crc INT, size INT, level INT)", 
 		sqlite_callback, 
 		0, 
 		&errormessage
 	);
+	if(recall == SQLITE_OK)
+	{
+		printf("Error\n");
+	}
 
 	return &errormessage;
 }
