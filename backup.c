@@ -47,7 +47,7 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 	}
 	if(errormessage != NULL)
 	{
-		printf("%d\n", errormessage);
+		printf("%s\n", errormessage);
 	}
 	sqlite3_free(zsql);
 
@@ -69,13 +69,7 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 int backup(job_t *job_import)
 {
 	/*DATABASE CREATE*/
-	int *error;
-	error = (int) db_init(job_import->block_name);
-	if(error != NULL)
-	{
-		sqlite3_free(error);
-		printf("%d\n", *error);
-	}
+	db_init(job_import->block_name);
 	/*CURRENT DATABASE INIT*/
 		/*USE CLEAR FROM CREATE*/
 	sqlite3_open(job_import->block_name, &database);

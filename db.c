@@ -13,7 +13,7 @@ static int sqlite_callback(void *notused, int argc, char **argv, char **azcolumn
 }
 */
 
-char db_init(char blockname[256])
+int db_init(char blockname[256])
 {
 	/*DATABASE INIT*/
 	sqlite3 *database;
@@ -32,9 +32,13 @@ char db_init(char blockname[256])
 	);
 	if(recall != SQLITE_OK)
 	{
-		printf("Error\n");
+		fprintf(stderr, "Error\n");
+	}
+	if(errormessage != NULL)
+	{
+		fprintf(stderr, "%s\n", errormessage);
 	}
 
-	return *errormessage;
+	return 0;
 }
 

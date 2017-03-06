@@ -6,7 +6,7 @@
 
 #include"sqlite3.h"
 
-char db_init(char blockname[256]);
+int db_init(char blockname[256]);
 
 #endif
 
