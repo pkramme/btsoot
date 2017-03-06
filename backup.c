@@ -37,7 +37,7 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 
 	char *zsql = sqlite3_mprintf(
 	"INSERT INTO files (filename, path, type, size, level, crc) VALUES ('%q', '%q', '%q', '%i', '%i', '%i')"
-		, "test", fpath, type, sb->st_size, ftwbuf->level, h64);
+		, fpath + ftwbuf->base, fpath, type, sb->st_size, ftwbuf->level, h64);
 
 	char *errormessage = 0;
 	recall = sqlite3_exec(database, zsql, NULL, NULL, &errormessage);
@@ -51,17 +51,6 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 	}
 	sqlite3_free(zsql);
 
-
-		/*
-		fprintf(scanfile, "%-3s %2d %7jd %-40s 0x%llx\n",
-			(tflag == FTW_D) ?   "d"   : (tflag == FTW_DNR) ? "dnr" :
-			(tflag == FTW_DP) ?  "dp"  : (tflag == FTW_F) ?   "f" :
-			(tflag == FTW_NS) ?  "ns"  : (tflag == FTW_SL) ?  "sl" :
-			(tflag == FTW_SLN) ? "sln" : "???",
-			ftwbuf->level, (intmax_t) sb->st_size,
-			fpath, state64
-		);
-		*/
 	fclose(fp);
 	return 0;
 }
