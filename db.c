@@ -35,6 +35,6 @@ char db_init(char blockname[256])
 		printf("Error\n");
 	}
 
-	return &errormessage;
+	return *errormessage;
 }
 
