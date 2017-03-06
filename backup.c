@@ -9,6 +9,7 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 	char buffer[45000];
 	uint64_t total_read = 1;
 	char type[256];
+	int recall;
 
 	switch(tflag)
 	{
@@ -35,19 +36,21 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 	uint64_t h64 = XXH64_digest(&state64);
 
 	char *zsql = sqlite3_mprintf(
-	"INSERT INTO files [(filename, path, type, size, level, crc)] VALUES ('%q', '%q', '%q', '%i', '%i', '%i')"
+	"INSERT INTO files (filename, path, type, size, level, crc) VALUES ('%q', '%q', '%q', '%i', '%i', '%i')"
 		, "test", fpath, type, sb->st_size, ftwbuf->level, h64);
 
 	char *errormessage = 0;
-	int rc = sqlite3_exec(&database, zsql, NULL, NULL, &errormessage);
-	if(rc == SQLITE_OK)
+	recall = sqlite3_exec(database, zsql, NULL, NULL, &errormessage);
+	if(recall != SQLITE_OK)
 	{
 		puts("ERROR");
 	}
 	if(errormessage != NULL)
 	{
-		printf("%s", errormessage);
+		printf("%s\n", errormessage);
 	}
+	sqlite3_free(zsql);
+
 
 		/*
 		fprintf(scanfile, "%-3s %2d %7jd %-40s 0x%llx\n",

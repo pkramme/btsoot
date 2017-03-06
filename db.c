@@ -1,5 +1,6 @@
 #include"db.h"
 
+/*
 static int sqlite_callback(void *notused, int argc, char **argv, char **azcolumnname)
 {
 	int i;
@@ -10,7 +11,7 @@ static int sqlite_callback(void *notused, int argc, char **argv, char **azcolumn
 	printf("\n");
 	return 0;
 }
-
+*/
 
 char db_init(char blockname[256])
 {
@@ -25,11 +26,11 @@ char db_init(char blockname[256])
 	/*	TABLE CREATION*/
 	recall = sqlite3_exec(database, 
 		"CREATE TABLE IF NOT EXISTS files(filename TEXT, path TEXT, type TEXT, crc INT, size INT, level INT)", 
-		sqlite_callback, 
+		0, 
 		0, 
 		&errormessage
 	);
-	if(recall == SQLITE_OK)
+	if(recall != SQLITE_OK)
 	{
 		printf("Error\n");
 	}
