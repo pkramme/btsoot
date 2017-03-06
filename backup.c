@@ -10,30 +10,36 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 	uint64_t total_read = 1;
 	char type[256];
 	int recall;
+	uint64_t h64;
 
 	switch(tflag)
 	{
 		case FTW_D:
 		{
 			strcpy(type, "directory");
+			h64 = 0;
+			break;
 		}
 		case FTW_F:
 		{
+			XXH64_reset(&state64, 0);
+			while(total_read)
+			{
+				total_read = fread(buffer, 1, 45000, fp);
+				XXH64_update(&state64, buffer, sizeof(buffer));
+			}
+			h64 = XXH64_digest(&state64);
 			strcpy(type, "file");
+			break;
 		}
 		default:
 		{
 			strcpy(type, "ERROR");
+			h64 = 0;
+			break;
 		}
 	}
 
-	XXH64_reset(&state64, 0);
-	while(total_read)
-	{
-		total_read = fread(buffer, 1, 45000, fp);
-		XXH64_update(&state64, buffer, sizeof(buffer));
-	}
-	uint64_t h64 = XXH64_digest(&state64);
 
 	char *zsql = sqlite3_mprintf(
 	"INSERT INTO files (filename, path, type, size, level, crc) VALUES ('%q', '%q', '%q', '%i', '%i', '%i')"
