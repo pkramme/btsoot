@@ -88,8 +88,8 @@ int backup(job_t *job_import)
 	 * BACKUP PIPELINE
 	 * 
 	 * Needed functions:
-	 *  - scan for files and directories, record size of files
-	 *  - scan for crc values
+	 *  - scan for files and directories, record size of files - done
+	 *  - scan for hash values - done
 	 *  - diff this scan with the last
 	 *  - execute all necessary changes
 	 */
