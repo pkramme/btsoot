@@ -1,7 +1,8 @@
 #include"backup.h"
 
 static sqlite3 *database = NULL;
-int8_t buffer[45000];
+int8_t buffer[FILEBUFFER];
+
 static int filewalk_info_callback(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf)
 {
 	FILE *fp = fopen(fpath, "rb");
