@@ -73,11 +73,6 @@ int backup(job_t *job_import)
 	/*CURRENT DATABASE INIT*/
 		/*USE CLEAR FROM CREATE*/
 	sqlite3_open(job_import->block_name, &database);
-	
-	/**
-	 * FILEWALKER
-	 */
-	printf("%s\n", job_import->src_path);
 
 	//BEGIN SQLITE TRANSACTION AND SPEED HACKS
 	sqlite3_exec(database, "BEGIN TRANSACTION", NULL, NULL, NULL);
