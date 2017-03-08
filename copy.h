@@ -1,5 +1,4 @@
-#ifndef COPY_H_INCLUDED
-#define COPY_H_INCLUDED
+#pragma once
 
 #include<stdio.h>
 #include<fcntl.h>
@@ -11,4 +10,3 @@ int copy(char *source, char *destination);
 
 int copy_fallback(char *source, char *destination);
 
-#endif

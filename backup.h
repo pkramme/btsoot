@@ -1,5 +1,4 @@
-#ifndef BACKUP_H_INCLUDED
-#define BACKUP_H_INCLUDED
+#pragma once
 
 #define _XOPEN_SOURCE 500
 #ifndef XXHASH_C_2097394837
@@ -19,6 +18,5 @@
 
 int backup(job_t *job_import);
 
-#endif
 #endif
 

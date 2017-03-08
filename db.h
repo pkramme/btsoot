@@ -1,5 +1,4 @@
-#ifndef DB_H_INCLUDED
-#define DB_H_INCLUDED
+#pragma once
 
 #include<stdio.h>
 #include<string.h>
@@ -8,5 +7,4 @@
 
 int db_init(char blockname[256]);
 
-#endif
 

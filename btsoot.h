@@ -1,5 +1,4 @@
-#ifndef BTSOOT_H_INCLUDED
-#define BTSOOT_H_INCLUDED
+#pragma once
 
 #include<stdio.h>
 #include<stdlib.h>
@@ -28,4 +27,3 @@ typedef struct job job_t;
 #include"copy.h"
 #include"backup.h"
 
-#endif
