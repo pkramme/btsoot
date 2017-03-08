@@ -77,12 +77,18 @@ int backup(job_t *job_import)
 	 * FILEWALKER
 	 */
 	printf("%s\n", job_import->src_path);
+
+	//BEGIN SQLITE TRANSACTION
+	sqlite3_exec(database, "BEGIN TRANSACTION", NULL, NULL, NULL);
 	
 	if(nftw(job_import->src_path, filewalk_info_callback, 20, 0) == -1)
 	{
 		fprintf(stderr, "ERROR NFTW\n");
 		exit(EXIT_FAILURE);
 	}
+
+	//CLOSE SQLITE TRANSACTION
+	sqlite3_exec(database, "END TRANSACTION", NULL, NULL, NULL);
 
 	/*CRC CHECK*/
 
