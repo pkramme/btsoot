@@ -5,6 +5,10 @@ static sqlite3 *database = NULL;
 static int filewalk_info_callback(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf)
 {
 	FILE *fp = fopen(fpath, "rb");
+	if(fp == NULL)
+	{
+		return 1;
+	}
 	XXH64_state_t state64;
 	char buffer[45000];
 	uint64_t total_read = 1;
