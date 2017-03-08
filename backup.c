@@ -30,7 +30,7 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 			while(total_read)
 			{
 				total_read = fread(buffer, 1, 45000, fp);
-				XXH64_update(&state64, buffer, sizeof(buffer));
+				XXH64_update(&state64, buffer, 45000);
 			}
 			h64 = XXH64_digest(&state64);
 			strcpy(type, "file");
