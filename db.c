@@ -18,22 +18,17 @@ int db_init(char blockname[256])
 	/*DATABASE INIT*/
 	sqlite3 *database;
 	char *errormessage = 0;
-	int recall;
 
 	strcat(blockname, ".dat");
-	recall = sqlite3_open(blockname, &database);
+	sqlite3_open(blockname, &database);
 
 	/*	TABLE CREATION*/
-	recall = sqlite3_exec(database, 
+	sqlite3_exec(database, 
 		"CREATE TABLE IF NOT EXISTS files(filename TEXT, path TEXT, type TEXT, crc INT, size INT, level INT)", 
 		0, 
 		0, 
 		&errormessage
 	);
-	if(recall != SQLITE_OK)
-	{
-		fprintf(stderr, "Error\n");
-	}
 	if(errormessage != NULL)
 	{
 		fprintf(stderr, "%s\n", errormessage);

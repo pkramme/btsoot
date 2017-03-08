@@ -65,9 +65,6 @@ int copy_fallback(char *source, char *destination)
 	mode_t permissions;
 	ssize_t read_check;
 
-	/*compiler complains...*/
-	read_check = 0;
-
 	fd_source = open(source, O_RDONLY);
 	if(fd_source == -1)
 	{
