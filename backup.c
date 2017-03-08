@@ -1,7 +1,7 @@
 #include"backup.h"
 
 static sqlite3 *database = NULL;
-
+int8_t buffer[45000];
 static int filewalk_info_callback(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf)
 {
 	FILE *fp = fopen(fpath, "rb");
@@ -10,7 +10,7 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 		return 1;
 	}
 	XXH64_state_t state64;
-	char buffer[45000];
+	//int8_t buffer[45000];
 	uint64_t total_read = 1;
 	char type[256];
 	int recall;
@@ -59,8 +59,9 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 	{
 		printf("%s\n", errormessage);
 	}
-	sqlite3_free(zsql);
 
+	sqlite3_free(zsql);
+	memset(buffer, 0, 45000);
 	fclose(fp);
 	return 0;
 }
@@ -78,9 +79,12 @@ int backup(job_t *job_import)
 	 */
 	printf("%s\n", job_import->src_path);
 
-	//BEGIN SQLITE TRANSACTION
+	//BEGIN SQLITE TRANSACTION AND SPEED HACKS
 	sqlite3_exec(database, "BEGIN TRANSACTION", NULL, NULL, NULL);
-	
+	sqlite3_exec(database, "PRAGMA synchronous = off", NULL, NULL, NULL);
+	sqlite3_exec(database, "PRAGMA journal_mode = MEMORY", NULL, NULL, NULL);
+
+	//Execute filewalk
 	if(nftw(job_import->src_path, filewalk_info_callback, 20, 0) == -1)
 	{
 		fprintf(stderr, "ERROR NFTW\n");
