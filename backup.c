@@ -10,7 +10,6 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 		return 1;
 	}
 	XXH64_state_t state64;
-	//int8_t buffer[45000];
 	uint64_t total_read = 1;
 	char type[256];
 	int recall;
