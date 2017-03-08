@@ -14,7 +14,7 @@ build:
 test:
   stage: test
   script:
-    - scan-build make
+    - scan-build make -j 16
 
 dpkg:
   stage: package
