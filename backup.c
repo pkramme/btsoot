@@ -2,6 +2,7 @@
 
 static sqlite3 *database = NULL;
 int8_t buffer[FILEBUFFER];
+curr_file_t current_file = {0};
 
 static int filewalk_info_callback(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf)
 {
