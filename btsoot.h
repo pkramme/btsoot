@@ -20,6 +20,7 @@ struct job {
 	char src_path[MAX_PATH_LEN];
 	char dest_path[MAX_PATH_LEN];
 	char db_path[MAX_PATH_LEN];
+	char scantime[256];
 };
 
 typedef struct job job_t;
