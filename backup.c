@@ -66,6 +66,16 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 	return 0;
 }
 
+static int crc_calc_callback(void *notused, int argc, char **argv, char **azColName)
+{
+	for(int i = 0; i < argc; i++)
+	{
+		printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+	}
+	printf("\n");
+	return 0;
+}
+
 int backup(job_t *job_import)
 {
 	/*DATABASE CREATE*/
