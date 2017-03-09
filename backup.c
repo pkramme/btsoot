@@ -13,7 +13,17 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 	size_t total_read = 1;
 	uint64_t h64;
 	char zsql[10000];
-	int8_t buffer[FILEBUFFER];
+	size_t initsize;
+	if(sb->st_size < FILEBUFFER) 
+	{
+		initsize = sb->st_size;
+	}
+	else
+	{
+		initsize = FILEBUFFER;
+	}
+
+	int8_t buffer[initsize];
 
 	switch(tflag)
 	{
@@ -22,8 +32,8 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 			XXH64_reset(&state64, 0);
 			while(total_read)
 			{
-				total_read = fread(buffer, 1, FILEBUFFER, fp);
-				XXH64_update(&state64, buffer, FILEBUFFER);
+				total_read = fread(buffer, 1, initsize, fp);
+				XXH64_update(&state64, buffer, initsize);
 			}
 			h64 = XXH64_digest(&state64);
 			break;

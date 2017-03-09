@@ -16,7 +16,7 @@
 #include"xxhash.h"
 #include"db.h"
 
-#define FILEBUFFER 64000
+#define FILEBUFFER 100000
 
 int backup(job_t *job_import);
 
