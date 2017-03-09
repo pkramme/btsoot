@@ -18,16 +18,6 @@
 
 #define FILEBUFFER 100000
 
-struct curr_file{
-	int8_t buffer[FILEBUFFER];
-	uint64_t total_read;
-	char type[256];
-	int recall;
-	uint64_t h64;
-	FILE *fp;
-};
-
-typedef struct curr_file curr_file_t;
 int backup(job_t *job_import);
 
 #endif
