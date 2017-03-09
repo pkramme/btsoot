@@ -13,6 +13,7 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 	XXH64_state_t state64;
 	size_t total_read = 1;
 	uint64_t h64;
+	char zsql[10000];
 
 	switch(tflag)
 	{
@@ -35,7 +36,7 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 	}
 
 
-	char *zsql = sqlite3_mprintf(
+	sqlite3_snprintf(sizeof(zsql), zsql,
 	"INSERT INTO files (filename, path, type, size, level, hash) VALUES ('%q', '%q', %i, %i, %i, %i)"
 		, fpath + ftwbuf->base, fpath, tflag, sb->st_size, ftwbuf->level, h64);
 
@@ -46,7 +47,6 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 		printf("%s\n", errormessage);
 	}
 
-	sqlite3_free(zsql);
 	memset(buffer, 0, FILEBUFFER);
 	fclose(fp);
 	return 0;
