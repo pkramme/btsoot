@@ -1,7 +1,7 @@
 #include"backup.h"
 
 static sqlite3 *database = NULL;
-int8_t buffer[FILEBUFFER];
+//int8_t buffer[FILEBUFFER];
 
 static int filewalk_info_callback(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf)
 {
@@ -14,6 +14,7 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 	size_t total_read = 1;
 	uint64_t h64;
 	char zsql[10000];
+	int8_t buffer[FILEBUFFER];
 
 	switch(tflag)
 	{
@@ -47,7 +48,7 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 		printf("%s\n", errormessage);
 	}
 
-	memset(buffer, 0, FILEBUFFER);
+	//memset(buffer, 0, FILEBUFFER);
 	fclose(fp);
 	return 0;
 }
