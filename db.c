@@ -24,7 +24,7 @@ int db_init(char blockname[256])
 
 	/*	TABLE CREATION*/
 	sqlite3_exec(database, 
-		"CREATE TABLE IF NOT EXISTS files(filename TEXT, path TEXT, type TEXT, crc INT, size INT, level INT, scaninit NUMERIC, scantime NUMERIC)", 
+		"CREATE TABLE IF NOT EXISTS files(filename TEXT, path TEXT, type INT, hash INT, size INT, level INT, scaninit NUMERIC, scantime NUMERIC)", 
 		0, 
 		0, 
 		&errormessage

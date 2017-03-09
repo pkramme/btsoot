@@ -12,18 +12,10 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 	}
 	XXH64_state_t state64;
 	uint64_t total_read = 1;
-	char type[256];
-	int recall;
 	uint64_t h64;
 
 	switch(tflag)
 	{
-		case FTW_D:
-		{
-			strcpy(type, "directory");
-			h64 = 0;
-			break;
-		}
 		case FTW_F:
 		{
 			XXH64_reset(&state64, 0);
@@ -33,12 +25,10 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 				XXH64_update(&state64, buffer, 45000);
 			}
 			h64 = XXH64_digest(&state64);
-			strcpy(type, "file");
 			break;
 		}
 		default:
 		{
-			strcpy(type, "ERROR");
 			h64 = 0;
 			break;
 		}
@@ -46,33 +36,19 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 
 
 	char *zsql = sqlite3_mprintf(
-	"INSERT INTO files (filename, path, type, size, level, crc) VALUES ('%q', '%q', '%q', '%i', '%i', '%i')"
-		, fpath + ftwbuf->base, fpath, type, sb->st_size, ftwbuf->level, h64);
+	"INSERT INTO files (filename, path, type, size, level, crc) VALUES ('%q', '%q', '%i', '%i', '%i', '%i')"
+		, fpath + ftwbuf->base, fpath, tflag, sb->st_size, ftwbuf->level, h64);
 
 	char *errormessage = 0;
-	recall = sqlite3_exec(database, zsql, NULL, NULL, &errormessage);
-	if(recall != SQLITE_OK)
-	{
-		puts("ERROR");
-	}
+	sqlite3_exec(database, zsql, NULL, NULL, &errormessage);
 	if(errormessage != NULL)
 	{
 		printf("%s\n", errormessage);
 	}
 
 	sqlite3_free(zsql);
-	memset(buffer, 0, 45000);
+	memset(buffer, 0, FILEBUFFER);
 	fclose(fp);
-	return 0;
-}
-
-static int crc_calc_callback(void *notused, int argc, char **argv, char **azColName)
-{
-	for(int i = 0; i < argc; i++)
-	{
-		printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
-	}
-	printf("\n");
 	return 0;
 }
 
