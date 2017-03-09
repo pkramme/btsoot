@@ -11,7 +11,7 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 		return 1;
 	}
 	XXH64_state_t state64;
-	uint64_t total_read = 1;
+	size_t total_read = 1;
 	uint64_t h64;
 
 	switch(tflag)
@@ -21,8 +21,8 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 			XXH64_reset(&state64, 0);
 			while(total_read)
 			{
-				total_read = fread(buffer, 1, 45000, fp);
-				XXH64_update(&state64, buffer, 45000);
+				total_read = fread(buffer, 1, FILEBUFFER, fp);
+				XXH64_update(&state64, buffer, FILEBUFFER);
 			}
 			h64 = XXH64_digest(&state64);
 			break;
@@ -36,7 +36,7 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 
 
 	char *zsql = sqlite3_mprintf(
-	"INSERT INTO files (filename, path, type, size, level, hash) VALUES ('%q', '%q', '%i', '%i', '%i', '%i')"
+	"INSERT INTO files (filename, path, type, size, level, hash) VALUES ('%q', '%q', %i, %i, %i, %i)"
 		, fpath + ftwbuf->base, fpath, tflag, sb->st_size, ftwbuf->level, h64);
 
 	char *errormessage = 0;
