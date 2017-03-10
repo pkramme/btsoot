@@ -91,6 +91,10 @@ int main(int argc, char *argv[])
 
 					backup(jptr);
 				}
+				else
+				{
+					printf(ANSI_COLOR_RED"Block %s was not found.\n"ANSI_COLOR_RESET, argv[2]);
+				}
 			}
 			fclose(config);
 		}
