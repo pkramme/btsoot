@@ -72,6 +72,8 @@ int main(int argc, char *argv[])
 		}
 		else if(strcmp(argv[1], "backup") == 0)
 		{
+			printf(ANSI_COLOR_CYAN "Backing up %s\n" ANSI_COLOR_RESET, argv[2]);
+
 			j.pip_purp_id = PIP_PURP_ID_BACKUP;
 			strcpy(j.block_name, argv[2]);
 
