@@ -7,28 +7,31 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 	FILE *fp = fopen(fpath, "rb");
 	if(fp == NULL)
 	{
-		return 1;
-	}
-	XXH64_state_t state64;
-	size_t total_read = 1;
-	uint64_t h64;
-	char zsql[10000];
-	size_t initsize;
-	if(sb->st_size < FILEBUFFER) 
-	{
-		initsize = sb->st_size;
-	}
-	else
-	{
-		initsize = FILEBUFFER;
+		return 0;
 	}
 
-	int8_t buffer[initsize];
+	uint64_t h64;
+	char zsql[10000];
 
 	switch(tflag)
 	{
 		case FTW_F:
 		{
+			size_t initsize;
+			if(sb->st_size < FILEBUFFER) 
+			{
+				initsize = sb->st_size;
+			}
+			else
+			{
+				initsize = FILEBUFFER;
+			}
+
+			int8_t buffer[initsize];
+
+			XXH64_state_t state64;
+			size_t total_read = 1;
+
 			XXH64_reset(&state64, 0);
 			while(total_read)
 			{
