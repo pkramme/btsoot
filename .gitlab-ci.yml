@@ -7,9 +7,6 @@ build:
   stage: build
   script:
     - make -j 16
-  artifacts:
-    paths:
-      - btsoot
 
 test:
   stage: test
