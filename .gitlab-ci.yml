@@ -12,6 +12,7 @@ test:
   stage: test
   script:
     - scan-build make -j 16
+  when: manual
 
 web_testing:
   stage: package
