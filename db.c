@@ -18,8 +18,10 @@ int db_init(char blockname[256])
 	/*DATABASE INIT*/
 	sqlite3 *database;
 	char *errormessage = 0;
+    char path[4096];   //max linux path size + blockname
 
-	strcat(blockname, ".dat");
+    snprintf(path, database_path"%s.dat", blockname);
+
 	sqlite3_open(blockname, &database);
 
 	/*	TABLE CREATION*/
