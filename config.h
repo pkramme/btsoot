@@ -1,3 +1,3 @@
 #pragma once
 
-#define database_path .
+#define database_path "."
