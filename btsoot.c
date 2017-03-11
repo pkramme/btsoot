@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
 
 			j.pip_purp_id = PIP_PURP_ID_BACKUP;
 			strcpy(j.block_name, argv[2]);
-
+			sprintf(j.db_path, database_path"%s.dat", j.block_name);
 			FILE *config = fopen(CONFIG_PATH, "r");
 			char buffer[8448];
 			while(fgets(buffer, sizeof(buffer), config) != NULL)

@@ -13,20 +13,15 @@ static int sqlite_callback(void *notused, int argc, char **argv, char **azcolumn
 }
 */
 
-int db_init(char blockname[256])
+int db_init(char path[4096])
 {
 	/*DATABASE INIT*/
 	sqlite3 *database;
 	char *errormessage = 0;
-    char path[4096];   //max linux path size + blockname
 
-    sprintf(path, database_path"%s.dat", blockname);
-
-	sqlite3_open(blockname, &database);
-
-	/*	TABLE CREATION*/
+	sqlite3_open(path, &database);
 	sqlite3_exec(database, 
-		"CREATE TABLE IF NOT EXISTS files(filename TEXT, path TEXT, type INT, hash INT, size INT, level INT, scaninit NUMERIC, scantime NUMERIC)", 
+		"CREATE TABLE IF NOT EXISTS files(filename TEXT, path TEXT, type INT, hash INT, size INT, level INT, scantime NUMERIC)", 
 		0, 
 		0, 
 		&errormessage

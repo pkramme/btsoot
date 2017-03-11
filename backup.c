@@ -2,6 +2,8 @@
 
 static sqlite3 *database = NULL;
 
+time_t t0;
+
 static int filewalk_info_callback(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf)
 {
 	FILE *fp = fopen(fpath, "rb");
@@ -50,8 +52,8 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 
 
 	sqlite3_snprintf(sizeof(zsql), zsql,
-	"INSERT INTO files (filename, path, type, size, level, hash) VALUES ('%q', '%q', %i, %i, %i, %i)"
-		, fpath + ftwbuf->base, fpath, tflag, sb->st_size, ftwbuf->level, h64);
+	"INSERT INTO files (filename, path, type, size, level, hash, scantime) VALUES ('%q', '%q', %i, %i, %i, %i, %i)"
+		, fpath + ftwbuf->base, fpath, tflag, sb->st_size, ftwbuf->level, h64, t0);
 
 	char *errormessage = 0;
 	sqlite3_exec(database, zsql, NULL, NULL, &errormessage);
@@ -66,11 +68,13 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 
 int backup(job_t *job_import)
 {
+	t0 = time(0);
+
 	/*DATABASE CREATE*/
-	db_init(job_import->block_name);
+	db_init(job_import->db_path);
 	/*CURRENT DATABASE INIT*/
 		/*USE CLEAR FROM CREATE*/
-	sqlite3_open(job_import->block_name, &database);
+	sqlite3_open(job_import->db_path, &database);
 
 	//BEGIN SQLITE TRANSACTION AND SPEED HACKS
 	sqlite3_exec(database, "BEGIN TRANSACTION", NULL, NULL, NULL);
