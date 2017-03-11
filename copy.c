@@ -6,8 +6,6 @@ return -1 = incorrect number of args
 return 0 = ok
 return 1 = couldnt open source fd
 return 2 = couldnt open dest fd
-return 3 = couldnt write to dest fd
-return 4 = couldnt read from source fd
 return 5 = couldnt close source fd
 return 6 = couldnt close dest fd
 */
