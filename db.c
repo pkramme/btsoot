@@ -20,7 +20,7 @@ int db_init(char blockname[256])
 	char *errormessage = 0;
     char path[4096];   //max linux path size + blockname
 
-    snprintf(path, database_path"%s.dat", blockname);
+    sprintf(path, database_path"%s.dat", blockname);
 
 	sqlite3_open(blockname, &database);
 
