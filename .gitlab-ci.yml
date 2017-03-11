@@ -16,9 +16,34 @@ test:
   script:
     - scan-build make -j 16
 
+web_testing:
+  stage: package
+  environment: testing
+  script:
+    - make -j 16
+    - cp ./btsoot /home/paul/nas/testing/btsoot_$CI_JOB_ID_$CI_ENVIRONMENT_NAME
+
+web_stable:
+  stage: package
+  environment: stable
+  script:
+    - make -j 16
+    - cp ./btsoot /home/paul/nas/stable/btsoot_$CI_COMMIT_TAG_$CI_JOB_ID
+  only:
+    - tags
+    
+web_stable:
+  stage: package
+  environment: rolling
+  script:
+    - make -j 16
+    - cp ./btsoot /home/paul/nas/stable/btsoot_rolling_$CI_JOB_ID
+  only:
+    - master
+
 dpkg:
   stage: package
-  environment: Production
+  environment: stable
   script:
     - make
     - mkdir -p btsoot_$CI_BUILD_TAG/DEBIAN/
