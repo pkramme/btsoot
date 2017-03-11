@@ -19,7 +19,7 @@ web_testing:
   environment: testing
   script:
     - make -j 16
-    - cp ./btsoot /home/paul/nas/btsoot/testing/btsoot_$CI_PIPELINE_ID_$CI_ENVIRONMENT_NAME
+    - cp btsoot /home/paul/nas/btsoot/testing/btsoot_$CI_PIPELINE_ID_$CI_ENVIRONMENT_NAME
 
 web_stable:
   stage: package
