@@ -1,18 +1,5 @@
 #include"db.h"
 
-/*
-static int sqlite_callback(void *notused, int argc, char **argv, char **azcolumnname)
-{
-	int i;
-	for(i = 0; i < argc; i++)
-	{
-		printf("%s = %s\n", azcolumnname[i], argv[i] ? argv[i] : "NULL");
-	}
-	printf("\n");
-	return 0;
-}
-*/
-
 int db_init(char path[4096])
 {
 	/*DATABASE INIT*/
