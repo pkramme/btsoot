@@ -20,4 +20,3 @@ int db_init(char path[4096])
 
 	return 0;
 }
-
