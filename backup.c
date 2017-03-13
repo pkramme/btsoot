@@ -91,8 +91,6 @@ int backup(job_t *job_import)
 	//CLOSE SQLITE TRANSACTION
 	sqlite3_exec(database, "END TRANSACTION", NULL, NULL, NULL);
 
-	/*CRC CHECK*/
-
 	/*EXECUTOR*/
 
 	/**
