@@ -66,32 +66,50 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 	return 0;
 }
 
+static int diff_callback(void *notused, int argc, char **argv, char **azcolname)
+{
+	for(int i = 0; i < argc; i++)
+	{
+		if(strcmp(azcolname[i], "scantime") == 0 && atoi(argv[i]) < t0)
+		{
+			printf("Comparing %li with %s\n", t0, argv[i]);
+			return 1;
+		}
+	}
+	return 0;
+}
+
 int backup(job_t *job_import)
 {
 	t0 = time(0);
 
-	/*DATABASE CREATE*/
-	db_init(job_import->db_path);
-	/*CURRENT DATABASE INIT*/
-		/*USE CLEAR FROM CREATE*/
+	db_init(job_import->db_path);	//create and open database
 	sqlite3_open(job_import->db_path, &database);
 
-	//BEGIN SQLITE TRANSACTION AND SPEED HACKS
 	sqlite3_exec(database, "BEGIN TRANSACTION", NULL, NULL, NULL);
 	sqlite3_exec(database, "PRAGMA synchronous = off", NULL, NULL, NULL);
 	sqlite3_exec(database, "PRAGMA journal_mode = MEMORY", NULL, NULL, NULL);
 
-	//Execute filewalk
+	//Execute filewalker
 	if(nftw(job_import->src_path, filewalk_info_callback, 20, 0) == -1)
 	{
 		fprintf(stderr, "ERROR NFTW\n");
 		exit(EXIT_FAILURE);
 	}
 
-	//CLOSE SQLITE TRANSACTION
-	sqlite3_exec(database, "END TRANSACTION", NULL, NULL, NULL);
+	puts("Searching for previous scan");
+	char *errormesgselect = 0;
+	char *zsqlsel = sqlite3_mprintf("SELECT * FROM files \
+					WHERE %i > scantime \
+					ORDER BY scantime DESC", t0);
+	sqlite3_exec(database, zsqlsel, diff_callback, NULL, &errormesgselect);
+	if(errormesgselect != NULL)
+	{
+		printf("%s\n", errormesgselect);
+	}
 
-	/*EXECUTOR*/
+
+	sqlite3_exec(database, "END TRANSACTION", NULL, NULL, NULL);
 
 	/**
 	 * BACKUP PIPELINE
@@ -105,3 +123,4 @@ int backup(job_t *job_import)
 	sqlite3_close(database);
 	return 0;
 }
+
