@@ -8,7 +8,7 @@ int db_init(char path[4096])
 
 	sqlite3_open(path, &database);
 	sqlite3_exec(database, 
-		"CREATE TABLE IF NOT EXISTS files(filename TEXT, path TEXT, type INT, hash INT, size INT, level INT, scantime NUMERIC)", 
+		"CREATE TABLE IF NOT EXISTS files(filename TEXT, path TEXT, type INT, hash INT, size INT, level INT, scantime NUMERIC, thread INT)", 
 		0, 
 		0, 
 		&errormessage
