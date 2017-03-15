@@ -3,6 +3,7 @@
 static sqlite3 *database = NULL;
 
 time_t t0;
+time_t tsearched;
 
 static int filewalk_info_callback(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf)
 {
@@ -72,7 +73,7 @@ static int diff_callback(void *notused, int argc, char **argv, char **azcolname)
 	{
 		if(strcmp(azcolname[i], "scantime") == 0 && atoi(argv[i]) < t0)
 		{
-			printf("Comparing %li with %s\n", t0, argv[i]);
+			tsearched = atoi(argv[i]);
 			return 1;
 		}
 	}
@@ -98,15 +99,21 @@ int backup(job_t *job_import)
 	}
 
 	puts("Searching for previous scan");
+	int *timestamp = NULL;
 	char *errormesgselect = 0;
-	char *zsqlsel = sqlite3_mprintf("SELECT * FROM files \
-					WHERE %i > scantime \
-					ORDER BY scantime DESC", t0);
-	sqlite3_exec(database, zsqlsel, diff_callback, NULL, &errormesgselect);
+	char *zsqlsel = sqlite3_mprintf("SELECT * FROM files WHERE %i > scantime ORDER BY scantime DESC", t0);
+	sqlite3_exec(database, zsqlsel, diff_callback, timestamp, &errormesgselect);
 	if(errormesgselect != NULL)
 	{
-		printf("%s\n", errormesgselect);
+		if(strcmp(errormesgselect, "callback requested query abort") != 0)
+		{
+			printf("%s\n", errormesgselect);
+		}
 	}
+	sqlite3_free(zsqlsel);
+
+
+
 
 
 	sqlite3_exec(database, "END TRANSACTION", NULL, NULL, NULL);
