@@ -4,12 +4,12 @@
 
 static sqlite3 *database = NULL;
 
-time_t t0;
-time_t tsearched;
-size_t total_size = 0;
-size_t max_thread_size = 0;
-size_t curr_size = 0; //Stores current size for thread filling
-int8_t thread_number = 0;
+static time_t t0;
+static time_t tsearched;
+static size_t total_size = 0;
+static size_t max_thread_size = 0;
+static size_t curr_size = 0; //Stores current size for thread filling
+static int8_t thread_number = 0;
 
 static int filewalk_info_callback(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf)
 {
