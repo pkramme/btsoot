@@ -60,7 +60,7 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 
 
 	sqlite3_snprintf(sizeof(zsql), zsql,
-	"INSERT INTO files (filename, path, type, size, level, hash, scantime) VALUES ('%q', '%q', %i, %i, %i, %i, %i)"
+	"INSERT INTO files (filename, path, type, size, level, hash, scantime) VALUES ('%q', '%q', %i, %lli, %i, %lli, %i)"
 		, fpath + ftwbuf->base, fpath, tflag, sb->st_size, ftwbuf->level, h64, t0);
 
 	char *errormessage = 0;
