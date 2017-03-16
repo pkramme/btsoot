@@ -9,7 +9,7 @@ time_t tsearched;
 size_t total_size = 0;
 size_t max_thread_size = 0;
 size_t curr_size = 0; //Stores current size for thread filling
-int thread_number = 0;
+int8_t thread_number = 0;
 
 static int filewalk_info_callback(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf)
 {
@@ -89,8 +89,9 @@ static int time_callback(void *notused, int argc, char **argv, char **azcolname)
 
 static int sql_hash(void *notused, int argc, char **argv, char **azcolname)
 {
+	char path[4096];
 	for(int i = 0; i < argc; i++)
-	{		
+	{	
 		printf("%s = %s\n", azcolname[i], argv[i] ? argv[i] : "NULL");
 		if(strcmp(azcolname[i], "size") == 0)
 		{
@@ -98,13 +99,18 @@ static int sql_hash(void *notused, int argc, char **argv, char **azcolname)
 			{
 				curr_size += atoi(argv[i]);
 				char *zsql = sqlite3_mprintf(
-					"UPDATE files SET thread = %i WHERE path = '%s'", thread_number, argv[i - 1]);
+					"UPDATE files SET thread = %i WHERE path = '%s'", thread_number, path);
+				sqlite3_exec(database, zsql, NULL, NULL, NULL);
 			}
 			else
 			{
 				curr_size = 0;
 				thread_number += 1;
 			}
+		}
+		else
+		{
+			strcpy(path, argv[i]);
 		}
 	}
 	return 0;
@@ -146,7 +152,7 @@ int backup(job_t *job_import)
 
 	char *zsqlhash = sqlite3_mprintf("SELECT path, size FROM files WHERE scantime = %i AND type = 0", tsearched);
 	sqlite3_exec(database, zsqlhash, sql_hash, NULL, &errormessage);
-	printf("%li", total_size);
+	printf("%li\n", total_size);
 
 
 	sqlite3_exec(database, "END TRANSACTION", NULL, NULL, NULL);
