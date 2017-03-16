@@ -95,12 +95,12 @@ static int sql_hash(void *notused, int argc, char **argv, char **azcolname)
 		printf("%s = %s\n", azcolname[i], argv[i] ? argv[i] : "NULL");
 		if(strcmp(azcolname[i], "size") == 0)
 		{
+			char *zsql = sqlite3_mprintf(
+				"UPDATE files SET thread = %i WHERE path = '%s'", thread_number, path);
+			sqlite3_exec(database, zsql, NULL, NULL, NULL);
 			if(curr_size <= max_thread_size)
 			{
 				curr_size += atoi(argv[i]);
-				char *zsql = sqlite3_mprintf(
-					"UPDATE files SET thread = %i WHERE path = '%s'", thread_number, path);
-				sqlite3_exec(database, zsql, NULL, NULL, NULL);
 			}
 			else
 			{
@@ -150,7 +150,7 @@ int backup(job_t *job_import)
 
 	max_thread_size = total_size / MAX_THREADS;
 
-	char *zsqlhash = sqlite3_mprintf("SELECT path, size FROM files WHERE scantime = %i AND type = 0", tsearched);
+	char *zsqlhash = sqlite3_mprintf("SELECT path, size FROM files WHERE scantime = %i AND type = 0", t0);
 	sqlite3_exec(database, zsqlhash, sql_hash, NULL, &errormessage);
 	printf("%li\n", total_size);
 
