@@ -92,7 +92,7 @@ static int sql_hash(void *notused, int argc, char **argv, char **azcolname)
 	char path[4096];
 	for(int i = 0; i < argc; i++)
 	{	
-		printf("%s = %s\n", azcolname[i], argv[i] ? argv[i] : "NULL");
+		//printf("%s = %s\n", azcolname[i], argv[i] ? argv[i] : "NULL");
 		if(strcmp(azcolname[i], "size") == 0)
 		{
 			char *zsql = sqlite3_mprintf(
