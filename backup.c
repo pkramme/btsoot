@@ -1,6 +1,6 @@
 #include"backup.h"
 
-#define MAX_THREADS 4
+#define MAX_THREADS 1
 
 static sqlite3 *database = NULL;
 
@@ -13,12 +13,6 @@ static int8_t thread_number = 0;
 
 static int filewalk_info_callback(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf)
 {
-	FILE *fp = fopen(fpath, "rb");
-	if(fp == NULL)
-	{
-		return 0;
-	}
-
 	total_size += sb->st_size;
 
 	char zsql[10000];
@@ -34,7 +28,6 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 		printf("%s\n", errormessage);
 	}
 
-	fclose(fp);
 	return 0;
 }
 
@@ -82,54 +75,35 @@ static int sql_thread_calc(void *notused, int argc, char **argv, char **azcolnam
 
 static int hash(void *notused, int argc, char **argv, char **azcolname)
 {
-	for(int i = 0; i < argc; i++)
+
+	char sql[10000];
+	FILE *fp = fopen(argv[0], "rb");
+	if(fp == NULL)
 	{
-		size_t fsize = 0;
-		if(strcmp(azcolname[i], "size") == 0)
-		{
-			fsize = atoi(argv[i]);
-		}
-		else if(strcmp(azcolname[i], "path") == 0)
-		{
-			FILE *fp = fopen(argv[i], "rb");
-			if(fp == NULL)
-			{
-				return 0;
-			}
-
-			uint64_t h64;
-			size_t initsize;
-
-			if(fsize < FILEBUFFER) 
-			{
-				initsize = fsize;
-			}
-			else
-			{	
-				initsize = FILEBUFFER;
-			}
-			int8_t buffer[initsize];
-			XXH64_state_t state64;	
-			size_t total_read = 1;
-		
-			XXH64_reset(&state64, 0);
-			while(total_read)
-			{
-				total_read = fread(buffer, 1, initsize, fp);	
-				XXH64_update(&state64, buffer, initsize);
-			}
-			h64 = XXH64_digest(&state64);
-			char *zsql = sqlite3_mprintf("UPDATE files SET hash = %lli WHERE path = %q", h64, argv[i]);
-			sqlite3_exec(database, zsql, NULL, NULL, NULL);
-			sqlite3_free(zsql);
-		}
+		return 0;
 	}
+	uint64_t h64;
+
+	int8_t buffer[FILEBUFFER];
+	XXH64_state_t state64;	
+	size_t total_read = 1;
+		
+	XXH64_reset(&state64, 0);
+	while(total_read)
+	{
+		total_read = fread(buffer, 1, FILEBUFFER, fp);	
+		XXH64_update(&state64, buffer, FILEBUFFER);
+	}
+	h64 = XXH64_digest(&state64);
+	sqlite3_snprintf(sizeof(sql), sql, "UPDATE files SET hash = %llu WHERE path = '%s'", h64, argv[0]);
+	sqlite3_exec(database, sql, NULL, NULL, NULL);
+	
 	return 0;
 }
 
 static int sql_hash(int threadsql)
 {
-	char *zsql = sqlite3_mprintf("SELECT size, path FROM files WHERE thread = %i", threadsql);
+	char *zsql = sqlite3_mprintf("SELECT path FROM files WHERE thread = %i and scantime = %i", threadsql, t0);
 	sqlite3_exec(database, zsql, hash, NULL, NULL);
 	return 0;
 }
@@ -170,7 +144,7 @@ int backup(job_t *job_import)
 	char *zsql_thread_calc = sqlite3_mprintf("SELECT path, size FROM files WHERE scantime = %i AND type = 0", t0);
 	sqlite3_exec(database, zsql_thread_calc, sql_thread_calc, NULL, &errormessage);
 
-	
+	sql_hash(0);
 
 
 	sqlite3_exec(database, "END TRANSACTION", NULL, NULL, NULL);
