@@ -78,6 +78,7 @@ static uint64_t hash(char path[4096])
 
 static int filewalk_info_callback(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf)
 {
+	/*
 	strcpy(current_node->link.path, fpath);
 	strcpy(current_node->link.name, fpath + ftwbuf->base);
 	current_node->link.type = tflag;
@@ -90,7 +91,16 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 
 	current_node->next = malloc(sizeof(node_t));
 	current_node = current_node->next;
+	*/
+	file_t current_file;
+	strcpy(current_file.path, fpath);
+	strcpy(current_file.name, fpath + ftwbuf->base);
+	current_file.size = sb->st_size;
+	current_file.type = tflag;
+	current_file.scantime = t0;
+	current_file.checksum = hash(current_file.path);
 
+	push(files_head, current_file);
 	/*
 	sqlite3_snprintf(sizeof(zsql), zsql,
 	"INSERT INTO files (filename, path, type, size, level, scantime) VALUES ('%q', '%q', %i, %lli, %i, %i)"
@@ -113,6 +123,8 @@ int backup(job_t *job_import)
 		fprintf(stderr, "ERROR NFTW\n");
 		exit(EXIT_FAILURE);
 	}
+
+	print_list(files_head);
 
 	return 0;
 }
