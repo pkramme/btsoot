@@ -34,6 +34,21 @@ static void push(node_t *head, file_t filestruct)
 	current->next->next = NULL;
 }
 
+static file_t pop(node_t **head)
+{
+	file_t returnvalue = {0};
+	node_t *next_node = NULL;
+	if(*head == NULL)
+	{
+		return returnvalue;
+	}
+	next_node = (*head)->next;
+	returnvalue = (*head)->link;
+	free(*head);
+	*head = next_node;
+
+	return returnvalue;
+}
 
 static void print_list(node_t *head)
 {
