@@ -78,35 +78,18 @@ static uint64_t hash(char path[4096])
 
 static int filewalk_info_callback(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf)
 {
-	/*
-	strcpy(current_node->link.path, fpath);
-	strcpy(current_node->link.name, fpath + ftwbuf->base);
-	current_node->link.type = tflag;
-	current_node->link.size = sb->st_size;
-	current_node->link.scantime = t0;
-	if(tflag == 0)
-	{
-		current_node->link.checksum = hash(current_node->link.path);
-	}
-
-	current_node->next = malloc(sizeof(node_t));
-	current_node = current_node->next;
-	*/
-	file_t current_file;
+	file_t current_file = {0};
 	strcpy(current_file.path, fpath);
 	strcpy(current_file.name, fpath + ftwbuf->base);
 	current_file.size = sb->st_size;
 	current_file.type = tflag;
 	current_file.scantime = t0;
-	current_file.checksum = hash(current_file.path);
+	if(tflag == 0)
+	{
+		current_file.checksum = hash(current_file.path);
+	}
 
 	push(files_head, current_file);
-	/*
-	sqlite3_snprintf(sizeof(zsql), zsql,
-	"INSERT INTO files (filename, path, type, size, level, scantime) VALUES ('%q', '%q', %i, %lli, %i, %i)"
-		, fpath + ftwbuf->base, fpath, tflag, sb->st_size, ftwbuf->level, t0);
-
-	*/
 	return 0;
 }
 
@@ -124,7 +107,7 @@ int backup(job_t *job_import)
 		exit(EXIT_FAILURE);
 	}
 
-	print_list(files_head);
+	//print_list(files_head);
 
 	return 0;
 }
