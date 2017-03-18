@@ -1,7 +1,5 @@
 #include"backup.h"
 
-#define MAX_THREADS 1
-
 typedef struct file_info {
 	char name[256];
 	char path[4096];
@@ -10,84 +8,53 @@ typedef struct file_info {
 	int8_t level;
 	size_t size;
 	time_t scantime;
+	int8_t thread_number;
 } file_t;
 
-static sqlite3 *database = NULL;
+typedef struct node {
+	file_t link;
+	struct node *next;
+} node_t;
 
 static time_t t0;
-static time_t tsearched;
-static size_t total_size = 0;
-static size_t max_thread_size = 0;
-static size_t curr_size = 0; //Stores current size for thread filling
-static int8_t thread_number = 0;
 
-static int filewalk_info_callback(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf)
+node_t *files_head = NULL;
+node_t *current_node = NULL;
+
+
+static void push(node_t *head, file_t filestruct)
 {
-	total_size += sb->st_size;
-
-	char zsql[10000];
-
-	sqlite3_snprintf(sizeof(zsql), zsql,
-	"INSERT INTO files (filename, path, type, size, level, scantime) VALUES ('%q', '%q', %i, %lli, %i, %i)"
-		, fpath + ftwbuf->base, fpath, tflag, sb->st_size, ftwbuf->level, t0);
-
-	char *errormessage = 0;
-	sqlite3_exec(database, zsql, NULL, NULL, &errormessage);
-	if(errormessage != NULL)
+	node_t *current = head;
+	while(current->next != NULL)
 	{
-		printf("%s\n", errormessage);
+		current = current->next;
 	}
-
-	return 0;
+	current->next = malloc(sizeof(node_t));
+	current->next->link = filestruct;
+	current->next->next = NULL;
 }
 
-static int time_callback(void *notused, int argc, char **argv, char **azcolname)
+
+static void print_list(node_t *head)
 {
-	for(int i = 0; i < argc; i++)
+	node_t *current = head;
+	while(current != NULL)
 	{
-		if(strcmp(azcolname[i], "scantime") == 0 && atoi(argv[i]) < t0)
-		{
-			tsearched = atoi(argv[i]);
-			return 1;
-		}
+		printf("%s\n%s\n%i\n%i\n%i\n%i\n\n", 
+			current->link.path, 
+			current->link.name, 
+			current->link.type, 
+			current->link.size, 
+			current->link.scantime,
+			current->link.checksum
+		);
+		current = current->next;
 	}
-	return 0;
 }
 
-static int sql_thread_calc(void *notused, int argc, char **argv, char **azcolname)
+static uint64_t hash(char path[4096])
 {
-	char path[4096];
-	for(int i = 0; i < argc; i++)
-	{	
-		//printf("%s = %s\n", azcolname[i], argv[i] ? argv[i] : "NULL");
-		if(strcmp(azcolname[i], "size") == 0)
-		{
-			char *zsql = sqlite3_mprintf(
-				"UPDATE files SET thread = %i WHERE path = '%s'", thread_number, path);
-			sqlite3_exec(database, zsql, NULL, NULL, NULL);
-			if(curr_size <= max_thread_size)
-			{
-				curr_size += atoi(argv[i]);
-			}
-			else
-			{
-				curr_size = 0;
-				thread_number += 1;
-			}
-		}
-		else
-		{
-			strcpy(path, argv[i]);
-		}
-	}
-	return 0;
-}
-
-static int hash(void *notused, int argc, char **argv, char **azcolname)
-{
-
-	char sql[10000];
-	FILE *fp = fopen(argv[0], "rb");
+	FILE *fp = fopen(path, "rb");
 	if(fp == NULL)
 	{
 		return 0;
@@ -105,30 +72,40 @@ static int hash(void *notused, int argc, char **argv, char **azcolname)
 		XXH64_update(&state64, buffer, FILEBUFFER);
 	}
 	h64 = XXH64_digest(&state64);
-	sqlite3_snprintf(sizeof(sql), sql, "UPDATE files SET hash = %llu WHERE path = '%s'", h64, argv[0]);
-	sqlite3_exec(database, sql, NULL, NULL, NULL);
 	
-	return 0;
+	return h64;
 }
 
-static int sql_hash(int threadsql)
+static int filewalk_info_callback(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf)
 {
-	char *zsql = sqlite3_mprintf("SELECT path FROM files WHERE thread = %i and scantime = %i", threadsql, t0);
-	sqlite3_exec(database, zsql, hash, NULL, NULL);
+	strcpy(current_node->link.path, fpath);
+	strcpy(current_node->link.name, fpath + ftwbuf->base);
+	current_node->link.type = tflag;
+	current_node->link.size = sb->st_size;
+	current_node->link.scantime = t0;
+	if(tflag == 0)
+	{
+		current_node->link.checksum = hash(current_node->link.path);
+	}
+
+	current_node->next = malloc(sizeof(node_t));
+	current_node = current_node->next;
+
+	/*
+	sqlite3_snprintf(sizeof(zsql), zsql,
+	"INSERT INTO files (filename, path, type, size, level, scantime) VALUES ('%q', '%q', %i, %lli, %i, %i)"
+		, fpath + ftwbuf->base, fpath, tflag, sb->st_size, ftwbuf->level, t0);
+
+	*/
 	return 0;
 }
 
 int backup(job_t *job_import)
 {
 	t0 = time(0);
-	char *errormessage = 0;
 
-	db_init(job_import->db_path);	//create and open database
-	sqlite3_open(job_import->db_path, &database);
-
-	sqlite3_exec(database, "BEGIN TRANSACTION", NULL, NULL, NULL);
-	sqlite3_exec(database, "PRAGMA synchronous = off", NULL, NULL, NULL);
-	sqlite3_exec(database, "PRAGMA journal_mode = MEMORY", NULL, NULL, NULL);
+	files_head = malloc(sizeof(node_t));
+	current_node = files_head;
 
 	//Execute filewalker
 	if(nftw(job_import->src_path, filewalk_info_callback, 20, 0) == -1)
@@ -137,38 +114,6 @@ int backup(job_t *job_import)
 		exit(EXIT_FAILURE);
 	}
 
-	puts("Searching for previous scan");
-	char *zsqlsel = sqlite3_mprintf("SELECT * FROM files WHERE %i > scantime ORDER BY scantime DESC", t0);
-	sqlite3_exec(database, zsqlsel, time_callback, NULL, &errormessage);
-	if(errormessage != NULL)
-	{
-		if(strcmp(errormessage, "callback requested query abort") != 0)
-		{
-			printf("%s\n", errormessage);
-		}
-	}
-	sqlite3_free(zsqlsel);
-
-	max_thread_size = total_size / MAX_THREADS;
-
-	char *zsql_thread_calc = sqlite3_mprintf("SELECT path, size FROM files WHERE scantime = %i AND type = 0", t0);
-	sqlite3_exec(database, zsql_thread_calc, sql_thread_calc, NULL, &errormessage);
-
-	sql_hash(0);
-
-
-	sqlite3_exec(database, "END TRANSACTION", NULL, NULL, NULL);
-
-	/**
-	 * BACKUP PIPELINE
-	 * 
-	 * Needed functions:
-	 *  - scan for files and directories, record size of files - done
-	 *  - scan for hash values - done
-	 *  - diff this scan with the last
-	 *  - execute all necessary changes
-	 */
-	sqlite3_close(database);
 	return 0;
 }
 
