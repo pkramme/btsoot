@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 	/* Argument resolving code */
 	if(argc < 2)
 	{
-	    puts("USAGE:")
+		puts("USAGE:");
 		puts("Add to add a block");
 		puts("Rm to remove a block");
 		puts("Backup to backup a block");
