@@ -2,6 +2,16 @@
 
 #define MAX_THREADS 1
 
+typedef struct file_info {
+	char name[256];
+	char path[4096];
+	uint64_t checksum;
+	int8_t type;
+	int8_t level;
+	size_t size;
+	time_t scantime;
+} file_t;
+
 static sqlite3 *database = NULL;
 
 static time_t t0;
