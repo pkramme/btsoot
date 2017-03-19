@@ -111,14 +111,12 @@ int backup(job_t *job_import)
 	files_head = malloc(sizeof(node_t));
 	current_node = files_head;
 
-	//Execute filewalker
 	if(nftw(job_import->src_path, filewalk_info_callback, 20, 0) == -1)
 	{
 		fprintf(stderr, "ERROR NFTW\n");
 		exit(EXIT_FAILURE);
 	}
 
-	//print_list(files_head);
 	delete(files_head);
 	return 0;
 }
