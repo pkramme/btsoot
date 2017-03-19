@@ -61,8 +61,13 @@ static void print_list(node_t *head)
 	}
 }
 
-static uint64_t hash(char path[4096])
+static uint64_t hash(char path[4096], size_t size)
 {
+	if(size > FILEBUFFER)
+	{
+		size = FILEBUFFER;
+	}
+
 	FILE *fp = fopen(path, "rb");
 	if(fp == NULL)
 	{
@@ -70,15 +75,15 @@ static uint64_t hash(char path[4096])
 	}
 	uint64_t h64;
 
-	int8_t buffer[FILEBUFFER];
+	int8_t buffer[size];
 	XXH64_state_t state64;	
 	size_t total_read = 1;
 		
 	XXH64_reset(&state64, 0);
 	while(total_read)
 	{
-		total_read = fread(buffer, 1, FILEBUFFER, fp);	
-		XXH64_update(&state64, buffer, FILEBUFFER);
+		total_read = fread(buffer, 1, size, fp);	
+		XXH64_update(&state64, buffer, size);
 	}
 	h64 = XXH64_digest(&state64);
 
