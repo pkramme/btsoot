@@ -38,7 +38,6 @@ static void delete(node_t *head)
 	node_t *current;
 	while((current = head) != NULL)
 	{
-		printf("Cleaning %i\n", *current);
 		head = head->next;
 		free(current);
 		current = NULL;
@@ -95,10 +94,6 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 	current_file.size = sb->st_size;
 	current_file.type = tflag;
 	current_file.scantime = t0;
-	if(tflag == 0)
-	{
-		current_file.checksum = hash(current_file.path);
-	}
 
 	push(files_head, current_file);
 	return 0;
@@ -118,9 +113,8 @@ int backup(job_t *job_import)
 		exit(EXIT_FAILURE);
 	}
 
-	print_list(files_head);
-	delete(files_head);
 	//print_list(files_head);
+	delete(files_head);
 	return 0;
 }
 
