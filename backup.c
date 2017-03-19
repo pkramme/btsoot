@@ -21,7 +21,6 @@ static time_t t0;
 node_t *files_head = NULL;
 node_t *current_node = NULL;
 
-
 static void push(node_t *head, file_t filestruct)
 {
 	node_t *current = head;
@@ -34,20 +33,16 @@ static void push(node_t *head, file_t filestruct)
 	current->next->next = NULL;
 }
 
-static file_t pop(node_t **head)
+static void delete(node_t *head)
 {
-	file_t returnvalue = {0};
-	node_t *next_node = NULL;
-	if(*head == NULL)
+	node_t *current;
+	while((current = head) != NULL)
 	{
-		return returnvalue;
+		printf("Cleaning %i\n", *current);
+		head = head->next;
+		free(current);
+		current = NULL;
 	}
-	next_node = (*head)->next;
-	returnvalue = (*head)->link;
-	free(*head);
-	*head = next_node;
-
-	return returnvalue;
 }
 
 static void print_list(node_t *head)
@@ -87,7 +82,8 @@ static uint64_t hash(char path[4096])
 		XXH64_update(&state64, buffer, FILEBUFFER);
 	}
 	h64 = XXH64_digest(&state64);
-	
+
+	fclose(fp);	
 	return h64;
 }
 
@@ -122,8 +118,9 @@ int backup(job_t *job_import)
 		exit(EXIT_FAILURE);
 	}
 
+	print_list(files_head);
+	delete(files_head);
 	//print_list(files_head);
-
 	return 0;
 }
 
