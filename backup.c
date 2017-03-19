@@ -49,7 +49,7 @@ static void print_list(node_t *head)
 	node_t *current = head;
 	while(current != NULL)
 	{
-		printf("%s\n%s\n%i\n%i\n%i\n%i\n\n", 
+		printf("%s\n%s\n%i\n%li\n%li\n%"PRIu64"\n\n", 
 			current->link.path, 
 			current->link.name, 
 			current->link.type, 
