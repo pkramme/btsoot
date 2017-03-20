@@ -2,7 +2,7 @@
 
 typedef struct file_info {
 	char name[256];
-	char *path;
+	const char *path;
 	uint64_t checksum;
 	int8_t type;
 	int8_t level;
@@ -94,7 +94,7 @@ static uint64_t hash(char path[4096], size_t size)
 static int filewalk_info_callback(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf)
 {
 	file_t current_file = {0};
-	current_file.path = fpath;
+	current_file.path = strdup(fpath);
 	strcpy(current_file.name, fpath + ftwbuf->base);
 	current_file.size = sb->st_size;
 	current_file.type = tflag;
@@ -117,7 +117,7 @@ int backup(job_t *job_import)
 		exit(EXIT_FAILURE);
 	}
 
-	print_list(files_head);
+	//print_list(files_head);
 	delete(files_head);
 	return 0;
 }
