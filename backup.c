@@ -119,7 +119,7 @@ int backup(job_t *job_import)
 		exit(EXIT_FAILURE);
 	}
 
-	print_list(files_head);
+	//print_list(files_head);
 	delete(files_head);
 	return 0;
 }
