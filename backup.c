@@ -73,7 +73,6 @@ static uint64_t hash(char path[4096], size_t size)
 	{
 		return 0;
 	}
-	uint64_t h64;
 
 	int8_t buffer[size];
 	XXH64_state_t state64;	
@@ -85,10 +84,9 @@ static uint64_t hash(char path[4096], size_t size)
 		total_read = fread(buffer, 1, size, fp);	
 		XXH64_update(&state64, buffer, size);
 	}
-	h64 = XXH64_digest(&state64);
 
 	fclose(fp);	
-	return h64;
+	return XXH64_digest(&state64);
 }
 
 static int filewalk_info_callback(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf)
@@ -100,7 +98,11 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 	current_file.type = tflag;
 	current_file.scantime = t0;
 
-	push(files_head, current_file);
+	current_node->link = current_file;
+	current_node->next = malloc(sizeof(node_t));
+	current_node = current_node->next;
+	current_node->next = NULL;
+
 	return 0;
 }
 
