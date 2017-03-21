@@ -21,9 +21,9 @@ static time_t t0;
 node_t *files_head = NULL;
 node_t *current_node = NULL;
 
-uint64_t total_size = 0;
-uint64_t max_allowed_thread_size = 0;
-uint64_t current_thread_size = 0;
+size_t total_size = 0;
+size_t max_allowed_thread_size = 0;
+size_t current_thread_size = 0;
 
 int8_t thread_number = 0;
 
@@ -135,7 +135,7 @@ static int filewalk_size_callback(const char *fpath, const struct stat *sb, int 
 	return 0;
 }
 
-static void thread_hash(int t)
+void *thread_hash(int t)
 {
 	node_t *current = files_head;
 	while(current != NULL)
@@ -186,7 +186,7 @@ int backup(job_t *job_import)
 
 	pthread_t threads[job_import->max_threads];
 	int rc;
-	for(int t = 0; t < job_import->max_threads; t++)
+	for(long t = 0; t < job_import->max_threads; t++)
 	{
 		rc = pthread_create(&threads[t], NULL, thread_hash, (void*) t);
 		if(rc)
@@ -196,7 +196,7 @@ int backup(job_t *job_import)
 		}
 	}
 	
-	for(int t = 0; t < job_import->max_threads; t++)
+	for(long t = 0; t < job_import->max_threads; t++)
 	{
 		rc = pthread_join(threads[t], &status);
 		if(rc)
