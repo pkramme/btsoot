@@ -76,7 +76,7 @@ static void print_list(node_t *head)
 	}
 }
 
-static uint64_t hash(char path[4096], size_t size)
+static uint64_t hash(const char path[4096], size_t size)
 {
 	if(size > FILEBUFFER)
 	{
@@ -135,12 +135,12 @@ static int filewalk_size_callback(const char *fpath, const struct stat *sb, int 
 	return 0;
 }
 
-void *thread_hash(int t)
+void *thread_hash(void* t)
 {
 	node_t *current = files_head;
 	while(current != NULL)
 	{
-		if(current->link.thread_number == t)
+		if(current->link.thread_number == (int8_t)t)
 		{
 			current->link.checksum = hash(current->link.path, current->link.size);
 		}
