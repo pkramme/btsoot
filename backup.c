@@ -39,6 +39,7 @@ static void delete(node_t *head)
 	while((current = head) != NULL)
 	{
 		head = head->next;
+		free((void*)current->link.path);
 		free(current);
 		current = NULL;
 	}
