@@ -140,7 +140,7 @@ void *thread_hash(void* t)
 	node_t *current = files_head;
 	while(current != NULL)
 	{
-		if(current->link.thread_number == (int8_t)t)
+		if(current->link.thread_number == (uintptr_t)t)
 		{
 			current->link.checksum = hash(current->link.path, current->link.size);
 		}
