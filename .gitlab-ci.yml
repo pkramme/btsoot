@@ -6,19 +6,19 @@ stages:
 build:
   stage: build
   script:
-    - make -j 16
+    - make production -j 16
 
 test:
   stage: test
   script:
-    - scan-build make -j 16
+    - scan-build make production -j 16
   when: manual
 
 web_testing:
   stage: package
   environment: testing
   script:
-    - make -j 16
+    - make production -j 16
     - cp btsoot /home/paul/nas/btsoot/testing/btsoot-$CI_PIPELINE_ID-$CI_ENVIRONMENT_NAME
 
 web_stable:
@@ -34,7 +34,7 @@ web_rolling:
   stage: package
   environment: rolling
   script:
-    - make -j 16
+    - make production -j 16
     - cp ./btsoot /home/paul/nas/stable/btsoot-$CI_PIPELINE_ID-$CI_ENVIRONMENT_NAME
   only:
     - master
