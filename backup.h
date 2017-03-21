@@ -9,6 +9,7 @@
 #include<inttypes.h>
 #include<unistd.h>
 #include<time.h>
+#include<pthread.h>
 
 #include"sqlite3.h"
 #include"btsoot.h"

@@ -21,6 +21,12 @@ static time_t t0;
 node_t *files_head = NULL;
 node_t *current_node = NULL;
 
+uint64_t total_size = 0;
+uint64_t max_allowed_thread_size = 0;
+uint64_t current_thread_size = 0;
+
+int8_t thread_number = 0;
+
 static void push(node_t *head, file_t filestruct)
 {
 	node_t *current = head;
@@ -50,15 +56,23 @@ static void print_list(node_t *head)
 	node_t *current = head;
 	while(current != NULL)
 	{
-		printf("%s\n%s\n%i\n%li\n%li\n%"PRIu64"\n\n", 
+		printf("%s\n%s\n%i\n%li\n%li\n%"PRIu64"\n%i\n\n", 
 			current->link.path, 
 			current->link.name, 
 			current->link.type, 
 			current->link.size, 
 			current->link.scantime,
-			current->link.checksum
+			current->link.checksum,
+			current->link.thread_number
 		);
-		current = current->next;
+		if(current->next != NULL)
+		{
+			current = current->next;
+		}
+		else
+		{
+			break;
+		}
 	}
 }
 
@@ -98,6 +112,14 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 	current_file.size = sb->st_size;
 	current_file.type = tflag;
 	current_file.scantime = t0;
+	current_file.thread_number = thread_number;
+
+	current_thread_size += sb->st_size;
+	if(current_thread_size > max_allowed_thread_size)
+	{
+		++thread_number;
+		current_thread_size = 0;
+	}
 
 	current_node->link = current_file;
 	current_node->next = malloc(sizeof(node_t));
@@ -107,9 +129,46 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 	return 0;
 }
 
+static int filewalk_size_callback(const char *fpath, const struct stat *sb, int typeflag)
+{
+	total_size += sb->st_size;
+	return 0;
+}
+
+static void thread_hash(int t)
+{
+	node_t *current = files_head;
+	while(current != NULL)
+	{
+		if(current->link.thread_number == t)
+		{
+			current->link.checksum = hash(current->link.path, current->link.size);
+		}
+		if(current->next != NULL)
+		{
+			current = current->next;
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	pthread_exit((void*) t);
+}
+
 int backup(job_t *job_import)
 {
 	t0 = time(0);
+
+	if(ftw(job_import->src_path, &filewalk_size_callback, 1))
+	{
+		printf("SIZE CALC ERROR\n");
+		exit(EXIT_FAILURE);
+	}
+
+	job_import->max_threads = 4;
+	max_allowed_thread_size = total_size / job_import->max_threads;
 
 	files_head = malloc(sizeof(node_t));
 	current_node = files_head;
@@ -120,8 +179,37 @@ int backup(job_t *job_import)
 		exit(EXIT_FAILURE);
 	}
 
+	pthread_attr_t attr;
+	pthread_attr_init(&attr);
+	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+	void *status;
+
+	pthread_t threads[job_import->max_threads];
+	int rc;
+	for(int t = 0; t < job_import->max_threads; t++)
+	{
+		rc = pthread_create(&threads[t], NULL, thread_hash, (void*) t);
+		if(rc)
+		{
+			printf("ERROR FROM PTHREAD\nrc is %i\n", rc);
+			exit(EXIT_FAILURE);
+		}
+	}
+	
+	for(int t = 0; t < job_import->max_threads; t++)
+	{
+		rc = pthread_join(threads[t], &status);
+		if(rc)
+		{
+			puts("PTHREAD ERROR");
+			exit(EXIT_FAILURE);
+		}
+		//printf("join complete with %i\n", t);
+	}
+
 	//print_list(files_head);
 	delete(files_head);
+	pthread_exit(NULL);
 	return 0;
 }
 
