@@ -204,7 +204,6 @@ int backup(job_t *job_import)
 			puts("PTHREAD ERROR");
 			exit(EXIT_FAILURE);
 		}
-		//printf("join complete with %i\n", t);
 	}
 
 	//print_list(files_head);
