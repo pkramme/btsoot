@@ -157,6 +157,34 @@ void *thread_hash(void* t)
 	pthread_exit((void*) t);
 }
 
+static int write_to_db(node_t *head, sqlite3 *database)
+{
+	char zsql[8192];
+	node_t *current = head;
+	while(current != NULL)
+	{
+		sqlite3_snprintf(sizeof(zsql), zsql, "INSERT INTO files (filename, path, type, size, level, scantime, checksum) VALUES('%q', '%q', %i, %lli, %i, %i, %lli)", 
+			current->link.name, 
+			current->link.path, 
+			current->link.type, 
+			current->link.size, 
+			current->link.level, 
+			current->link.scantime, 
+			current->link.checksum);
+		sqlite3_exec(database, zsql, NULL, NULL, NULL);
+		if(current->next != NULL)
+		{
+			current = current->next;
+		}
+		else
+		{
+			break;
+		}
+		memset(zsql, '\0', sizeof(zsql));
+	}
+	return 0;
+}
+
 int backup(job_t *job_import)
 {
 	t0 = time(0);
@@ -206,7 +234,14 @@ int backup(job_t *job_import)
 		}
 	}
 
-	//print_list(files_head);
+	//Hashes are done
+
+	sqlite3 *database = NULL;
+	db_init(job_import->db_path);
+	sqlite3_open(job_import->db_path, &database);
+
+	write_to_db(files_head, database);
+
 	delete(files_head);
 	pthread_exit(NULL);
 	return 0;
