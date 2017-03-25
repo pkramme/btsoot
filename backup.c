@@ -157,6 +157,20 @@ void *thread_hash(void* t)
 	pthread_exit((void*) t);
 }
 
+static int read_latest(node_t *head, sqlite *database)
+{
+	node_t *current = head;
+	
+	//Read latest timestamp
+	//Read all data with given timestamp into linked list starting at "head"
+	return 0;
+}
+
+static int write_to_server(void)
+{
+	return 0;
+}
+
 static int write_to_db(node_t *head, sqlite3 *database)
 {
 	char zsql[8192];
