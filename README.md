@@ -43,9 +43,11 @@ product.
 ---
 
 ## Dependencies
-- Linux OS (no specific distribution)
-- [Python 3.6](https://python.org) or above
-- build-essential
+- 64bit Linux OS (no specific distribution)  
+
+If you want to build from source:  
+- clang
+- make
 
 ---
 
