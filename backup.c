@@ -26,9 +26,13 @@ typedef struct node {
 } node_t;
 
 static time_t t0;
+static time_t tsearched;
 
 static node_t *files_head = NULL;
 static node_t *current_node = NULL;
+
+static node_t *old_files_head = NULL;
+//static node_t *old_current_node = NULL;
 
 static size_t total_size = 0;
 static size_t max_allowed_thread_size = 0;
@@ -166,14 +170,35 @@ void *thread_hash(void* t)
 	pthread_exit((void*) t);
 }
 
-static int read_latest_from_database(node_t *head, sqlite3 *database)
+static int get_old_scantime_callback(void *notused, int argc, char **argv, char **azcolname)
+{
+	for(int i = 0; i < argc; i++)
+	{
+		if(strcmp(azcolname[i], "scantime") == 0)
+		{
+			tsearched = argv[i] ? atoi(argv[i]) : -1;
+		}
+	}
+	return 1;
+}
+
+static int read_old_from_database(node_t *head, sqlite3 *database)
 {
 	node_t *current = head;
-	char zsql[8192];
+	sqlite3_exec(database, "SELECT scantime FROM files ORDER BY scantime DESC", get_old_scantime_callback, NULL, NULL);
+	if(tsearched == -1)
+	{
+		puts("Make first scan...");
+		return 1;
+	}
+
+	char *zsql = sqlite3_mprintf("SELECT * FROM files WHERE scantime = %li", tsearched);
+	sqlite3_exec(database, zsql, NULL, NULL, NULL);
 	
 	//-> make current global so callback can easiely access it?
 	//Read latest timestamp
 	//Read all data with given timestamp into linked list starting at "head"
+	sqlite3_free(zsql);
 	return 0;
 }
 
@@ -266,12 +291,17 @@ int backup(job_t *job_import)
 		}
 	}
 
-	//Write to database
+
+	// Open and init database
 	sqlite3 *database;
 	db_init(job_import->db_path);
 	sqlite3_open(job_import->db_path, &database);
 
-	print_list(files_head);
+	// Read old from database
+	read_old_from_database(old_files_head, database);
+
+	//Write to database
+	//print_list(files_head);
 	write_to_db(files_head, database);
 
 	delete(files_head);
