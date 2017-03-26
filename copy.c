@@ -1,4 +1,13 @@
 /*
+ * Copyright (C) Paul Kramme 2017
+ * 
+ * Part of BTSOOT
+ * Single folder redundancy offsite-backup utility
+ * 
+ * Licensed under MIT License
+ */
+
+/*
 COPY RETURN CODES
 Return codes are incase of error displayed and handled by BTSOOT.
 
@@ -6,6 +15,8 @@ return -1 = incorrect number of args
 return 0 = ok
 return 1 = couldnt open source fd
 return 2 = couldnt open dest fd
+return 3 = couldnt write to dest fd - NOT EXISTENT IN COPY()
+return 4 = couldnt read from source fd - NOT EXISTENT IN COPY()
 return 5 = couldnt close source fd
 return 6 = couldnt close dest fd
 */
@@ -63,9 +74,6 @@ int copy_fallback(char *source, char *destination)
 	mode_t permissions;
 	ssize_t read_check;
 
-	/*compiler complains...*/
-	read_check = 0;
-
 	fd_source = open(source, O_RDONLY);
 	if(fd_source == -1)
 	{
@@ -106,4 +114,3 @@ int copy_fallback(char *source, char *destination)
 	
 	return 0;
 }
-

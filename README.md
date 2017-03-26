@@ -43,8 +43,11 @@ product.
 ---
 
 ## Dependencies
+- 64bit Linux OS (no specific distribution)  
+
+If you want to build from source:  
+- clang
 - make
-- build-essential
 
 ---
 
@@ -161,14 +164,7 @@ The key is to reduce as much disk writing as possible.
 ---
 
 ## Project Information
-I am currently trying to enforce GitLab Flow, with [semantic versioning](http://semver.com) in release channels.
+I am currently enforcing GitLab Flow, with [semantic versioning](http://semver.com) in release channels.
 
-## Error Codes
-### Copy Error
-* -1 = Incorrect number of arguments
-* 1 = Couldn't open source file descriptor
-* 2 = Couldn't open destination file descriptor
-* 3 = Couldn't write to destination file descriptor
-* 4 = Couldn't read from source file descriptor
-* 5 = Couldn't close source file descriptor
-* 6 = Couldn't close destination file descriptor
+## Dependencies
+For the sake of portability, i try to statically link anything possible. [A list of additional dependencies and their licenses](https://git.paukra.com/open-source/btsoot/wikis/additional-dependencies).
