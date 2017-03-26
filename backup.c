@@ -157,10 +157,12 @@ void *thread_hash(void* t)
 	pthread_exit((void*) t);
 }
 
-static int read_latest(node_t *head, sqlite *database)
+static int read_latest_from_database(node_t *head, sqlite *database)
 {
 	node_t *current = head;
+	char zsql[8192];
 	
+	//-> make current global so callback can easiely access it?
 	//Read latest timestamp
 	//Read all data with given timestamp into linked list starting at "head"
 	return 0;
@@ -248,8 +250,7 @@ int backup(job_t *job_import)
 		}
 	}
 
-	//Hashes are done
-
+	//Write to database
 	sqlite3 *database = NULL;
 	db_init(job_import->db_path);
 	sqlite3_open(job_import->db_path, &database);
