@@ -19,14 +19,14 @@ web_testing:
   environment: testing
   script:
     - make production -j 16
-    - cp btsoot.x86-64 /home/paul/nas/btsoot/testing/btsoot-$CI_PIPELINE_ID-$CI_ENVIRONMENT_NAME
+    - cp btsoot.x86_64 /home/paul/nas/btsoot/testing/btsoot-$CI_PIPELINE_ID-$CI_ENVIRONMENT_NAME
 
 web_stable:
   stage: package
   environment: stable
   script:
     - make production -j 16
-    - cp ./btsoot.x86-64 /home/paul/nas/btsoot/stable/btsoot-$CI_COMMIT_TAG-$CI_ENVIRONMENT_NAME
+    - cp ./btsoot.x86_64 /home/paul/nas/btsoot/stable/btsoot-$CI_COMMIT_TAG-$CI_ENVIRONMENT_NAME
   only:
     - tags
     
@@ -35,23 +35,6 @@ web_rolling:
   environment: rolling
   script:
     - make production -j 16
-    - cp ./btsoot.x86-64 /home/paul/nas/stable/btsoot-$CI_PIPELINE_ID-$CI_ENVIRONMENT_NAME
+    - cp ./btsoot.x86_64 /home/paul/nas/stable/btsoot-$CI_PIPELINE_ID-$CI_ENVIRONMENT_NAME
   only:
     - master
-
-dpkg:
-  stage: package
-  environment: stable
-  script:
-    - make production -j 16
-    - mkdir -p btsoot_$CI_BUILD_TAG/DEBIAN/
-    - python3.6 scripts/package_deb_replace_version.py $CI_BUILD_TAG
-    - mkdir -p btsoot-$CI_BUILD_TAG/usr/local/bin
-    - mkdir -p btsoot-$CI_BUILD_TAG/etc/btsoot/scans
-    - cp btsoot btsoot_$CI_BUILD_TAG/usr/local/bin/btsoot
-    - dpkg-deb --build btsoot_$CI_BUILD_TAG
-  artifacts:
-    paths:
-      - btsoot_$CI_BUILD_TAG.deb
-  only:
-    - tags
