@@ -12,8 +12,7 @@ test:
   stage: test
   script:
     - scan-build make production -j 16
-  when: 
-    - manual
+  when: manual
 
 web_testing:
   stage: package
