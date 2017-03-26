@@ -1,3 +1,9 @@
+# Config
+*.conf
+
+# Datafiles
+*.dat
+
 # Prerequisites
 *.d
 
