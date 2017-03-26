@@ -35,6 +35,6 @@ web_rolling:
   environment: rolling
   script:
     - make production -j 16
-    - cp ./btsoot.x86_64 /home/paul/nas/stable/btsoot-$CI_PIPELINE_ID-$CI_ENVIRONMENT_NAME
+    - cp ./btsoot.x86_64 /home/paul/nas/btsoot/stable/btsoot-$CI_PIPELINE_ID-$CI_ENVIRONMENT_NAME
   only:
     - master
