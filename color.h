@@ -1,3 +1,12 @@
+/*
+ * Copyright (C) Paul Kramme 2017
+ * 
+ * Part of BTSOOT
+ * Single folder redundancy offsite-backup utility
+ * 
+ * Licensed under MIT License
+ */
+ 
 #pragma once
 
 #define ANSI_COLOR_RED "\x1b[31m"

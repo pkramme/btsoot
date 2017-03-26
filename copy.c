@@ -1,4 +1,13 @@
 /*
+ * Copyright (C) Paul Kramme 2017
+ * 
+ * Part of BTSOOT
+ * Single folder redundancy offsite-backup utility
+ * 
+ * Licensed under MIT License
+ */
+
+/*
 COPY RETURN CODES
 Return codes are incase of error displayed and handled by BTSOOT.
 

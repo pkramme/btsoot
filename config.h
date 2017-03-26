@@ -1,3 +1,12 @@
+/*
+ * Copyright (C) Paul Kramme 2017
+ * 
+ * Part of BTSOOT
+ * Single folder redundancy offsite-backup utility
+ * 
+ * Licensed under MIT License
+ */
+
 #pragma once
 
 #define database_path "./"  //Storage path for all database files.
