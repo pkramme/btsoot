@@ -32,7 +32,6 @@ static node_t *current_node = NULL;
 
 static size_t total_size = 0;
 static size_t max_allowed_thread_size = 0;
-static size_t current_thread_size = 0;
 
 static void push(node_t *head, file_t filestruct)
 {
@@ -63,7 +62,7 @@ static void print_list(node_t *head)
 	node_t *current = head;
 	while(current != NULL)
 	{
-		printf("%s\n%s\n%i\n%li\n%li\n%"PRIu64"\n%i\n\n", 
+		printf("path=%s\nname=%s\ntype=%i\nsize=%li\ntime=%li\nchecksum=%"PRIu64"\nthrnmb=%i\n\n", 
 			current->link.path, 
 			current->link.name, 
 			current->link.type, 
@@ -123,6 +122,7 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 	current_file.scantime = t0;
 	current_file.thread_number = thread_number;
 
+	static size_t current_thread_size;
 	current_thread_size += sb->st_size;
 	if(current_thread_size > max_allowed_thread_size)
 	{
@@ -264,6 +264,7 @@ int backup(job_t *job_import)
 	db_init(job_import->db_path);
 	sqlite3_open(job_import->db_path, &database);
 
+	print_list(files_head);
 	write_to_db(files_head, database);
 
 	delete(files_head);

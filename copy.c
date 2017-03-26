@@ -114,4 +114,3 @@ int copy_fallback(char *source, char *destination)
 	
 	return 0;
 }
-

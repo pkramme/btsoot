@@ -32,4 +32,3 @@
 int backup(job_t *job_import);
 
 #endif
-
