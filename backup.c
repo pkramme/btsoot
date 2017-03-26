@@ -261,4 +261,3 @@ int backup(job_t *job_import)
 	pthread_exit(NULL);
 	return 0;
 }
-
