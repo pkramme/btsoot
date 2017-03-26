@@ -18,14 +18,14 @@ typedef struct node {
 
 static time_t t0;
 
-node_t *files_head = NULL;
-node_t *current_node = NULL;
+static node_t *files_head = NULL;
+static node_t *current_node = NULL;
 
-size_t total_size = 0;
-size_t max_allowed_thread_size = 0;
-size_t current_thread_size = 0;
+static size_t total_size = 0;
+static size_t max_allowed_thread_size = 0;
+static size_t current_thread_size = 0;
 
-int8_t thread_number = 0;
+static int8_t thread_number = 0; //needed for thread assignment
 
 static void push(node_t *head, file_t filestruct)
 {
