@@ -13,4 +13,4 @@ remove:
 	rm /usr/local/bin/btsoot
 	rm -rf /etc/btsoot
 clean:
-	rm btsoot *.o
+	rm btsoot.x86_64 *.o

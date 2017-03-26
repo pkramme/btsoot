@@ -184,11 +184,13 @@ static int write_to_server(void)
 
 static int write_to_db(node_t *head, sqlite3 *database)
 {
-	char zsql[8192];
 	node_t *current = head;
+	char *sqlerrormessage = 0;
+
 	while(current != NULL)
 	{
-		sqlite3_snprintf(sizeof(zsql), zsql, "INSERT INTO files (filename, path, type, size, level, scantime, checksum) VALUES('%q', '%q', %i, %lli, %i, %i, %lli)", 
+		char zsql[8192];
+		sqlite3_snprintf(sizeof(zsql), zsql, "INSERT INTO files (filename, path, type, size, level, scantime, hash) VALUES('%q', '%q', %i, %lli, %i, %i, %lli)", 
 			current->link.name, 
 			current->link.path, 
 			current->link.type, 
@@ -196,7 +198,12 @@ static int write_to_db(node_t *head, sqlite3 *database)
 			current->link.level, 
 			current->link.scantime, 
 			current->link.checksum);
-		sqlite3_exec(database, zsql, NULL, NULL, NULL);
+		if(sqlite3_exec(database, zsql, NULL, NULL, &sqlerrormessage))
+		{
+			printf("ERROR: %s\n", sqlerrormessage);
+			sqlite3_free(sqlerrormessage);
+		}
+
 		if(current->next != NULL)
 		{
 			current = current->next;
@@ -260,7 +267,7 @@ int backup(job_t *job_import)
 	}
 
 	//Write to database
-	sqlite3 *database = NULL;
+	sqlite3 *database;
 	db_init(job_import->db_path);
 	sqlite3_open(job_import->db_path, &database);
 
@@ -268,6 +275,7 @@ int backup(job_t *job_import)
 	write_to_db(files_head, database);
 
 	delete(files_head);
+	sqlite3_close(database);
 	pthread_exit(NULL);
 	return 0;
 }
