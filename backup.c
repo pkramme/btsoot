@@ -170,6 +170,11 @@ void *thread_hash(void* t)
 	pthread_exit((void*) t);
 }
 
+static int old_files_list_filler(void *notused, int argc, char **argv, char **azcolname)
+{
+	return 0;
+}
+
 static int get_old_scantime_callback(void *notused, int argc, char **argv, char **azcolname)
 {
 	for(int i = 0; i < argc; i++)
@@ -191,6 +196,7 @@ static int read_old_from_database(node_t *head, sqlite3 *database)
 		puts("Make first scan...");
 		return 1;
 	}
+	//printf("%li\n", tsearched);
 
 	char *zsql = sqlite3_mprintf("SELECT * FROM files WHERE scantime = %li", tsearched);
 	sqlite3_exec(database, zsql, NULL, NULL, NULL);
