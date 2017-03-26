@@ -25,8 +25,6 @@ static size_t total_size = 0;
 static size_t max_allowed_thread_size = 0;
 static size_t current_thread_size = 0;
 
-static int8_t thread_number = 0; //needed for thread assignment
-
 static void push(node_t *head, file_t filestruct)
 {
 	node_t *current = head;
@@ -106,6 +104,8 @@ static uint64_t hash(const char path[4096], size_t size)
 
 static int filewalk_info_callback(const char *fpath, const struct stat *sb, int tflag, struct FTW *ftwbuf)
 {
+	static int8_t thread_number = 0;
+
 	file_t current_file = {0};
 	current_file.path = strdup(fpath);
 	strcpy(current_file.name, fpath + ftwbuf->base);
@@ -157,7 +157,7 @@ void *thread_hash(void* t)
 	pthread_exit((void*) t);
 }
 
-static int read_latest_from_database(node_t *head, sqlite *database)
+static int read_latest_from_database(node_t *head, sqlite3 *database)
 {
 	node_t *current = head;
 	char zsql[8192];
