@@ -172,6 +172,39 @@ void *thread_hash(void* t)
 
 static int old_files_list_filler(void *notused, int argc, char **argv, char **azcolname)
 {
+	file_t current_file = {0};
+	
+	for(int i = 0; i < argc; ++i)
+	{
+		if(strcmp(azcolname, "path") == 0)
+		{
+			current_file.path = strdup(argv[i]);
+		}
+		else if(strcmp(azcolname, "filename") == 0)
+		{
+			strcpy(current_file.name, fpath + ftwbuf->base);
+		}
+		else if(strcmp(azcolname, "type") == 0)
+		{
+			current_file.type = atoi(argv[i]);
+		}
+		else if(strcmp(azcolname, "size") == 0)
+		{
+			current_file.size = atoi(argv[i]);
+		}
+		else if(strcmp(azcolname, "level") == 0)
+		{
+			current_file.type = atoi(argv[i]);
+		}
+		else if(strcmp(azcolname, "scantime") == 0)
+		{
+			current_file.scantime = atoi(argv[i]);
+		}
+		else
+		{
+			puts("A database reading error occured.");
+		}
+	}
 	return 0;
 }
 
@@ -294,7 +327,6 @@ int backup(job_t *job_import)
 			exit(EXIT_FAILURE);
 		}
 	}
-
 
 	// Open and init database
 	sqlite3 *database;
