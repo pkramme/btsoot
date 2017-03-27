@@ -176,27 +176,27 @@ static int old_files_list_filler(void *notused, int argc, char **argv, char **az
 	
 	for(int i = 0; i < argc; ++i)
 	{
-		if(strcmp(azcolname, "path") == 0)
+		if(strcmp(azcolname[i], "path") == 0)
 		{
 			current_file.path = strdup(argv[i]);
 		}
-		else if(strcmp(azcolname, "filename") == 0)
+		else if(strcmp(azcolname[i], "filename") == 0)
 		{
 			strcpy(current_file.name, argv[i]);
 		}
-		else if(strcmp(azcolname, "type") == 0)
+		else if(strcmp(azcolname[i], "type") == 0)
 		{
 			current_file.type = atoi(argv[i]);
 		}
-		else if(strcmp(azcolname, "size") == 0)
+		else if(strcmp(azcolname[i], "size") == 0)
 		{
 			current_file.size = atoi(argv[i]);
 		}
-		else if(strcmp(azcolname, "level") == 0)
+		else if(strcmp(azcolname[i], "level") == 0)
 		{
 			current_file.type = atoi(argv[i]);
 		}
-		else if(strcmp(azcolname, "scantime") == 0)
+		else if(strcmp(azcolname[i], "scantime") == 0)
 		{
 			current_file.scantime = atoi(argv[i]);
 		}
