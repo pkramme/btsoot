@@ -296,7 +296,6 @@ int backup(job_t *job_import)
 		}
 	}
 
-
 	// Open and init database
 	sqlite3 *database;
 	db_init(job_import->db_path);
