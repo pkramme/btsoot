@@ -242,7 +242,6 @@ static int write_to_db(node_t *head, sqlite3 *database)
 		{
 			break;
 		}
-		memset(zsql, '\0', sizeof(zsql));
 	}
 	return 0;
 }
