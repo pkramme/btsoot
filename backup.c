@@ -128,6 +128,7 @@ static int filewalk_info_callback(const char *fpath, const struct stat *sb, int 
 
 	static size_t current_thread_size;
 	current_thread_size += sb->st_size;
+	total_size += sb->st_size;
 	if(current_thread_size > max_allowed_thread_size)
 	{
 		++thread_number;
