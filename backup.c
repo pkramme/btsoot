@@ -196,7 +196,6 @@ static int read_old_from_database(node_t *head, sqlite3 *database)
 		puts("Make first scan...");
 		return 1;
 	}
-	//printf("%li\n", tsearched);
 
 	char *zsql = sqlite3_mprintf("SELECT * FROM files WHERE scantime = %li", tsearched);
 	sqlite3_exec(database, zsql, NULL, NULL, NULL);
@@ -303,15 +302,20 @@ int backup(job_t *job_import)
 	db_init(job_import->db_path);
 	sqlite3_open(job_import->db_path, &database);
 
+	// Apply speed hacks
+	sqlite3_exec(database, "BEGIN TRANSACTION", NULL, NULL, NULL);
+	sqlite3_exec(database, "PRAGMA synchronous = off", NULL, NULL, NULL);
+	sqlite3_exec(database, "PRAGMA journal_mode = MEMORY", NULL, NULL, NULL);
+	
 	// Read old from database
 	read_old_from_database(old_files_head, database);
 
 	//Write to database
-	//print_list(files_head);
 	write_to_db(files_head, database);
 
 	delete(files_head);
 	sqlite3_close(database);
+	sqlite3_exec(database, "END TRANSACTION", NULL, NULL, NULL);
 	pthread_exit(NULL);
 	return 0;
 }
