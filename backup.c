@@ -182,7 +182,7 @@ static int old_files_list_filler(void *notused, int argc, char **argv, char **az
 		}
 		else if(strcmp(azcolname, "filename") == 0)
 		{
-			strcpy(current_file.name, fpath + ftwbuf->base);
+			strcpy(current_file.name, argv[i]);
 		}
 		else if(strcmp(azcolname, "type") == 0)
 		{
