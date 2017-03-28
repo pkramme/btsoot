@@ -32,7 +32,7 @@ static node_t *files_head = NULL;
 static node_t *current_node = NULL;
 
 static node_t *old_files_head = NULL;
-//static node_t *old_current_node = NULL;
+static node_t *old_current_node = NULL;
 
 static size_t total_size = 0;
 static size_t max_allowed_thread_size = 0;
@@ -173,7 +173,7 @@ void *thread_hash(void* t)
 static int old_files_list_filler(void *notused, int argc, char **argv, char **azcolname)
 {
 	file_t current_file = {0};
-	
+
 	for(int i = 0; i < argc; ++i)
 	{
 		if(strcmp(azcolname[i], "path") == 0)
@@ -205,6 +205,12 @@ static int old_files_list_filler(void *notused, int argc, char **argv, char **az
 			puts("A database reading error occured.");
 		}
 	}
+
+	old_current_node->link = current_file;
+	old_current_node->next = malloc(sizeof(node_t));
+	old_current_node = current_node->next;
+	old_current_node->next = NULL;
+
 	return 0;
 }
 
@@ -222,16 +228,16 @@ static int get_old_scantime_callback(void *notused, int argc, char **argv, char 
 
 static int read_old_from_database(node_t *head, sqlite3 *database)
 {
-	node_t *current = head;
 	sqlite3_exec(database, "SELECT scantime FROM files ORDER BY scantime DESC", get_old_scantime_callback, NULL, NULL);
 	if(tsearched == -1)
 	{
 		puts("Make first scan...");
 		return 1;
 	}
-
+	old_current_node = old_files_head;
+	
 	char *zsql = sqlite3_mprintf("SELECT * FROM files WHERE scantime = %li", tsearched);
-	sqlite3_exec(database, zsql, NULL, NULL, NULL);
+	sqlite3_exec(database, zsql, old_files_list_filler, NULL, NULL);
 	
 	//-> make current global so callback can easiely access it?
 	//Read latest timestamp
@@ -289,7 +295,7 @@ int backup(job_t *job_import)
 		exit(EXIT_FAILURE);
 	}
 
-	job_import->max_threads = 4;
+	job_import->max_threads = 2;
 	max_allowed_thread_size = total_size / job_import->max_threads;
 
 	files_head = malloc(sizeof(node_t));
@@ -341,10 +347,11 @@ int backup(job_t *job_import)
 	// Read old from database
 	read_old_from_database(old_files_head, database);
 
-	//Write to database
+	// Write to database
 	write_to_db(files_head, database);
 
 	delete(files_head);
+	delete(old_files_head);
 	sqlite3_close(database);
 	sqlite3_exec(database, "END TRANSACTION", NULL, NULL, NULL);
 	pthread_exit(NULL);
