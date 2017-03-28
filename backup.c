@@ -282,6 +282,27 @@ static int write_to_db(node_t *head, sqlite3 *database)
 	return 0;
 }
 
+typedef struct action {
+	file_t file;
+	int type;
+} action_t;
+
+static int diff(node_t *old_head, node_t *new_head)
+{
+	node_t *old_current = NULL;
+	node_t *new_current = NULL;
+	while(new_current != NULL)
+	{
+		while(old_current != NULL)
+		{
+			if(old_current->link.checksum == new_current->link.checksum)
+			{
+				puts("Match found.");
+			}
+		}
+	}
+}
+
 int backup(job_t *job_import)
 {
 	t0 = time(0);
