@@ -226,7 +226,7 @@ static int get_old_scantime_callback(void *notused, int argc, char **argv, char 
 	return 1;
 }
 
-static int read_old_from_database(node_t *head, sqlite3 *database)
+static int read_old_from_database(sqlite3 *database)
 {
 	sqlite3_exec(database, "SELECT scantime FROM files ORDER BY scantime DESC", get_old_scantime_callback, NULL, NULL);
 	if(tsearched == -1)
@@ -238,10 +238,7 @@ static int read_old_from_database(node_t *head, sqlite3 *database)
 	
 	char *zsql = sqlite3_mprintf("SELECT * FROM files WHERE scantime = %li", tsearched);
 	sqlite3_exec(database, zsql, old_files_list_filler, NULL, NULL);
-	
-	//-> make current global so callback can easiely access it?
-	//Read latest timestamp
-	//Read all data with given timestamp into linked list starting at "head"
+
 	sqlite3_free(zsql);
 	return 0;
 }
@@ -345,7 +342,7 @@ int backup(job_t *job_import)
 	sqlite3_exec(database, "PRAGMA journal_mode = MEMORY", NULL, NULL, NULL);
 	
 	// Read old from database
-	read_old_from_database(old_files_head, database);
+	read_old_from_database(database);
 
 	// Write to database
 	write_to_db(files_head, database);
