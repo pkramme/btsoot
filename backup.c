@@ -301,6 +301,7 @@ static int diff(node_t *old_head, node_t *new_head)
 			}
 		}
 	}
+	return 0;
 }
 
 int backup(job_t *job_import)
