@@ -141,25 +141,6 @@ So i created a new project, this project, called BTSOOT, and began to write it i
 I wasn't good in Python, but it is way faster to learn than C with all Linux system calls. And here i am. The program as it is runs on a Linux host under Python3.6 (formatted srings
 were to nice to ignore them) and copies changed files to a mounted network folder on the host.
 
----
-
-## Performance
-As BTSOOT is currently, as of 52a445fa, single threaded, the performance is not as good as it could be. I am currently 
-trying to eliminate bottlenecks, like the random writing to disk, to improve performance with small files. This, 
-however, drasticly raises RAM usage. The worst case is number-of-files * (4096 + 8 + 2) * 2 (256 path lengh; 8 CRC  
-Hash; 2 Escape and Comma; 2 scanfiles). Limiting factors include, but are not limited to:
-- Slow disk speed
-- Many little files, which slow down the CRC algorithm and arrays which hold the data
-
-The table below might get you an impression of speed.
-
-|  COMMIT  | Data   |  Time             |  
-| -------- | :----- | :---------------- |  
-| 52a445fa | 1,9TB  |  187 Min, 22 Secs |  
-
-I will rewrite most of the python performance parts in C, as i did with the copy code. This alone gave promising
-results. For better or worse, there will be a C backend, python as a frontend, which only launches the backend pipeline.
-The key is to reduce as much disk writing as possible.
 
 ---
 
