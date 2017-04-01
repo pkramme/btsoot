@@ -293,6 +293,10 @@ typedef struct diff_report {
 	int8_t same_size;
 } diff_t;
 
+/*
+TODO: Basis is checksum, after that it is path.
+*/
+
 static int diff(node_t *old_head, node_t *new_head)
 {
 	node_t *old_current = NULL;
