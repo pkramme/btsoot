@@ -287,18 +287,26 @@ typedef struct action {
 	int type;
 } action_t;
 
+typedef struct diff_report {
+	int8_t same_name;
+	int8_t same_checksum;
+	int8_t same_size;
+} diff_t;
+
 static int diff(node_t *old_head, node_t *new_head)
 {
 	node_t *old_current = NULL;
 	node_t *new_current = NULL;
 	while(new_current != NULL)
 	{
-		while(old_current != NULL)
+		while(old_current->link.checksum != new_current->link.checksum)
 		{
-			if(old_current->link.checksum == new_current->link.checksum)
+			if(old_current->next == NULL)
 			{
-				puts("Match found.");
+				//add to action as copy ; file is changed
+				break;
 			}
+			
 		}
 	}
 	return 0;
