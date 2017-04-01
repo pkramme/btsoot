@@ -1,9 +1,9 @@
 /*
  * Copyright (C) Paul Kramme 2017
- * 
+ *
  * Part of BTSOOT
  * Single folder redundancy offsite-backup utility
- * 
+ *
  * Licensed under MIT License
  */
 
@@ -66,11 +66,11 @@ static void print_list(node_t *head)
 	node_t *current = head;
 	while(current != NULL)
 	{
-		printf("path=%s\nname=%s\ntype=%i\nsize=%li\ntime=%li\nchecksum=%"PRIu64"\nthrnmb=%i\n\n", 
-			current->link.path, 
-			current->link.name, 
-			current->link.type, 
-			current->link.size, 
+		printf("path=%s\nname=%s\ntype=%i\nsize=%li\ntime=%li\nchecksum=%"PRIu64"\nthrnmb=%i\n\n",
+			current->link.path,
+			current->link.name,
+			current->link.type,
+			current->link.size,
 			current->link.scantime,
 			current->link.checksum,
 			current->link.thread_number
@@ -100,17 +100,17 @@ static uint64_t hash(const char path[4096], size_t size)
 	}
 
 	int8_t buffer[size];
-	XXH64_state_t state64;	
+	XXH64_state_t state64;
 	size_t total_read = 1;
-		
+
 	XXH64_reset(&state64, 0);
 	while(total_read)
 	{
-		total_read = fread(buffer, 1, size, fp);	
+		total_read = fread(buffer, 1, size, fp);
 		XXH64_update(&state64, buffer, size);
 	}
 
-	fclose(fp);	
+	fclose(fp);
 	return XXH64_digest(&state64);
 }
 
@@ -235,7 +235,7 @@ static int read_old_from_database(sqlite3 *database)
 		return 1;
 	}
 	old_current_node = old_files_head;
-	
+
 	char *zsql = sqlite3_mprintf("SELECT * FROM files WHERE scantime = %li", tsearched);
 	sqlite3_exec(database, zsql, old_files_list_filler, NULL, NULL);
 
@@ -256,13 +256,13 @@ static int write_to_db(node_t *head, sqlite3 *database)
 	while(current != NULL)
 	{
 		char zsql[8192];
-		sqlite3_snprintf(sizeof(zsql), zsql, "INSERT INTO files (filename, path, type, size, level, scantime, hash) VALUES('%q', '%q', %i, %lli, %i, %i, %lli)", 
-			current->link.name, 
-			current->link.path, 
-			current->link.type, 
-			current->link.size, 
-			current->link.level, 
-			current->link.scantime, 
+		sqlite3_snprintf(sizeof(zsql), zsql, "INSERT INTO files (filename, path, type, size, level, scantime, hash) VALUES('%q', '%q', %i, %lli, %i, %i, %lli)",
+			current->link.name,
+			current->link.path,
+			current->link.type,
+			current->link.size,
+			current->link.level,
+			current->link.scantime,
 			current->link.checksum);
 		if(sqlite3_exec(database, zsql, NULL, NULL, &sqlerrormessage))
 		{
@@ -304,10 +304,19 @@ static int diff(node_t *old_head, node_t *new_head)
 			if(old_current->next == NULL)
 			{
 				//add to action as copy ; file is changed
+				if(old_current->link.path == new_current->link.path)
+				{
+					//same path, different checksum -> send again
+				}
+				else
+				{
+					//different path, different checksum -> file deleted
+				}
 				break;
 			}
-			
+			//increase to next
 		}
+		//increase to next
 	}
 	return 0;
 }
@@ -350,7 +359,7 @@ int backup(job_t *job_import)
 			exit(EXIT_FAILURE);
 		}
 	}
-	
+
 	for(long t = 0; t < job_import->max_threads; t++)
 	{
 		rc = pthread_join(threads[t], &status);
@@ -370,7 +379,7 @@ int backup(job_t *job_import)
 	sqlite3_exec(database, "BEGIN TRANSACTION", NULL, NULL, NULL);
 	sqlite3_exec(database, "PRAGMA synchronous = off", NULL, NULL, NULL);
 	sqlite3_exec(database, "PRAGMA journal_mode = MEMORY", NULL, NULL, NULL);
-	
+
 	// Read old from database
 	read_old_from_database(database);
 
