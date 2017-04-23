@@ -32,7 +32,7 @@ static node_t *files_head = NULL;
 static node_t *current_node = NULL;
 
 static node_t *old_files_head = NULL;
-//static node_t *old_current_node = NULL;
+static node_t *old_current_node = NULL;
 
 static size_t total_size = 0;
 static size_t max_allowed_thread_size = 0;
@@ -172,6 +172,45 @@ void *thread_hash(void* t)
 
 static int old_files_list_filler(void *notused, int argc, char **argv, char **azcolname)
 {
+	file_t current_file = {0};
+
+	for(int i = 0; i < argc; ++i)
+	{
+		if(strcmp(azcolname[i], "path") == 0)
+		{
+			current_file.path = strdup(argv[i]);
+		}
+		else if(strcmp(azcolname[i], "filename") == 0)
+		{
+			strcpy(current_file.name, argv[i]);
+		}
+		else if(strcmp(azcolname[i], "type") == 0)
+		{
+			current_file.type = atoi(argv[i]);
+		}
+		else if(strcmp(azcolname[i], "size") == 0)
+		{
+			current_file.size = atoi(argv[i]);
+		}
+		else if(strcmp(azcolname[i], "level") == 0)
+		{
+			current_file.type = atoi(argv[i]);
+		}
+		else if(strcmp(azcolname[i], "scantime") == 0)
+		{
+			current_file.scantime = atoi(argv[i]);
+		}
+		else
+		{
+			puts("A database reading error occured.");
+		}
+	}
+
+	old_current_node->link = current_file;
+	old_current_node->next = malloc(sizeof(node_t));
+	old_current_node = current_node->next;
+	old_current_node->next = NULL;
+
 	return 0;
 }
 
@@ -187,22 +226,19 @@ static int get_old_scantime_callback(void *notused, int argc, char **argv, char 
 	return 1;
 }
 
-static int read_old_from_database(node_t *head, sqlite3 *database)
+static int read_old_from_database(sqlite3 *database)
 {
-	node_t *current = head;
 	sqlite3_exec(database, "SELECT scantime FROM files ORDER BY scantime DESC", get_old_scantime_callback, NULL, NULL);
 	if(tsearched == -1)
 	{
 		puts("Make first scan...");
 		return 1;
 	}
+	old_current_node = old_files_head;
 
 	char *zsql = sqlite3_mprintf("SELECT * FROM files WHERE scantime = %li", tsearched);
-	sqlite3_exec(database, zsql, NULL, NULL, NULL);
+	sqlite3_exec(database, zsql, old_files_list_filler, NULL, NULL);
 
-	//-> make current global so callback can easiely access it?
-	//Read latest timestamp
-	//Read all data with given timestamp into linked list starting at "head"
 	sqlite3_free(zsql);
 	return 0;
 }
@@ -246,6 +282,49 @@ static int write_to_db(node_t *head, sqlite3 *database)
 	return 0;
 }
 
+typedef struct action {
+	file_t file;
+	int type;
+} action_t;
+
+typedef struct diff_report {
+	int8_t same_name;
+	int8_t same_checksum;
+	int8_t same_size;
+} diff_t;
+
+/*
+TODO: Basis is checksum, after that it is path.
+*/
+
+static int diff(node_t *old_head, node_t *new_head)
+{
+	node_t *old_current = NULL;
+	node_t *new_current = NULL;
+	while(new_current != NULL)
+	{
+		while(old_current->link.checksum != new_current->link.checksum)
+		{
+			if(old_current->next == NULL)
+			{
+				//add to action as copy ; file is changed
+				if(old_current->link.path == new_current->link.path)
+				{
+					//same path, different checksum -> send again
+				}
+				else
+				{
+					//different path, different checksum -> file deleted
+				}
+				break;
+			}
+			//increase to next
+		}
+		//increase to next
+	}
+	return 0;
+}
+
 int backup(job_t *job_import)
 {
 	t0 = time(0);
@@ -256,7 +335,7 @@ int backup(job_t *job_import)
 		exit(EXIT_FAILURE);
 	}
 
-	job_import->max_threads = 4;
+	job_import->max_threads = 2;
 	max_allowed_thread_size = total_size / job_import->max_threads;
 
 	files_head = malloc(sizeof(node_t));
@@ -305,12 +384,13 @@ int backup(job_t *job_import)
 	sqlite3_exec(database, "PRAGMA journal_mode = MEMORY", NULL, NULL, NULL);
 
 	// Read old from database
-	read_old_from_database(old_files_head, database);
+	read_old_from_database(database);
 
-	//Write to database
+	// Write to database
 	write_to_db(files_head, database);
 
 	delete(files_head);
+	delete(old_files_head);
 	sqlite3_close(database);
 	sqlite3_exec(database, "END TRANSACTION", NULL, NULL, NULL);
 	pthread_exit(NULL);
