@@ -356,8 +356,7 @@ int backup(job_t *job_import)
 	int rc;
 	for(long t = 0; t < job_import->max_threads; t++)
 	{
-		rc = pthread_create(&threads[t], NULL, thread_hash, (void*) t);
-		if(rc)
+		if(pthread_create(&threads[t], NULL, thread_hash, (void*) t))
 		{
 			printf("ERROR FROM PTHREAD\nrc is %i\n", rc);
 			exit(EXIT_FAILURE);
