@@ -6,9 +6,9 @@ import "encoding/json"
 import "io/ioutil"
 
 type location struct {
+	Name string
 	Source string
 	Dest string
-	Name string
 	More_special_settings bool
 }
 
