@@ -1,6 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"crypto/sha256"
+	"encoding/hex"
+	"io"
+	"os"
+	"path/filepath"
+)
 
 func sha256sum(filePath string) (result string, err error) {
 	file, err := os.Open(filePath)

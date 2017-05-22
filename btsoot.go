@@ -6,31 +6,26 @@ import "encoding/json"
 import "io/ioutil"
 
 type location struct {
-	Name string
-	Source string
-	Dest string
+	Name                  string
+	Source                string
+	Dest                  string
 	More_special_settings bool
 }
 
 type config struct {
 	Some_generell_settings bool
-	Locations []location
+	Locations              []location
 }
 
 func main() {
 	fmt.Println("BTSOOT - Copyright (C) 2016-2017 Paul Kramme")
 
 	verbose := flag.Bool("verbose", false, "Verbose output for better debugging or just to see whats going on. This can slow BTSOOT down.")
-	create_config := flag.Bool("createconfig", false, "Creates a config, aborts any other command")
 	add_new := flag.String("add", "", "Add new block")
 	add_new_src := flag.String("src", "", "Add new source location, can only be used with -add")
 	add_new_dest := flag.String("dest", "", "Add new destination, can only be used with -add")
 	rm := flag.String("rm", "", "Remove a block from config")
 	flag.Parse()
-
-	if *create_config == true {
-		createconfig()
-	}
 
 	var conf config
 	configfile, err := ioutil.ReadFile("./config.json")
@@ -42,7 +37,9 @@ func main() {
 		panic(err)
 	}
 
-	if *verbose == true {fmt.Println("Verbose printing activated.")}
+	if *verbose == true {
+		fmt.Println("Verbose printing activated.")
+	}
 
 	if *add_new != "" {
 		var loc location
@@ -70,16 +67,4 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-}
-
-func createconfig() {
-	fmt.Println("CREATING CONFIG")
-}
-
-func fromjson(src string, v interface{}) error {
-	return json.Unmarshal([]byte(src), v)
-}
-
-func tojson(v interface{}) ([]byte, error) {
-	return json.Marshal(v)
 }
