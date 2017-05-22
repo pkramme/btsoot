@@ -65,7 +65,6 @@ func main() {
 			}
 		}
 	}
-	// resulting_config, err := tojson(conf)
 	resulting_config, err := json.MarshalIndent(conf, "", "    ")
 	err = ioutil.WriteFile("./config.json", resulting_config, 0664)
 	if err != nil {
