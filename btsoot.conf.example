@@ -1,0 +1,13 @@
+title = "Example Configuration File For BTSOOT"
+
+Verbose = false
+
+[Blocks]
+[Block.HelloWorld1]
+Source = "/home/somebody"
+Destination = "/test"
+Interval = "120m"
+[Block.HelloWorld2]
+Source = "/nas/paul"
+Destination = "10.1.1.1"
+Interval = "10m"

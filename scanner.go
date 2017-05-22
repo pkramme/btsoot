@@ -24,11 +24,16 @@ func sha256sum(filePath string) (result string, err error) {
 	return
 }
 
-func scanfiles(location string) (m map[string]string, err error) {
-	m = make(map[string]string)
+func Worker(in chan File, out chan File) {
+
+}
+
+func scanfiles(location string, WorkFiller chan File) (err error) {
 	var walkcallback = func(path string, fileinfo os.FileInfo, inputerror error) (err error) {
-		checksum, _ := sha256sum(path)
-		m[path] = checksum
+		var f File
+		f.Path = path
+		f.Finfo = fileinfo
+		WorkFiller <- f
 		return
 	}
 	err = filepath.Walk(location, walkcallback)
