@@ -1,8 +1,6 @@
 package main
 
-import (
-  "encoding/json"
-)
+import "encoding/json"
 
 func fromjson(src string, v interface{}) error {
 	return json.Unmarshal([]byte(src), v)
