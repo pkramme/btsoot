@@ -8,12 +8,14 @@ type Duration struct {
 }
 
 type File struct {
+	Block
 	Path     string
 	Finfo    os.FileInfo
 	Checksum string
 }
 
 type Block struct {
+	Blockname string
 	Source      string
 	Destination string
 	Interval    Duration
@@ -21,5 +23,4 @@ type Block struct {
 
 type Configuration struct {
 	LogFileLocation string
-	Blocks          map[string]Block
 }
