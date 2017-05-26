@@ -9,7 +9,6 @@ import (
 func main() {
 	fmt.Println("BTSOOT - Copyright (C) 2016-2017 Paul Kramme")
 
-	//Verbose := flag.Bool("verbose", false, "Verbose output for better debugging or just to see whats going on. This can slow BTSOOT down.")
 	ConfigLocation := flag.String("config", "./btsoot.conf", "Specifies configfile location")
 	flag.Parse()
 
