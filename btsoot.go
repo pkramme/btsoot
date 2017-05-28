@@ -39,12 +39,11 @@ func main() {
 		panic(err)
 	}
 	defer db.Close()
-	NumberOfJobs := 0 // This should hold the number of all jobs loaded from the database
+	NumberOfJobs := 10 // This should hold the number of all jobs loaded from the database
 	signals := make(chan os.Signal, 1)
 	killall := make(chan bool, 1)
 	done := make(chan bool, 1)
 
-	//MasterWorkerGroup.Add(1)
 	for j := 0; j < NumberOfJobs; j++ {
 		go Job(killall, done)
 	}
@@ -52,12 +51,14 @@ func main() {
 	signal.Notify(signals, syscall.SIGINT)
 	<-signals
 	fmt.Println("Exiting. This may take a while.")
-	killall <- true
+	//killall <- true
+	for j := 0; j < NumberOfJobs; j++ {
+		killall <- true
+	}
 	for j := 0; j < NumberOfJobs; j++ {
 		<-done
 	}
 }
-
 
 func Job(killall chan bool, done chan bool) {
 	killtiny := make(chan bool, 1)
