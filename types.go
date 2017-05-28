@@ -15,7 +15,7 @@ type File struct {
 }
 
 type Block struct {
-	Blockname string
+	Blockname   string
 	Source      string
 	Destination string
 	Interval    Duration

@@ -25,7 +25,7 @@ func sha256sum(filePath string) (result string, err error) {
 }
 
 func WorkFiller(in chan File, out chan File) {
-	
+
 }
 
 func Worker(in chan File, out chan File) {
