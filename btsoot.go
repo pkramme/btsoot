@@ -1,13 +1,3 @@
-/*
-TODO: create startup
-- Update check async
-- Create and load database
-- load jobs from database
-- check if blocks exist
-- start webserver async
-- listen for SIGINT
-- start all jobs in their own timer thread -> after x amount of time, start scan,
-*/
 package main
 
 import (
