@@ -6,10 +6,10 @@ import (
 	"fmt"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/paulkramme/toml"
-	"os"
+	/*"os"
 	"os/signal"
 	"syscall"
-	"time"
+	"time"*/
 )
 
 func main() {
@@ -29,6 +29,7 @@ func main() {
 		panic(err)
 	}
 	defer db.Close()
+	/*
 	NumberOfJobs := 10 // This should hold the number of all jobs loaded from the database
 	signals := make(chan os.Signal, 1)
 	killall := make(chan bool, 1)
@@ -40,7 +41,7 @@ func main() {
 
 	signal.Notify(signals, syscall.SIGINT)
 	<-signals
-	fmt.Println("Exiting. This may take a while.")
+	fmt.Println("Exiting. Please wait...")
 	//killall <- true
 	for j := 0; j < NumberOfJobs; j++ {
 		killall <- true
@@ -48,6 +49,7 @@ func main() {
 	for j := 0; j < NumberOfJobs; j++ {
 		<-done
 	}
+	*/
 }
 
 func Job(killall chan bool, done chan bool) {
@@ -72,11 +74,4 @@ func Something(killall chan bool) {
 		default:
 		}
 	}
-}
-
-
-func (d *Duration) UnmarshalText(text []byte) error {
-	var err error
-	d.Duration, err = time.ParseDuration(string(text))
-	return err
 }

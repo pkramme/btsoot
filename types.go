@@ -24,3 +24,10 @@ type Block struct {
 type Configuration struct {
 	LogFileLocation string
 }
+
+// This function is needed to convert intervals (4m3s) to understandable formats
+func (d *Duration) UnmarshalText(text []byte) error {
+	var err error
+	d.Duration, err = time.ParseDuration(string(text))
+	return err
+}
