@@ -6,10 +6,10 @@ import (
 	"fmt"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/paulkramme/toml"
-	/*"os"
+	"os"
 	"os/signal"
 	"syscall"
-	"time"*/
+	"time"
 )
 
 func main() {
@@ -29,48 +29,44 @@ func main() {
 		panic(err)
 	}
 	defer db.Close()
-	/*
-	NumberOfJobs := 10 // This should hold the number of all jobs loaded from the database
-	signals := make(chan os.Signal, 1)
-	killall := make(chan bool, 1)
-	done := make(chan bool, 1)
 
-	for j := 0; j < NumberOfJobs; j++ {
-		go Job(killall, done)
-	}
+	ProcessList := CreateMasterProcessList()
+
+	// NOTE: Init standard threads...
+	go UpdateProcess(ProcessList[UpdateThreadID])
+
+	signals := make(chan os.Signal, 1)
 
 	signal.Notify(signals, syscall.SIGINT)
 	<-signals
 	fmt.Println("Exiting. Please wait...")
-	//killall <- true
-	for j := 0; j < NumberOfJobs; j++ {
-		killall <- true
+
+	for k, v := range ProcessList {
+		fmt.Printf("Sending stop to THREADID=%d\n", k)
+		v.Channel <- StopCode
 	}
-	for j := 0; j < NumberOfJobs; j++ {
-		<-done
+	for k, v := range ProcessList {
+		callback := <-v.Channel
+		if callback == ConfirmCode {
+			fmt.Printf("THREADID=%d has received and is shutting down\n", k)
+		} else {
+			fmt.Println("Problems...")
+			// FIXME: Holy, please make this a select
+		}
 	}
-	*/
 }
 
-func Job(killall chan bool, done chan bool) {
-	killtiny := make(chan bool, 1)
-	go Something(killtiny)
-	<-killall
-	fmt.Println("Setting killtiny to true")
-	killtiny <- true
-	done <- true
-	return
-}
-
-func Something(killall chan bool) {
-	var cnt int
+func UpdateProcess(config Process) {
+	fmt.Println("Process update started...")
+	fmt.Printf("%s\n", config.Description)
 	for {
-		cnt++
-		fmt.Println("Hello World", cnt)
+		time.Sleep(10 * time.Minute)
 		select {
-		case <-killall:
-			fmt.Println("Killing something")
-			return
+		case comm := <-config.Channel:
+			if comm == StopCode {
+				config.Channel <- ConfirmCode
+				return
+			}
 		default:
 		}
 	}
