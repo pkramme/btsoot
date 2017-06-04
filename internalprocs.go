@@ -7,6 +7,7 @@ const (
 
 	StopCode    = -1
 	ConfirmCode = -2
+	ErrorCode   = -3
 )
 
 func CreateMasterProcessList() map[int]Process {
@@ -16,17 +17,17 @@ func CreateMasterProcessList() map[int]Process {
 		Channel:     make(chan int),
 		Level:       0,
 		Description: "Update thread",
-	} /*
-		pmap[1] = Process{
-			Channel:     make(chan int),
-			Level:       0,
-			Description: "Master process for all scanning operations",
-		}
-		pmap[2] = Process{
-			Channel:     make(chan int),
-			Level:       0,
-			Description: "Webserver",
-		}*/
+	}/*
+	pmap[1] = Process{
+		Channel:     make(chan int),
+		Level:       0,
+		Description: "Master process for all scanning operations",
+	}*/
+	pmap[2] = Process{
+		Channel:     make(chan int),
+		Level:       0,
+		Description: "Webserver",
+	}
 	return pmap
 }
 
