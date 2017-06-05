@@ -5,9 +5,9 @@ const (
 	ScanThreadID      = 1
 	WebserverThreadID = 2
 
-	StopCode    = -1
-	ConfirmCode = -2
-	ErrorCode   = -3
+	StopCode    = 1000
+	ConfirmCode = 1001
+	ErrorCode   = 1002
 )
 
 func CreateMasterProcessList() map[int]Process {

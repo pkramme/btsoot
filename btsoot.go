@@ -46,13 +46,13 @@ func main() {
 	fmt.Println("Exiting. Please wait...")
 
 	for k, v := range ProcessList {
-		fmt.Printf("Sending stop to THREADID=%d\n", k)
+		fmt.Printf("Sending stop (%x) to THREADID=%d\n", StopCode, k)
 		v.Channel <- StopCode
 	}
 	for k, v := range ProcessList {
 		callback := <-v.Channel
 		if callback == ConfirmCode {
-			fmt.Printf("THREADID=%d has received and is shutting down\n", k)
+			fmt.Printf("THREADID=%d: Confirmation (%x)\n", k, ConfirmCode)
 		} else {
 			fmt.Println("Problems...")
 			// FIXME: Holy, please make this a select
@@ -61,8 +61,7 @@ func main() {
 }
 
 func UpdateProcess(config Process) {
-	fmt.Println("Process update started.")
-	fmt.Printf("%s\n", config.Description)
+	log.Printf("%d %d\tstarted", config.Level, UpdateThreadID)
 	for {
 
 		select {
@@ -78,7 +77,7 @@ func UpdateProcess(config Process) {
 }
 
 func WebServer(config Process) {
-	log.Printf("Process webserver (%d,%d) started", config.Level)
+	log.Printf("%d %d\tstarted", config.Level, WebserverThreadID)
 	server := http.Server{
 		Addr: ":8080",
 		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
