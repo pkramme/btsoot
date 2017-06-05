@@ -16,7 +16,7 @@ import (
 )
 
 func main() {
-	fmt.Println("BTSOOT - Copyright (C) 2016-2017 Paul Kramme")
+	fmt.Println("BTSOOT - Copyright (c) 2017 Paul Kramme All Rights Reserved.")
 
 	ConfigLocation := flag.String("config", "./btsoot.conf", "Specifies configfile location")
 	flag.Parse()
@@ -61,10 +61,10 @@ func main() {
 }
 
 func UpdateProcess(config Process) {
-	fmt.Println("Process update started...")
+	fmt.Println("Process update started.")
 	fmt.Printf("%s\n", config.Description)
 	for {
-		time.Sleep(10 * time.Second)
+
 		select {
 		case comm := <-config.Channel:
 			if comm == StopCode {
@@ -72,11 +72,13 @@ func UpdateProcess(config Process) {
 				return
 			}
 		default:
+			time.Sleep(10 * time.Second)
 		}
 	}
 }
 
 func WebServer(config Process) {
+	log.Printf("Process webserver (%d,%d) started", config.Level)
 	server := http.Server{
 		Addr: ":8080",
 		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -88,7 +90,6 @@ func WebServer(config Process) {
 		log.Println(server.ListenAndServe())
 	}()
 	for {
-		time.Sleep(1 * time.Second)
 		select {
 		case comm := <-config.Channel:
 			if comm == StopCode {
@@ -102,6 +103,7 @@ func WebServer(config Process) {
 				return
 			}
 		default:
+			time.Sleep(1 * time.Second)
 		}
 	}
 }
