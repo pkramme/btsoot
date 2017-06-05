@@ -38,7 +38,7 @@ func main() {
 	// NOTE: Init standard threads...
 	go UpdateProcess(ProcessList[UpdateThreadID])
 	go WebServer(ProcessList[WebserverThreadID])
-
+	go ScanningProcess(ProcessList[ScanThreadID])
 	signals := make(chan os.Signal, 1)
 
 	signal.Notify(signals, syscall.SIGINT)
@@ -98,6 +98,21 @@ func WebServer(config Process) {
 					config.Channel <- ErrorCode
 					return
 				}
+				config.Channel <- ConfirmCode
+				return
+			}
+		default:
+			time.Sleep(1 * time.Second)
+		}
+	}
+}
+
+func ScanningProcess(config Process) {
+	log.Printf("%d %d\tstarted", config.Level, ScanThreadID)
+	for {
+		select {
+		case comm := <-config.Channel:
+			if comm == StopCode {
 				config.Channel <- ConfirmCode
 				return
 			}
