@@ -32,6 +32,10 @@ func main() {
 		panic(err)
 	}
 	defer db.Close()
+	err = db.Ping()
+	if err != nil {
+		panic(err)
+	}
 
 	ProcessList := CreateMasterProcessList()
 
@@ -62,16 +66,22 @@ func main() {
 
 func UpdateProcess(config Process) {
 	log.Printf("%d %d\tstarted", config.Level, UpdateThreadID)
+	Tick := time.NewTicker(120 * time.Second)
 	for {
-
 		select {
 		case comm := <-config.Channel:
 			if comm == StopCode {
+				Tick.Stop()
 				config.Channel <- ConfirmCode
 				return
 			}
 		default:
-			time.Sleep(10 * time.Second)
+			select {
+			case <-Tick.C:
+				go log.Println("Update Check")
+			default:
+				time.Sleep(1 * time.Second) // Prevent high CPU usage
+			}
 		}
 	}
 }

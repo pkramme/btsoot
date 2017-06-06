@@ -14,19 +14,17 @@ func CreateMasterProcessList() map[int]Process {
 	pmap := make(map[int]Process)
 
 	pmap[0] = Process{
-		Channel:     make(chan int),
-		Level:       0,
-		Description: "Update thread",
+		Channel: make(chan int),
+		Level:   0,
 	}
 	pmap[1] = Process{
-		Channel:     make(chan int),
-		Level:       0,
-		Description: "Master process for all scanning operations",
+		Channel:      make(chan int),
+		Level:        0,
+		Subprocesses: make(map[int]Process),
 	}
 	pmap[2] = Process{
-		Channel:     make(chan int),
-		Level:       0,
-		Description: "Webserver",
+		Channel: make(chan int),
+		Level:   0,
 	}
 	return pmap
 }
@@ -44,7 +42,7 @@ func (p Process) Kill() {
 }
 
 type Process struct {
-	Channel     chan int
-	Level       int
-	Description string
+	Channel      chan int
+	Level        int
+	Subprocesses map[int]Process
 }
