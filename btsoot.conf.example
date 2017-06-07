@@ -1,3 +1,6 @@
 title = "Example Configuration File For BTSOOT"
 
 Verbose = false
+
+LogFileLocation = "./yourlogname.log"
+DBFileLocation = "./btsoot.db"

@@ -27,7 +27,7 @@ func main() {
 		fmt.Println("Couldn't find or open config file.")
 		panic(err)
 	}
-	db, err := sql.Open("sqlite3", "./helloworld.db")
+	db, err := sql.Open("sqlite3", Config.DBFileLocation)
 	if err != nil {
 		panic(err)
 	}
@@ -91,7 +91,7 @@ func WebServer(config Process) {
 	server := http.Server{
 		Addr: ":8080",
 		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			fmt.Fprintf(w, "Hello World!")
+			fmt.Fprintf(w, "BTSOOT SERVER MAIN PAGE")
 		}),
 	}
 	ctx, _ := context.WithTimeout(context.Background(), time.Second*5)
