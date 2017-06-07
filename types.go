@@ -23,7 +23,7 @@ type Block struct {
 
 type Configuration struct {
 	LogFileLocation string
-	DBFileLocation string
+	DBFileLocation  string
 }
 
 // This function is needed to convert intervals (4m3s) to understandable formats
