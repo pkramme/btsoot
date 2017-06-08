@@ -1,5 +1,12 @@
 package main
 
+import (
+	"fmt"
+	"sync"
+	"context"
+	"time"
+)
+
 const (
 	UpdateThreadID    = 0
 	ScanThreadID      = 1
@@ -9,6 +16,12 @@ const (
 	ConfirmCode = 1001
 	ErrorCode   = 1002
 )
+
+type Process struct {
+	Channel      chan int
+	Level        int
+	Subprocesses map[int]Process
+}
 
 func CreateMasterProcessList() map[int]Process {
 	pmap := make(map[int]Process)
@@ -29,20 +42,37 @@ func CreateMasterProcessList() map[int]Process {
 	return pmap
 }
 
-func ListProcessList() {
-	return
+func (p Process) Kill(wg *sync.WaitGroup) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second * 10)
+	defer cancel()
+	p.Channel <- StopCode
+	for {
+		select {
+		case callback := <-p.Channel:
+			if callback == ErrorCode {
+				fmt.Println("Error (%x)\nYou may have to kill btsoot. Shutdown is now unsafe.", ErrorCode)
+			}
+			time.Sleep(1 * time.Second)
+			wg.Done()
+		default:
+			select {
+			case <-ctx.Done():
+				fmt.Println("One thread does not answer. Program has to be killed manually.")
+				fmt.Println(ctx.Err())
+			default:
+				// NOTE: Wait for the next loop
+			}
+		}
+
+	}
 }
 
-func (p Process) AddProcessToList() {
-	return
-}
-
-func (p Process) Kill() {
-	return
-}
-
-type Process struct {
-	Channel      chan int
-	Level        int
-	Subprocesses map[int]Process
+func KillAll(m map[int]Process) {
+	var wg sync.WaitGroup
+	for _, v := range m {
+		wg.Add(1)
+		go v.Kill(&wg)
+	}
+	wg.Wait()
+	fmt.Println("Everything is shutted down.")
 }
