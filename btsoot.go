@@ -52,13 +52,19 @@ func main() {
 		fmt.Printf("Sending stop (%x) to THREADID=%d\n", StopCode, k)
 		v.Channel <- StopCode
 	}
-	for k, v := range ProcessList {
-		callback := <-v.Channel
-		if callback == ConfirmCode {
-			fmt.Printf("THREADID=%d: Confirmation (%x)\n", k, ConfirmCode)
-		} else {
-			fmt.Println("Problems...")
-			// FIXME: Holy, please make this a select
+	for len(ProcessList) != 0 {
+		for k, v := range ProcessList {
+			select {
+			case callback := <-v.Channel:
+				if callback == ConfirmCode {
+					fmt.Printf("THREADID=%d: Confirmation (%x)\n", k, ConfirmCode)
+					delete(ProcessList, k)
+				} else if callback == ErrorCode {
+					fmt.Println("THREADID=%d: Error (%x)\n", k, ErrorCode)
+				}
+			default:
+				// NOTE: Thread did not respond, wait for the next flyby
+			}
 		}
 	}
 }
