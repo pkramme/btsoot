@@ -44,15 +44,38 @@ func main() {
 
 	log.Println("Startup complete...")
 
+	// NOTE: Wait for SIGINT
 	signal.Notify(signals, syscall.SIGINT)
 	<-signals
 	fmt.Println("Exiting. Please wait...")
 
+	// NOTE: Copy ProcessList
+	ContactList := make(map[int]Process)
 	for k, v := range ProcessList {
-		fmt.Printf("Sending stop (%x) to THREADID=%d\n", StopCode, k)
-		v.Channel <- StopCode
+		ContactList[k] = v
 	}
+
+	// NOTE: Sending StopCode to registered threads inside ProcessList
+	//ContactList := ProcessList
+	for len(ContactList) != 0 {
+		fmt.Println("Masterloop")
+		for ContactListKey, _ := range ContactList {
+			fmt.Println("Shortloop")
+			v := ProcessList[ContactListKey]
+			select {
+			case v.Channel <- StopCode:
+				fmt.Printf("Sending stop (%x) to THREADID=%d\n", StopCode, ContactListKey)
+				delete(ContactList, ContactListKey)
+			default:
+				// NOTE: Wait for the next flyby to contact thread
+			}
+		}
+	}
+
+	fmt.Println(ProcessList)
+	// NOTE: Receiving reponse code and deleting registration from ProcessList
 	for len(ProcessList) != 0 {
+		//fmt.Println(len(ProcessList), "threads are registered.")
 		for k, v := range ProcessList {
 			select {
 			case callback := <-v.Channel:
@@ -67,4 +90,5 @@ func main() {
 			}
 		}
 	}
+	fmt.Print(ProcessList)
 }
