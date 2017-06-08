@@ -47,28 +47,5 @@ func main() {
 	signal.Notify(signals, syscall.SIGINT)
 	<-signals
 	fmt.Println("Exiting. Please wait...")
-
-	/*
-		for k, v := range ProcessList {
-			fmt.Printf("Sending stop (%x) to THREADID=%d\n", StopCode, k)
-			v.Channel <- StopCode
-		}
-
-		for len(ProcessList) != 0 {
-			for k, v := range ProcessList {
-				select {
-				case callback := <-v.Channel:
-					if callback == ConfirmCode {
-						fmt.Printf("THREADID=%d: Confirmation (%x)\n", k, ConfirmCode)
-						delete(ProcessList, k)
-					} else if callback == ErrorCode {
-						fmt.Println("THREADID=%d: Error (%x)\n", k, ErrorCode)
-					}
-				default:
-					// NOTE: Thread did not respond, wait for the next flyby
-				}
-			}
-		}
-	*/
 	KillAll(ProcessList)
 }
