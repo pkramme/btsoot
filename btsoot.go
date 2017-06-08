@@ -44,21 +44,9 @@ func main() {
 
 	log.Println("Startup complete...")
 
+	// NOTE: Wait for SIGINT
 	signal.Notify(signals, syscall.SIGINT)
 	<-signals
-	fmt.Println("Exiting. Please wait...")
-
-	for k, v := range ProcessList {
-		fmt.Printf("Sending stop (%x) to THREADID=%d\n", StopCode, k)
-		v.Channel <- StopCode
-	}
-	for k, v := range ProcessList {
-		callback := <-v.Channel
-		if callback == ConfirmCode {
-			fmt.Printf("THREADID=%d: Confirmation (%x)\n", k, ConfirmCode)
-		} else {
-			fmt.Println("Problems...")
-			// FIXME: Holy, please make this a select
-		}
-	}
+	log.Println("Exiting. Please wait...")
+	KillAll(ProcessList)
 }
