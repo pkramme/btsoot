@@ -46,6 +46,6 @@ func main() {
 
 	signal.Notify(signals, syscall.SIGINT)
 	<-signals
-	fmt.Println("Exiting. Please wait...")
+	log.Println("Exiting. Please wait...")
 	KillAll(ProcessList)
 }

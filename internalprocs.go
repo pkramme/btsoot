@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"sync"
+	"context"
+	"time"
 )
 
 const (
@@ -41,12 +43,28 @@ func CreateMasterProcessList() map[int]Process {
 }
 
 func (p Process) Kill(wg *sync.WaitGroup) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second * 10)
+	defer cancel()
 	p.Channel <- StopCode
-	callback := <-p.Channel
-	if callback == ErrorCode {
-		fmt.Println("Error (%x)\nYou may have to kill btsoot. Shutdown is now unsafe.", ErrorCode)
+	for {
+		select {
+		case callback := <-p.Channel:
+			if callback == ErrorCode {
+				fmt.Println("Error (%x)\nYou may have to kill btsoot. Shutdown is now unsafe.", ErrorCode)
+			}
+			time.Sleep(1 * time.Second)
+			wg.Done()
+		default:
+			select {
+			case <-ctx.Done():
+				fmt.Println("One thread does not answer. Program has to be killed manually.")
+				fmt.Println(ctx.Err())
+			default:
+				// NOTE: Wait for the next loop
+			}
+		}
+
 	}
-	wg.Done()
 }
 
 func KillAll(m map[int]Process) {
