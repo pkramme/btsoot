@@ -44,6 +44,7 @@ func main() {
 
 	log.Println("Startup complete...")
 
+	// NOTE: Wait for SIGINT
 	signal.Notify(signals, syscall.SIGINT)
 	<-signals
 	log.Println("Exiting. Please wait...")
