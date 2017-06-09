@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"sync"
-	"context"
 	"time"
 )
 
@@ -43,9 +42,10 @@ func CreateMasterProcessList() map[int]Process {
 }
 
 func (p Process) Kill(wg *sync.WaitGroup) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second * 10)
-	defer cancel()
+	//ctx, cancel := context.WithTimeout(context.Background(), time.Second * 10)
+	// defer cancel()
 	p.Channel <- StopCode
+
 	for {
 		select {
 		case callback := <-p.Channel:
@@ -55,19 +55,17 @@ func (p Process) Kill(wg *sync.WaitGroup) {
 			time.Sleep(1 * time.Second)
 			wg.Done()
 		default:
-			select {
-			case <-ctx.Done():
-				fmt.Println("One thread does not answer. Program has to be killed manually.")
-				fmt.Println(ctx.Err())
-			default:
-				// NOTE: Wait for the next loop
-			}
+			// NOTE: Wait for the next loop
 		}
-
 	}
 }
 
 func KillAll(m map[int]Process) {
+	go func() {
+		fmt.Println("Waiting 10 seconds...")
+		time.Sleep(10 * time.Second)
+		fmt.Println("One or more threads do not answer. You may have to kill the program or wait.")
+	}()
 	var wg sync.WaitGroup
 	for _, v := range m {
 		wg.Add(1)
