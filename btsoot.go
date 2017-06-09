@@ -1,10 +1,8 @@
 package main
 
 import (
-	"database/sql"
 	"flag"
 	"fmt"
-	_ "github.com/mattn/go-sqlite3"
 	"github.com/paulkramme/toml"
 	"log"
 	"os"
@@ -22,15 +20,6 @@ func main() {
 	_, err := toml.DecodeFile(*ConfigLocation, &Config)
 	if err != nil {
 		fmt.Println("Couldn't find or open config file.")
-		panic(err)
-	}
-	db, err := sql.Open("sqlite3", Config.DBFileLocation)
-	if err != nil {
-		panic(err)
-	}
-	defer db.Close()
-	err = db.Ping()
-	if err != nil {
 		panic(err)
 	}
 
