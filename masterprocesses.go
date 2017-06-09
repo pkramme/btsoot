@@ -24,7 +24,7 @@ func UpdateProcess(config Process) {
 			case <-Tick.C:
 				go log.Println("Update Check")
 			default:
-				time.Sleep(1 * time.Second) // Prevent high CPU usage
+				time.Sleep(100) // Prevent high CPU usage
 			}
 		}
 	}

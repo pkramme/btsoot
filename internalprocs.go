@@ -52,9 +52,9 @@ func (p Process) Kill(wg *sync.WaitGroup) {
 			if callback == ErrorCode {
 				fmt.Println("Error (%x)\nYou may have to kill btsoot. Shutdown is now unsafe.", ErrorCode)
 			}
-			time.Sleep(1 * time.Second)
 			wg.Done()
 		default:
+			time.Sleep(100)
 			// NOTE: Wait for the next loop
 		}
 	}
