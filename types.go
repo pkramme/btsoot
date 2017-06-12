@@ -1,7 +1,9 @@
 package main
 
-import "os"
-import "time"
+import (
+	"os"
+	"time"
+)
 
 type File struct {
 	Block
