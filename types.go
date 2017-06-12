@@ -3,15 +3,15 @@ package main
 import "os"
 import "time"
 
-type Duration struct {
-	time.Duration
-}
-
 type File struct {
 	Block
 	Path     string
 	Finfo    os.FileInfo
 	Checksum string
+}
+
+type Duration struct {
+	time.Duration
 }
 
 type Block struct {
