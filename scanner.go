@@ -1,21 +1,21 @@
 package main
 
 import (
-	"crypto/sha256"
+	"crypto/sha512"
 	"encoding/hex"
 	"io"
 	"os"
 	"path/filepath"
 )
 
-func sha256sum(filePath string) (result string, err error) {
+func sha512sum(filePath string) (result string, err error) {
 	file, err := os.Open(filePath)
 	if err != nil {
 		return
 	}
 	defer file.Close()
 
-	hash := sha256.New()
+	hash := sha512.New()
 	_, err = io.Copy(hash, file)
 	if err != nil {
 		return
