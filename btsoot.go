@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 )
 
 func main() {
@@ -38,4 +39,5 @@ func main() {
 	<-signals
 	log.Println("Exiting. Please wait...")
 	KillAll(ProcessList)
+	time.Sleep(1 * time.Second) // wait for scanners
 }

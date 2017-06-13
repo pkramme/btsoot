@@ -56,22 +56,26 @@ func WebServer(config Process) {
 				return
 			}
 		default:
-			time.Sleep(1 * time.Second)
+			time.Sleep(100)
 		}
 	}
 }
 
 func ScanningProcess(config Process) {
 	log.Printf("%d %d\tstarted", config.Level, ScanThreadID)
+	scanfilescomm := make(chan int, 2)
+	go scanfiles(".", scanfilescomm)
 	for {
 		select {
 		case comm := <-config.Channel:
 			if comm == StopCode {
 				config.Channel <- ConfirmCode
+				close(scanfilescomm)
 				return
 			}
 		default:
-			time.Sleep(1 * time.Second)
+			time.Sleep(100)
+
 		}
 	}
 }

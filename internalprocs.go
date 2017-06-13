@@ -42,8 +42,6 @@ func CreateMasterProcessList() map[int]Process {
 }
 
 func (p Process) Kill(wg *sync.WaitGroup) {
-	//ctx, cancel := context.WithTimeout(context.Background(), time.Second * 10)
-	// defer cancel()
 	p.Channel <- StopCode
 
 	for {

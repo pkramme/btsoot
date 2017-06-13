@@ -12,15 +12,15 @@ type File struct {
 	Checksum string
 }
 
-type Duration struct {
-	time.Duration
-}
-
 type Block struct {
 	Blockname   string
 	Source      string
 	Destination string
 	Interval    Duration
+}
+
+type Duration struct {
+	time.Duration
 }
 
 type Configuration struct {
