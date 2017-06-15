@@ -24,6 +24,16 @@ func main() {
 		panic(err)
 	}
 
+	f, err := os.OpenFile(Config.LogFileLocation, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	defer f.Close()
+	log.SetOutput(f)
+
+	// NOTE: Create a spacer in the log
+		log.Println("\n\n\n\n\n")
+
 	ProcessList := CreateMasterProcessList()
 
 	// NOTE: Init standard threads...
