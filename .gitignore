@@ -20,3 +20,4 @@
 # Exclude config files
 *.conf
 *.db
+*.log
