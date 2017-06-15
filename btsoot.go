@@ -47,7 +47,7 @@ func main() {
 	// NOTE: Wait for SIGINT
 	signal.Notify(signals, syscall.SIGINT)
 	<-signals
-	log.Println("Exiting. Please wait...")
+	log.Println("Exiting...")
 	KillAll(ProcessList)
 	time.Sleep(1 * time.Second) // wait for scanners
 }

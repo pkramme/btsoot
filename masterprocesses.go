@@ -16,7 +16,7 @@ func UpdateProcess(config Process) {
 		case comm := <-config.Channel:
 			if comm == StopCode {
 				Tick.Stop()
-				fmt.Println("UPDATEPROC: Shutdown")
+				log.Println("UPDATEPROC: Shutdown")
 				config.Channel <- ConfirmCode
 				return
 			}
@@ -53,7 +53,7 @@ func WebServer(config Process) {
 					config.Channel <- ErrorCode
 					return
 				}
-				fmt.Println("WEBSERVERPROC: Shutdown")
+				log.Println("WEBSERVERPROC: Shutdown")
 				config.Channel <- ConfirmCode
 				return
 			}
@@ -72,7 +72,7 @@ func ScanningProcess(config Process) {
 		case comm := <-config.Channel:
 			if comm == StopCode {
 				close(scanfilescomm)
-				fmt.Println("SCANNERPROC: Shutdown")
+				log.Println("SCANNERPROC: Shutdown")
 				config.Channel <- ConfirmCode
 				return
 			}
