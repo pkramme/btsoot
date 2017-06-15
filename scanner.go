@@ -30,7 +30,7 @@ func sha512sum(filePath string) (result string, err error) {
 func WorkFiller(in chan File, out chan File) {
 	Win := make(chan File)
 	Wout := make(chan File)
-	for i := 4; i != 0; i-- {
+	for i := Config.MaxWorkerThreads; i != 0; i-- {
 		fmt.Println(i)
 		go Worker(Win, Wout, i)
 	}
@@ -69,7 +69,6 @@ func scanfiles(location string, comm chan int) (err error) {
 		select {
 		case _, ok := <-comm:
 			if ok == false {
-				fmt.Println("Shutting down scanner")
 				return errors.New("Shutting down filewalker. THIS IS NOT AN ERROR!")
 			}
 		default:

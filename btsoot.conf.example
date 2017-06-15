@@ -4,3 +4,4 @@ Verbose = false
 
 LogFileLocation = "./yourlogname.log"
 DBFileLocation = "./btsoot.db"
+MaxWorkerThreads = 4

@@ -23,11 +23,6 @@ type Duration struct {
 	time.Duration
 }
 
-type Configuration struct {
-	LogFileLocation string
-	DBFileLocation  string
-}
-
 // This function is needed to convert intervals (4m3s) to understandable formats
 func (d *Duration) UnmarshalText(text []byte) error {
 	var err error

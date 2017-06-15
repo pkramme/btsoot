@@ -11,13 +11,16 @@ import (
 	"time"
 )
 
+var (
+	Config Configuration
+)
+
 func main() {
 	fmt.Println("BTSOOT - Copyright (c) 2017 Paul Kramme All Rights Reserved.")
 
 	ConfigLocation := flag.String("config", "./btsoot.conf", "Specifies configfile location")
 	flag.Parse()
 
-	var Config Configuration
 	_, err := toml.DecodeFile(*ConfigLocation, &Config)
 	if err != nil {
 		fmt.Println("Couldn't find or open config file.")
@@ -32,7 +35,7 @@ func main() {
 	log.SetOutput(f)
 
 	// NOTE: Create a spacer in the log
-		log.Println("\n\n\n\n\n")
+	log.Println("\n\n\n\n\n")
 
 	ProcessList := CreateMasterProcessList()
 
@@ -40,7 +43,7 @@ func main() {
 	go UpdateProcess(ProcessList[UpdateThreadID])
 	go WebServer(ProcessList[WebserverThreadID])
 	go ScanningProcess(ProcessList[ScanThreadID])
-	signals := make(chan os.Signal, 1)
+	signals := make(chan os.Signal)
 
 	log.Println("Startup complete...")
 
