@@ -9,13 +9,14 @@ import (
 )
 
 func UpdateProcess(config Process) {
-	log.Printf("%d %d\tstarted", config.Level, UpdateThreadID)
+	log.Println("UPDATEPROC: Startup complete")
 	Tick := time.NewTicker(120 * time.Second)
 	for {
 		select {
 		case comm := <-config.Channel:
 			if comm == StopCode {
 				Tick.Stop()
+				fmt.Println("UPDATEPROC: Shutdown")
 				config.Channel <- ConfirmCode
 				return
 			}
@@ -31,7 +32,7 @@ func UpdateProcess(config Process) {
 }
 
 func WebServer(config Process) {
-	log.Printf("%d %d\tstarted", config.Level, WebserverThreadID)
+	log.Println("WEBSERVERPROC: Startup complete")
 	server := http.Server{
 		Addr: ":8080",
 		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -52,6 +53,7 @@ func WebServer(config Process) {
 					config.Channel <- ErrorCode
 					return
 				}
+				fmt.Println("WEBSERVERPROC: Shutdown")
 				config.Channel <- ConfirmCode
 				return
 			}
@@ -62,20 +64,20 @@ func WebServer(config Process) {
 }
 
 func ScanningProcess(config Process) {
-	log.Printf("%d %d\tstarted", config.Level, ScanThreadID)
+	log.Println("SCANNERPROC: Startup complete")
 	scanfilescomm := make(chan int, 2)
 	go scanfiles(".", scanfilescomm)
 	for {
 		select {
 		case comm := <-config.Channel:
 			if comm == StopCode {
-				config.Channel <- ConfirmCode
 				close(scanfilescomm)
+				fmt.Println("SCANNERPROC: Shutdown")
+				config.Channel <- ConfirmCode
 				return
 			}
 		default:
 			time.Sleep(100)
-
 		}
 	}
 }
