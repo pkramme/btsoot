@@ -3,12 +3,12 @@ package main
 import (
 	"crypto/sha512"
 	"encoding/hex"
+	"errors"
+	"fmt"
 	"io"
+	"log"
 	"os"
 	"path/filepath"
-	"fmt"
-	"log"
-	"errors"
 )
 
 func sha512sum(filePath string) (result string, err error) {
