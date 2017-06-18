@@ -3,7 +3,6 @@ package main
 import (
 	"crypto/sha512"
 	"encoding/hex"
-	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -27,27 +26,11 @@ func sha512sum(filePath string) (result string, err error) {
 	return
 }
 
-func WorkFiller(in chan File, out chan File) {
-	Win := make(chan File)
-	Wout := make(chan File)
-	for i := Config.MaxWorkerThreads; i != 0; i-- {
-		fmt.Println(i)
-		go Worker(Win, Wout, i)
-	}
+func Worker(in chan File, out chan File) {
 	for {
 		FileToProcess, ok := <-in
 		if ok == false {
-			close(Win)
-			return
-		}
-		Win <- FileToProcess
-	}
-}
-
-func Worker(in chan File, out chan File, i int) {
-	for {
-		FileToProcess, ok := <-in
-		if ok == false {
+							fmt.Println("Shutting down a thread :)")
 			return
 		}
 		hash, err := sha512sum(FileToProcess.Path)
@@ -56,30 +39,49 @@ func Worker(in chan File, out chan File, i int) {
 			continue
 		}
 		FileToProcess.Checksum = hash
-		//out <- FileToProcess
-		fmt.Println(i, FileToProcess.Path)
+		out <- FileToProcess
 	}
 }
 
-func scanfiles(location string, comm chan int) (err error) {
+func scanfiles(location string, MaxWorkerThreads int, comm chan int) (files []File) {
 	WFin := make(chan File)
 	WFout := make(chan File)
-	go WorkFiller(WFin, WFout)
+	for i := MaxWorkerThreads; i > 0; i-- {
+		go Worker(WFin, WFout)
+	}
 	var walkcallback = func(path string, fileinfo os.FileInfo, inputerror error) (err error) {
-		select {
-		case _, ok := <-comm:
-			if ok == false {
-				return errors.New("Shutting down filewalker. THIS IS NOT AN ERROR!")
-			}
-		default:
-		}
 		var f File
 		f.Path = path
 		f.Finfo = fileinfo
 		WFin <- f
 		return
 	}
-	err = filepath.Walk(location, walkcallback)
+	go func() {
+		err := filepath.Walk(location, walkcallback)
+		close(WFin)
+		if err != nil {
+			panic(err)
+		}
+	}()
+	for {
+		select {
+		case file := <-WFout:
+			fmt.Println(file)
+			files = append(files, file)
+		default:
+			break
+		}
+		select {
+		case msg := <-comm:
+			if msg == StopCode {
+				close(WFin)
+				files = nil
+				break
+			}
+		default:
+		}
+	}
+	fmt.Println(files)
 	close(WFin)
 	return
 }
