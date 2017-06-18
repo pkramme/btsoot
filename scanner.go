@@ -17,8 +17,10 @@ func sha512sum(filePath string) (result string, err error) {
 	}
 	defer file.Close()
 
+	buf := make([]byte, 128)
+
 	hash := sha512.New()
-	_, err = io.Copy(hash, file)
+	_, err = io.CopyBuffer(hash, file, buf)
 	if err != nil {
 		return
 	}
