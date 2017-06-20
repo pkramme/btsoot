@@ -65,13 +65,11 @@ func WebServer(config Process) {
 
 func ScanningProcess(config Process) {
 	log.Println("SCANNERPROC: Startup complete")
-	scanfilescomm := make(chan int, 2)
-	go scanfiles(".", 4, scanfilescomm)
+	//go scanfiles(".", 4, scanfilescomm)
 	for {
 		select {
 		case comm := <-config.Channel:
 			if comm == StopCode {
-				close(scanfilescomm)
 				log.Println("SCANNERPROC: Shutdown")
 				config.Channel <- ConfirmCode
 				return

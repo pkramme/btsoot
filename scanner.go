@@ -30,10 +30,10 @@ func sha512sum(filePath string) (result string, err error) {
 
 func Worker(in chan File, out chan File) {
 	for {
-		FileToProcess, ok := <-in
-		if ok == false {
-							fmt.Println("Shutting down a thread :)")
-			return
+		FileToProcess := <-in
+		if FileToProcess.Finfo.IsDir() {
+			out <- FileToProcess
+			continue
 		}
 		hash, err := sha512sum(FileToProcess.Path)
 		if err != nil {

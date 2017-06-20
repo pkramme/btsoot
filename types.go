@@ -6,7 +6,6 @@ import (
 )
 
 type File struct {
-	Block
 	Path     string
 	Finfo    os.FileInfo
 	Checksum string
@@ -17,6 +16,7 @@ type Block struct {
 	Source      string
 	Destination string
 	Interval    Duration
+	Files []File
 }
 
 type Duration struct {

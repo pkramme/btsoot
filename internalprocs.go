@@ -17,8 +17,7 @@ const (
 )
 
 type Process struct {
-	Channel      chan int
-	Level        int
+	Channel      chan interface{}
 	Subprocesses map[int]Process
 }
 
@@ -26,17 +25,14 @@ func CreateMasterProcessList() map[int]Process {
 	pmap := make(map[int]Process)
 
 	pmap[0] = Process{
-		Channel: make(chan int),
-		Level:   0,
+		Channel: make(chan interface{}),
 	}
 	pmap[1] = Process{
-		Channel:      make(chan int),
-		Level:        0,
+		Channel: make(chan interface{}),
 		Subprocesses: make(map[int]Process),
 	}
 	pmap[2] = Process{
-		Channel: make(chan int),
-		Level:   0,
+		Channel: make(chan interface{}),
 	}
 	return pmap
 }
