@@ -1,4 +1,5 @@
 # BTSOOT
+**contains old information, wip**
 ## What is BTSOOT
 `tl;dr: A data selective backup/cloning tool that only manipulates changed data`  
 First of: BTSOOT should only be used under very special circumstaces. If these requirements are
