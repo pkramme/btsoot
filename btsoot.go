@@ -11,15 +11,13 @@ import (
 	"time"
 )
 
-var (
-	Config Configuration
-)
-
 func main() {
 	fmt.Println("BTSOOT - Copyright (c) 2017 Paul Kramme All Rights Reserved.")
 
 	ConfigLocation := flag.String("config", "./btsoot.conf", "Specifies configfile location")
 	flag.Parse()
+
+	var Config Configuration
 
 	_, err := toml.DecodeFile(*ConfigLocation, &Config)
 	if err != nil {
