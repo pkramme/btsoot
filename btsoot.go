@@ -1,8 +1,10 @@
 package main
 
 import (
+	"database/sql"
 	"flag"
 	"fmt"
+	_ "github.com/mattn/go-sqlite3"
 	"github.com/paulkramme/toml"
 	"log"
 	"os"
@@ -34,6 +36,16 @@ func main() {
 
 	// NOTE: Create a spacer in the log
 	log.Println("\n\n\n\n\n")
+
+	db, err := sql.Open("sqlite3", Config.DBFileLocation)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = db.Ping()
+	if err != nil {
+		panic(err)
+	}
+	log.Println("Database connection established.")
 
 	ProcessList := CreateMasterProcessList()
 
