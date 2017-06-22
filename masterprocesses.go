@@ -65,6 +65,7 @@ func WebServer(config Process) {
 
 func ScanningProcess(config Process) {
 	log.Println("SCANNERPROC: Startup complete")
+	config.Subprocesses = make(map[int]Process)
 	//go scanfiles(".", 4, scanfilescomm)
 	for {
 		select {

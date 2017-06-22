@@ -16,7 +16,7 @@ type Block struct {
 	Source      string
 	Destination string
 	Interval    Duration
-	Files []File
+	Files       []File
 }
 
 type Duration struct {

@@ -29,7 +29,6 @@ func CreateMasterProcessList() map[int]Process {
 	}
 	pmap[1] = Process{
 		Channel: make(chan interface{}),
-		Subprocesses: make(map[int]Process),
 	}
 	pmap[2] = Process{
 		Channel: make(chan interface{}),
