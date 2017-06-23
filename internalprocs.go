@@ -43,7 +43,7 @@ func (p Process) Kill(wg *sync.WaitGroup) {
 		select {
 		case callback := <-p.Channel:
 			if callback == ErrorCode {
-				fmt.Println("Error (%x)\nYou may have to kill btsoot. Shutdown is now unsafe.", ErrorCode)
+				fmt.Println("Error (%x)\nOne thread did not answer.", ErrorCode)
 			}
 			wg.Done()
 		default:
