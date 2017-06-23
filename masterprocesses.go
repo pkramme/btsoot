@@ -2,10 +2,10 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
+	"github.com/julienschmidt/httprouter"
 )
 
 func UpdateProcess(config Process) {
@@ -33,12 +33,14 @@ func UpdateProcess(config Process) {
 
 func WebServer(config Process) {
 	log.Println("WEBSERVERPROC: Startup complete")
+	router := httprouter.New()
 	server := http.Server{
 		Addr: ":8080",
-		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			fmt.Fprintf(w, "BTSOOT SERVER MAIN PAGE")
-		}),
+		Handler: router,
 	}
+	router.GET("/", RootHandler)
+	router.POST("/block/:name", NewBlockHandler)
+
 	ctx, _ := context.WithTimeout(context.Background(), time.Second*5)
 	go func() {
 		log.Println(server.ListenAndServe())
