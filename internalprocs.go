@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"sync"
 	"time"
+	"log"
 )
 
 const (
@@ -36,16 +37,16 @@ func CreateMasterProcessList() map[int]Process {
 	return pmap
 }
 
-func (p Process) Kill(wg *sync.WaitGroup) {
+func (p Process) Kill() {
 	p.Channel <- StopCode
-
-	for {
+	// NOTE: Wait 10 seconds, which is 100 loops with 100 milliseconds delay
+	// to increase responsiveness
+	for i := 100; i > 0; i-- {
 		select {
 		case callback := <-p.Channel:
 			if callback == ErrorCode {
-				fmt.Println("Error (%x)\nOne thread did not answer.", ErrorCode)
+				log.Println("Error %x. Could not kill thread", ErrorCode)
 			}
-			wg.Done()
 		default:
 			time.Sleep(100)
 			// NOTE: Wait for the next loop
@@ -53,6 +54,8 @@ func (p Process) Kill(wg *sync.WaitGroup) {
 	}
 }
 
+// This function only kills all level 0 threads. Subthreads need to be handled
+// by the threads itself.
 func KillAll(m map[int]Process) {
 	go func() {
 		fmt.Println("Waiting 10 seconds...")
@@ -62,7 +65,22 @@ func KillAll(m map[int]Process) {
 	var wg sync.WaitGroup
 	for _, v := range m {
 		wg.Add(1)
-		go v.Kill(&wg)
+		go func(p Process, wg *sync.WaitGroup) {
+			p.Channel <- StopCode
+
+			for {
+				select {
+				case callback := <-p.Channel:
+					if callback == ErrorCode {
+						fmt.Println("Error (%x)\nOne thread did not answer.", ErrorCode)
+					}
+					wg.Done()
+				default:
+					time.Sleep(100)
+					// NOTE: Wait for the next loop
+				}
+			}
+		}(v, &wg)
 	}
 	wg.Wait()
 	fmt.Println("Everything is shutted down.")
