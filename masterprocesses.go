@@ -2,28 +2,28 @@ package main
 
 import (
 	"context"
+	"github.com/julienschmidt/httprouter"
 	"log"
 	"net/http"
 	"time"
-	"github.com/julienschmidt/httprouter"
 )
 
-func UpdateProcess(config Process) {
+func UpdateProcess(procconfig Process, config Configuration) {
 	log.Println("UPDATEPROC: Startup complete")
 	Tick := time.NewTicker(120 * time.Second)
 	for {
 		select {
-		case comm := <-config.Channel:
+		case comm := <-procconfig.Channel:
 			if comm == StopCode {
 				Tick.Stop()
 				log.Println("UPDATEPROC: Shutdown")
-				config.Channel <- ConfirmCode
+				procconfig.Channel <- ConfirmCode
 				return
 			}
 		default:
 			select {
 			case <-Tick.C:
-				go log.Println("Update Check")
+				go log.Println("UPDATEPROC: Update Check")
 			default:
 				time.Sleep(100) // Prevent high CPU usage
 			}
@@ -31,11 +31,11 @@ func UpdateProcess(config Process) {
 	}
 }
 
-func WebServer(config Process) {
+func WebServer(procconfig Process, config Configuration) {
 	log.Println("WEBSERVERPROC: Startup complete")
 	router := httprouter.New()
 	server := http.Server{
-		Addr: ":8080",
+		Addr:    config.Listen,
 		Handler: router,
 	}
 	router.GET("/", RootHandler)
@@ -47,16 +47,16 @@ func WebServer(config Process) {
 	}()
 	for {
 		select {
-		case comm := <-config.Channel:
+		case comm := <-procconfig.Channel:
 			if comm == StopCode {
 				err := server.Shutdown(ctx)
 				if err != nil {
 					log.Println("HTTP error stop unsuccessful")
-					config.Channel <- ErrorCode
+					procconfig.Channel <- ErrorCode
 					return
 				}
 				log.Println("WEBSERVERPROC: Shutdown")
-				config.Channel <- ConfirmCode
+				procconfig.Channel <- ConfirmCode
 				return
 			}
 		default:
@@ -65,16 +65,16 @@ func WebServer(config Process) {
 	}
 }
 
-func ScanningProcess(config Process) {
+func ScanningProcess(procconfig Process, config Configuration) {
 	log.Println("SCANNERPROC: Startup complete")
-	config.Subprocesses = make(map[int]Process)
+	procconfig.Subprocesses = make(map[int]Process)
 	//go scanfiles(".", 4, scanfilescomm)
 	for {
 		select {
-		case comm := <-config.Channel:
+		case comm := <-procconfig.Channel:
 			if comm == StopCode {
 				log.Println("SCANNERPROC: Shutdown")
-				config.Channel <- ConfirmCode
+				procconfig.Channel <- ConfirmCode
 				return
 			}
 		default:

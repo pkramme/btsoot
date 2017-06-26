@@ -50,9 +50,9 @@ func main() {
 	ProcessList := CreateMasterProcessList()
 
 	// NOTE: Init standard threads...
-	go UpdateProcess(ProcessList[UpdateThreadID])
-	go WebServer(ProcessList[WebserverThreadID])
-	go ScanningProcess(ProcessList[ScanThreadID])
+	go UpdateProcess(ProcessList[UpdateThreadID], Config)
+	go WebServer(ProcessList[WebserverThreadID], Config)
+	go ScanningProcess(ProcessList[ScanThreadID], Config)
 	signals := make(chan os.Signal)
 
 	log.Println("Startup complete...")
