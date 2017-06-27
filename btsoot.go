@@ -41,11 +41,16 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer db.Close()
 	err = db.Ping()
 	if err != nil {
 		panic(err)
 	}
-	log.Println("Database connection established.")
+
+	err = DatabaseSetup(db)
+	if err != nil {
+		panic(err)
+	}
 
 	ProcessList := CreateMasterProcessList()
 
@@ -55,12 +60,50 @@ func main() {
 	go ScanningProcess(ProcessList[ScanThreadID], Config)
 	signals := make(chan os.Signal)
 
-	log.Println("Startup complete...")
+	log.Println("Startup complete")
+	fmt.Println("Startup complete")
 
 	// NOTE: Wait for SIGINT
 	signal.Notify(signals, syscall.SIGINT)
 	<-signals
-	log.Println("Exiting...")
+	log.Println("SIGINT received")
 	KillAll(ProcessList)
 	time.Sleep(1 * time.Second) // wait for scanners
+}
+
+func DatabaseSetup(db *sql.DB) (err error) {
+	_, err = db.Exec(`
+		CREATE TABLE IF NOT EXISTS blocks(
+			name text PRIMARY KEY NOT NULL,
+			interval VARCHAR,
+			path text NOT NULL,
+			destination text NOT NULL,
+			absolutepath BOOL)`)
+	if err != nil {
+		return err
+	}
+	_, err = db.Exec(`
+		CREATE TABLE IF NOT EXISTS files(
+			block text NOT NULL,
+			checksum TEXT NOT NULL,
+			filename text,
+			absolutepath text,
+			FOREIGN KEY (block) REFERENCES blocks(name))`)
+	if err != nil {
+		return err
+	}
+	_, err = db.Exec(
+		`CREATE TABLE IF NOT EXISTS users(
+			username text,
+			password hash)`)
+	if err != nil {
+		return err
+	}
+	/*
+	_, err = db.Exec("CREATE TABLE IF NOT EXISTS version")
+	if err != nil {
+		return err
+	}
+	*/
+	return
 }
