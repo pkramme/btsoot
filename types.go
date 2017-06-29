@@ -29,3 +29,8 @@ func (d *Duration) UnmarshalText(text []byte) error {
 	d.Duration, err = time.ParseDuration(string(text))
 	return err
 }
+
+type WebResponse struct {
+	Type    string
+	Message string
+}

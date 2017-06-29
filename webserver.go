@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"time"
@@ -20,7 +21,7 @@ func WebServer(procconfig Process, config Configuration, db *sql.DB) {
 	router.GET("/", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		RootHandler(w, r, ps, db)
 	})
-	router.POST("/block/:name", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	router.POST("/block", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		NewBlockHandler(w, r, ps, db)
 	})
 
@@ -34,7 +35,7 @@ func WebServer(procconfig Process, config Configuration, db *sql.DB) {
 			if comm == StopCode {
 				err := server.Shutdown(ctx)
 				if err != nil {
-					log.Println("HTTP error stop unsuccessful")
+					log.Println("HTTP error stop unsuccessful:", err)
 					procconfig.Channel <- ErrorCode
 					return
 				}
@@ -54,7 +55,22 @@ func RootHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params, d
 }
 
 func NewBlockHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params, db *sql.DB) {
-	fmt.Println("Creating a new block:", ps.ByName("name"))
+	fmt.Println("Hello there!")
+	var NewBlock Block
+	defer r.Body.Close()
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	err = fromjson(string(body), &NewBlock)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	fmt.Println(NewBlock)
 	// if block exists, abort
 	// if not, create
 }
