@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"time"
 	"path/filepath"
 )
 
@@ -86,4 +87,22 @@ func scanfiles(location string, MaxWorkerThreads int, comm chan int) (files []Fi
 	fmt.Println(files)
 	close(WFin)
 	return
+}
+
+func ScanningProcess(procconfig Process, config Configuration) {
+	log.Println("SCANNERPROC: Startup complete")
+	procconfig.Subprocesses = make(map[int]Process)
+	//go scanfiles(".", 4, scanfilescomm)
+	for {
+		select {
+		case comm := <-procconfig.Channel:
+			if comm == StopCode {
+				log.Println("SCANNERPROC: Shutdown")
+				procconfig.Channel <- ConfirmCode
+				return
+			}
+		default:
+			time.Sleep(100)
+		}
+	}
 }
