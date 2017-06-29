@@ -56,7 +56,7 @@ func main() {
 
 	// NOTE: Init standard threads...
 	go UpdateProcess(ProcessList[UpdateThreadID], Config)
-	go WebServer(ProcessList[WebserverThreadID], Config)
+	go WebServer(ProcessList[WebserverThreadID], Config, db)
 	go ScanningProcess(ProcessList[ScanThreadID], Config)
 	signals := make(chan os.Signal)
 

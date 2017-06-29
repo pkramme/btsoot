@@ -7,8 +7,8 @@ import (
 	"io"
 	"log"
 	"os"
-	"time"
 	"path/filepath"
+	"time"
 )
 
 func sha512sum(filePath string) (result string, err error) {

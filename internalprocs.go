@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"sync"
 	"time"
-	"log"
 )
 
 const (
