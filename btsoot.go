@@ -99,11 +99,9 @@ func DatabaseSetup(db *sql.DB) (err error) {
 	if err != nil {
 		return err
 	}
-	/*
-	_, err = db.Exec("CREATE TABLE IF NOT EXISTS version")
-	if err != nil {
-		return err
-	}
-	*/
+	// _, err = db.Exec("CREATE TABLE IF NOT EXISTS version")
+	// if err != nil {
+	// 	return err
+	// }
 	return
 }
