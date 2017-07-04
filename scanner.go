@@ -8,7 +8,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"time"
 )
 
 func sha512sum(filePath string) (result string, err error) {
@@ -32,6 +31,7 @@ func sha512sum(filePath string) (result string, err error) {
 func Worker(in chan File, out chan File) {
 	for {
 		FileToProcess := <-in
+		fmt.Println(FileToProcess.Path)
 		if FileToProcess.Finfo.IsDir() {
 			out <- FileToProcess
 			continue
@@ -46,7 +46,7 @@ func Worker(in chan File, out chan File) {
 	}
 }
 
-func scanfiles(location string, MaxWorkerThreads int, comm chan int) (files []File) {
+func ScanFiles(location string, MaxWorkerThreads int, comm chan int) (files []File) {
 	WFin := make(chan File)
 	WFout := make(chan File)
 	for i := MaxWorkerThreads; i > 0; i-- {
@@ -69,7 +69,7 @@ func scanfiles(location string, MaxWorkerThreads int, comm chan int) (files []Fi
 	for {
 		select {
 		case file := <-WFout:
-			fmt.Println(file)
+			// fmt.Println(file)
 			files = append(files, file)
 		default:
 			break
@@ -89,20 +89,18 @@ func scanfiles(location string, MaxWorkerThreads int, comm chan int) (files []Fi
 	return
 }
 
-func ScanningProcess(procconfig Process, config Configuration) {
-	log.Println("SCANNERPROC: Startup complete")
-	procconfig.Subprocesses = make(map[int]Process)
-	//go scanfiles(".", 4, scanfilescomm)
-	for {
-		select {
-		case comm := <-procconfig.Channel:
-			if comm == StopCode {
-				log.Println("SCANNERPROC: Shutdown")
-				procconfig.Channel <- ConfirmCode
-				return
-			}
-		default:
-			time.Sleep(100)
-		}
-	}
-}
+// func ScanningProcess(procconfig Process, config Configuration) {
+// 	go ScanFiles(".", 4, scanfilescomm)
+// 	for {
+// 		select {
+// 		case comm := <-procconfig.Channel:
+// 			if comm == StopCode {
+// 				log.Println("SCANNERPROC: Shutdown")
+// 				procconfig.Channel <- ConfirmCode
+// 				return
+// 			}
+// 		default:
+// 			time.Sleep(100)
+// 		}
+// 	}
+// }
