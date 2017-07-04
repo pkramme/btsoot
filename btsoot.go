@@ -8,9 +8,6 @@ import (
 	"github.com/paulkramme/toml"
 	"log"
 	"os"
-	"os/signal"
-	"syscall"
-	"time"
 )
 
 const (
@@ -61,32 +58,7 @@ func main() {
 		panic(err)
 	}
 
-	// ProcessList := CreateMasterProcessList()
-
-	// NOTE: Init standard threads...
-	// go UpdateProcess(ProcessList[UpdateThreadID], Config)
-	// go WebServer(ProcessList[WebserverThreadID], Config, db)
-	// go ScanningProcess(ProcessList[ScanThreadID], Config)
-	scancomm := make(chan int)
-	_ = ScanFiles(Config.Source, Config.MaxWorkerThreads, scancomm)
-	signals := make(chan os.Signal)
-
-	// log.Println("Startup complete")
-	// fmt.Println("Startup complete")
-
-	// NOTE: Wait for SIGINT
-	signal.Notify(signals, syscall.SIGINT)
-	<-signals
-	log.Println("SIGINT received")
-	// KillAll(ProcessList)
-	scancomm <- StopCode
-	callback := <-scancomm
-	fmt.Println("Send shutdown")
-	if callback != ConfirmCode {
-		fmt.Println("There was a problem shutting down the scanner.")
-	}
-
-	time.Sleep(1 * time.Second) // wait for scanners
+	_ = ScanFiles(Config.Source, Config.MaxWorkerThreads)
 }
 
 func DatabaseSetup(db *sql.DB) (err error) {
