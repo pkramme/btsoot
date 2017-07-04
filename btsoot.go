@@ -40,7 +40,7 @@ func main() {
 	}
 
 	// NOTE: Create a spacer in the log
-	log.Println("\n\n")
+	log.Println("BTSOOT started")
 
 	db, err := sql.Open("sqlite3", Config.DBFileLocation)
 	if err != nil {
