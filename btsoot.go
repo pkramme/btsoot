@@ -26,7 +26,6 @@ func main() {
 
 	_, err := toml.DecodeFile(*ConfigLocation, &Config)
 	if err != nil {
-		fmt.Println("Couldn't find or open config file.")
 		panic(err)
 	}
 
