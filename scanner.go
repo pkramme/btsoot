@@ -8,7 +8,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"time"
 )
 
 func sha512sum(filePath string) (result string, err error) {
@@ -29,9 +28,17 @@ func sha512sum(filePath string) (result string, err error) {
 	return
 }
 
-func Worker(in chan File, out chan File) {
+func Worker(in chan File, out chan File, comm chan bool) {
 	for {
-		FileToProcess := <-in
+		FileToProcess, ok := <-in
+		if ok != true {
+			comm <- true
+			return
+		}
+		if FileToProcess.Finfo == nil {
+			log.Println("Error", FileToProcess)
+			continue
+		}
 		if FileToProcess.Finfo.IsDir() {
 			out <- FileToProcess
 			continue
@@ -46,13 +53,21 @@ func Worker(in chan File, out chan File) {
 	}
 }
 
-func scanfiles(location string, MaxWorkerThreads int, comm chan int) (files []File) {
+func ScanFiles(location string, MaxWorkerThreads int) (files []File) {
 	WFin := make(chan File)
 	WFout := make(chan File)
+
+	CheckIfDone := make(chan bool)
+	WorkerMap := make(map[int]chan bool)
 	for i := MaxWorkerThreads; i > 0; i-- {
-		go Worker(WFin, WFout)
+		WorkerMap[i] = make(chan bool)
+		go Worker(WFin, WFout, WorkerMap[i])
 	}
 	var walkcallback = func(path string, fileinfo os.FileInfo, inputerror error) (err error) {
+		if inputerror != nil {
+			fmt.Println(inputerror)
+			return
+		}
 		var f File
 		f.Path = path
 		f.Finfo = fileinfo
@@ -65,44 +80,32 @@ func scanfiles(location string, MaxWorkerThreads int, comm chan int) (files []Fi
 		if err != nil {
 			panic(err)
 		}
+		CheckIfDone <- true
 	}()
-	for {
-		select {
-		case file := <-WFout:
-			fmt.Println(file)
-			files = append(files, file)
-		default:
-			break
-		}
-		select {
-		case msg := <-comm:
-			if msg == StopCode {
-				close(WFin)
-				files = nil
-				break
-			}
-		default:
-		}
-	}
-	fmt.Println(files)
-	close(WFin)
-	return
-}
 
-func ScanningProcess(procconfig Process, config Configuration) {
-	log.Println("SCANNERPROC: Startup complete")
-	procconfig.Subprocesses = make(map[int]Process)
-	//go scanfiles(".", 4, scanfilescomm)
+Resultloop:
 	for {
+		file := <-WFout
+		files = append(files, file)
 		select {
-		case comm := <-procconfig.Channel:
-			if comm == StopCode {
-				log.Println("SCANNERPROC: Shutdown")
-				procconfig.Channel <- ConfirmCode
-				return
+		case <-CheckIfDone:
+			for len(WorkerMap) != 0 {
+				for key, value := range WorkerMap {
+					select {
+					case <-value:
+						delete(WorkerMap, key)
+					default:
+						file := <-WFout
+						files = append(files, file)
+					}
+				}
 			}
+			break Resultloop
 		default:
-			time.Sleep(100)
 		}
 	}
+	for i, v := range files {
+		fmt.Println(i, v.Path, v.Checksum)
+	}
+	return
 }

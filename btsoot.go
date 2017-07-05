@@ -8,34 +8,39 @@ import (
 	"github.com/paulkramme/toml"
 	"log"
 	"os"
-	"os/signal"
-	"syscall"
-	"time"
+)
+
+const (
+	StopCode    = 1000
+	ConfirmCode = 1001
+	ErrorCode   = 1002
 )
 
 func main() {
 	fmt.Println("BTSOOT - Copyright (c) 2017 Paul Kramme All Rights Reserved.")
 
-	ConfigLocation := flag.String("config", "./btsoot.conf", "Specifies configfile location")
+	ConfigLocation := flag.String("c", "", "Specifies configfile location")
 	flag.Parse()
 
 	var Config Configuration
 
 	_, err := toml.DecodeFile(*ConfigLocation, &Config)
 	if err != nil {
-		fmt.Println("Couldn't find or open config file.")
 		panic(err)
 	}
 
-	f, err := os.OpenFile(Config.LogFileLocation, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-	if err != nil {
-		log.Fatalln(err)
+	var f *os.File
+	if Config.LogFileLocation != "" {
+		f, err = os.OpenFile(Config.LogFileLocation, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		defer f.Close()
+		log.SetOutput(f)
 	}
-	defer f.Close()
-	log.SetOutput(f)
 
 	// NOTE: Create a spacer in the log
-	log.Println("\n\n\n\n\n")
+	log.Println("BTSOOT started")
 
 	db, err := sql.Open("sqlite3", Config.DBFileLocation)
 	if err != nil {
@@ -52,23 +57,7 @@ func main() {
 		panic(err)
 	}
 
-	ProcessList := CreateMasterProcessList()
-
-	// NOTE: Init standard threads...
-	go UpdateProcess(ProcessList[UpdateThreadID], Config)
-	go WebServer(ProcessList[WebserverThreadID], Config, db)
-	go ScanningProcess(ProcessList[ScanThreadID], Config)
-	signals := make(chan os.Signal)
-
-	log.Println("Startup complete")
-	fmt.Println("Startup complete")
-
-	// NOTE: Wait for SIGINT
-	signal.Notify(signals, syscall.SIGINT)
-	<-signals
-	log.Println("SIGINT received")
-	KillAll(ProcessList)
-	time.Sleep(1 * time.Second) // wait for scanners
+	_ = ScanFiles(Config.Source, Config.MaxWorkerThreads)
 }
 
 func DatabaseSetup(db *sql.DB) (err error) {

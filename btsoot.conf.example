@@ -1,8 +1,7 @@
-title = "Example Configuration File For BTSOOT"
+title = "Example Configuration"
 
-Verbose = false
-
-LogFileLocation = "./yourlogname.log"
-DBFileLocation = "./btsoot.db"
+LogFileLocation = ""
+DBFileLocation = "./exampledatabase.db"
 MaxWorkerThreads = 4
-Listen = ":8000"
+Source = "/home/test/test"
+Destination = "/another/home/test"
