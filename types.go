@@ -1,11 +1,11 @@
 package main
 
 type File struct {
-	Path     string
-	Name string
-	Checksum string
+	Path      string
+	Name      string
+	Checksum  string
 	Directory bool
-	Size int64
+	Size      int64
 }
 
 type Configuration struct {

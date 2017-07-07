@@ -2,8 +2,8 @@ package main
 
 import (
 	"encoding/gob"
+	"fmt"
 	"os"
-  "fmt"
 )
 
 func Save(path string, object interface{}) error {
@@ -11,9 +11,9 @@ func Save(path string, object interface{}) error {
 	if err == nil {
 		encoder := gob.NewEncoder(file)
 		err := encoder.Encode(object)
-    if err != nil {
-      fmt.Println(err)
-    }
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
 	file.Close()
 	return err
