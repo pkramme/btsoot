@@ -35,11 +35,11 @@ func Worker(in chan File, out chan File, comm chan bool) {
 			comm <- true
 			return
 		}
-		if FileToProcess.Finfo == nil {
-			log.Println("Error", FileToProcess)
-			continue
-		}
-		if FileToProcess.Finfo.IsDir() {
+		// if FileToProcess.Finfo == nil {
+		// 	log.Println("Error", FileToProcess)
+		// 	continue
+		// }
+		if FileToProcess.Directory == true {
 			out <- FileToProcess
 			continue
 		}
@@ -70,7 +70,9 @@ func ScanFiles(location string, MaxWorkerThreads int) (files []File) {
 		}
 		var f File
 		f.Path = path
-		f.Finfo = fileinfo
+		f.Name = fileinfo.Name()
+		f.Size = fileinfo.Size()
+		f.Directory = fileinfo.IsDir()
 		WFin <- f
 		return
 	}

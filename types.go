@@ -1,13 +1,11 @@
 package main
 
-import (
-	"os"
-)
-
 type File struct {
 	Path     string
-	Finfo    os.FileInfo
+	Name string
 	Checksum string
+	Directory bool
+	Size int64
 }
 
 type Configuration struct {
@@ -15,4 +13,8 @@ type Configuration struct {
 	DBFileLocation   string
 	MaxWorkerThreads int
 	Source           string
+}
+
+type Block struct {
+	Scans map[string][]File
 }

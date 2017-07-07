@@ -1,5 +1,7 @@
 title = "Example Configuration"
 
+;Always use forward slashs for paths! Even on windows!
+
 LogFileLocation = ""
 DBFileLocation = "./exampledatabase.db"
 MaxWorkerThreads = 4

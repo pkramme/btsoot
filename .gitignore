@@ -19,5 +19,5 @@
 # End of https://www.gitignore.io/api/go
 # Exclude config files
 *.conf
-*.db
+*.data
 *.log
