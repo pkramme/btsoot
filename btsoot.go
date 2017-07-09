@@ -40,15 +40,13 @@ func main() {
 
 	log.Println("BTSOOT started")
 
-	NewScan := new(Block)
-	NewScan.Scans = make(map[string][]File)
-	// OldScan := new(Block)
-	// err = Load(Config.DBFileLocation, OldScan)
-	// if err != nil {
-	// fmt.Println("Datafile not found. Should i create a new one? Please create one.")
-	// }
+	Data := new(Block)
+	err = Load(Config.DBFileLocation, Data)
+	if err != nil {
+		fmt.Println("Datafile not found. Please initialize the file")
+	}
 
-	NewScan.Scans[time.Now().Format(time.RFC3339)] = ScanFiles(Config.Source, Config.MaxWorkerThreads)
+	Scan.Scans[time.Now().Format(time.RFC3339)] = ScanFiles(Config.Source, Config.MaxWorkerThreads)
 	err = Save(Config.DBFileLocation, NewScan)
 	if err != nil {
 		panic(err)
