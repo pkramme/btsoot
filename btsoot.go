@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/paulkramme/cli"
 	"github.com/paulkramme/ini"
+	"gopkg.in/urfave/cli.v1"
 	"log"
 	"os"
 	"time"
@@ -17,16 +17,12 @@ const (
 
 func main() {
 	app := cli.NewApp()
-
-	app.Flags = []cli.Flag{
-		cli.StringFlag{
-			Name:        "config, c",
-			Usage:       "Specifies the location of the configfile",
-		},
-		cli.StringFlag{
-			Name:  "lang",
-			Value: "english",
-			Usage: "language for the greeting",
+	app.Copyright = "Copyright (c) 2017 Paul Kramme All Rights Reserved."
+	app.Compiled = time.Now()
+	app.Authors = []cli.Author{
+		cli.Author{
+			Name:  "Paul Kramme",
+			Email: "pjkramme@gmail.com",
 		},
 	}
 
@@ -34,23 +30,38 @@ func main() {
 		{
 			Name:  "init",
 			Usage: "Initialize a new block",
-			Action: func(c *cli.Context) {
+			Action: func(c *cli.Context) error {
 				// Init(c.String("config"))
 				fmt.Println("init")
-				fmt.Println(c.String("lang"))
+				return nil
+			},
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:  "config, c",
+					Usage: "Specifies the location of the configfile",
+				},
 			},
 		},
+
 		{
 			Name:  "license",
 			Usage: "Show all licenses associated with this project",
-			Action: func(c *cli.Context) {
+			Action: func(c *cli.Context) error {
 				License()
+				return nil
 			},
 		},
+
 		{
 			Name:  "backup",
 			Usage: "Backups the dataset",
-			Action: func(c *cli.Context) {
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:  "config, c",
+					Usage: "Specifies the location of the configfile",
+				},
+			},
+			Action: func(c *cli.Context) error {
 				Config := new(Configuration)
 
 				err := ini.MapTo(Config, c.String("config"))
@@ -81,6 +92,7 @@ func main() {
 				if err != nil {
 					panic(err)
 				}
+				return err
 			},
 		},
 	}
