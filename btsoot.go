@@ -17,7 +17,7 @@ const (
 
 func main() {
 	app := cli.NewApp()
-	app.Copyright = "Copyright (c) 2017 Paul Kramme All Rights Reserved."
+	app.Copyright = "Copyright (c) 2017 Paul Kramme All Rights Reserved. Distributed under BSD 3-Clause License."  
 	app.Compiled = time.Now()
 	app.Authors = []cli.Author{
 		cli.Author{
