@@ -17,7 +17,7 @@ const (
 
 func main() {
 	app := cli.NewApp()
-	app.Copyright = "Copyright (c) 2017 Paul Kramme All Rights Reserved. Distributed under BSD 3-Clause License."  
+	app.Copyright = "Copyright (c) 2017 Paul Kramme All Rights Reserved. Distributed under BSD 3-Clause License."
 	app.Compiled = time.Now()
 	app.Authors = []cli.Author{
 		cli.Author{
@@ -79,17 +79,17 @@ func main() {
 					log.SetOutput(f)
 				}
 
-				log.Println("BTSOOT started")
-
 				Data := new(Block)
 				err = Load(Config.DBFileLocation, Data)
 				if err != nil {
+					log.Println(err)
 					fmt.Println("Datafile not found. Please initialize the file")
 				}
 
 				Data.Scans[time.Now().Format(time.RFC3339)] = ScanFiles(Config.Source, Config.MaxWorkerThreads)
 				err = Save(Config.DBFileLocation, Data)
 				if err != nil {
+					log.Println(err)
 					panic(err)
 				}
 				return err
