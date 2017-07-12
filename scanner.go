@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/sha256"
 	"crypto/sha512"
 	"encoding/hex"
 	"fmt"
@@ -9,6 +10,24 @@ import (
 	"os"
 	"path/filepath"
 )
+
+func sha256sum(filePath string) (result string, err error) {
+	file, err := os.Open(filePath)
+	if err != nil {
+		return
+	}
+	defer file.Close()
+
+	buf := make([]byte, 64)
+
+	hash := sha256.New()
+	_, err = io.CopyBuffer(hash, file, buf)
+	if err != nil {
+		return
+	}
+	result = hex.EncodeToString(hash.Sum(nil))
+	return
+}
 
 func sha512sum(filePath string) (result string, err error) {
 	file, err := os.Open(filePath)
@@ -28,17 +47,13 @@ func sha512sum(filePath string) (result string, err error) {
 	return
 }
 
-func Worker(in chan File, out chan File, comm chan bool) {
+func worker(in chan File, out chan File, comm chan bool) {
 	for {
 		FileToProcess, ok := <-in
 		if ok != true {
 			comm <- true
 			return
 		}
-		// if FileToProcess.Finfo == nil {
-		// 	log.Println("Error", FileToProcess)
-		// 	continue
-		// }
 		if FileToProcess.Directory == true {
 			out <- FileToProcess
 			continue
@@ -61,7 +76,7 @@ func ScanFiles(location string, MaxWorkerThreads int) (files []File) {
 	WorkerMap := make(map[int]chan bool)
 	for i := MaxWorkerThreads; i > 0; i-- {
 		WorkerMap[i] = make(chan bool)
-		go Worker(WFin, WFout, WorkerMap[i])
+		go worker(WFin, WFout, WorkerMap[i])
 	}
 	var walkcallback = func(path string, fileinfo os.FileInfo, inputerror error) (err error) {
 		if inputerror != nil {
