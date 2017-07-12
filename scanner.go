@@ -68,6 +68,7 @@ func worker(in chan File, out chan File, comm chan bool) {
 	}
 }
 
+// ScanFiles takes a folder and a maximum thread number, scans the directory, and returnes File type with SHA512 checksums.
 func ScanFiles(location string, MaxWorkerThreads int) (files []File) {
 	WFin := make(chan File)
 	WFout := make(chan File)

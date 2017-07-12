@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/paulkramme/ini"
-	"gopkg.in/urfave/cli.v1"
 	"log"
 	"os"
 	"time"
+
+	"github.com/paulkramme/ini"
+	"gopkg.in/urfave/cli.v1"
 )
 
 const (
