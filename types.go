@@ -16,5 +16,6 @@ type Configuration struct {
 }
 
 type Block struct {
+	Version string
 	Scans map[string][]File
 }
