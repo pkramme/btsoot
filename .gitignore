@@ -21,3 +21,6 @@
 *.conf
 *.data
 *.log
+
+# vscode exclusion
+.vscode
