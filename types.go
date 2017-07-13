@@ -1,5 +1,7 @@
 package main
 
+import "time"
+
 type File struct {
 	Path      string
 	Name      string
@@ -10,5 +12,5 @@ type File struct {
 
 type Block struct {
 	Version string
-	Scans   map[string][]File
+	Scans   map[time.Time][]File
 }
