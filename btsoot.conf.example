@@ -3,7 +3,7 @@ title = "Example Configuration"
 ;Always use forward slashs for paths! Even on windows!
 
 LogFileLocation = ""
-DBFileLocation = "./exampledatabase.db"
+DBFileLocation = "./exampledatabase.data"
 MaxWorkerThreads = 4
 Source = "/home/test/test"
 Destination = "/another/home/test"

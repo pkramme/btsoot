@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/paulkramme/ini"
+	"gopkg.in/ini.v1"
 	"gopkg.in/urfave/cli.v1"
 )
 
@@ -31,25 +31,26 @@ func main() {
 		{
 			Name:  "init",
 			Usage: "Initialize a new block",
-			Action: func(c *cli.Context) error {
-				// Init(c.String("config"))
-				fmt.Println("init")
-				return nil
-			},
 			Flags: []cli.Flag{
 				cli.StringFlag{
 					Name:  "config, c",
 					Usage: "Specifies the location of the configfile",
 				},
 			},
-		},
-
-		{
-			Name:  "license",
-			Usage: "Show all licenses associated with this project",
 			Action: func(c *cli.Context) error {
-				License()
-				return nil
+				Config := new(Configuration)
+				err := ini.MapTo(Config, c.String("config"))
+				if err != nil {
+					panic(err)
+				}
+				f, err := os.Create(Config.DBFileLocation)
+				f.Close()
+				if err == nil {
+					Data := new(Block)
+					Data.Version = "0.7.0"
+					Save(Config.DBFileLocation, Data)
+				}
+				return err
 			},
 		},
 
@@ -86,7 +87,9 @@ func main() {
 					log.Println(err)
 					fmt.Println("Datafile not found. Please initialize the file")
 				}
-
+				if Data.Version == "0.7.0" {
+					fmt.Println("Block Version is 0.7.0")
+				}
 				Data.Scans[time.Now().Format(time.RFC3339)] = ScanFiles(Config.Source, Config.MaxWorkerThreads)
 				err = Save(Config.DBFileLocation, Data)
 				if err != nil {
