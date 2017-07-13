@@ -6,8 +6,7 @@ import (
 	"os"
 	"time"
 
-	"gopkg.in/ini.v1"
-	"gopkg.in/urfave/cli.v1"
+	cli "gopkg.in/urfave/cli.v1"
 )
 
 const (
@@ -38,8 +37,7 @@ func main() {
 				},
 			},
 			Action: func(c *cli.Context) error {
-				Config := new(Configuration)
-				err := ini.MapTo(Config, c.String("config"))
+				Config, err := LoadConfig(c.String("config"))
 				if err != nil {
 					panic(err)
 				}
@@ -64,9 +62,7 @@ func main() {
 				},
 			},
 			Action: func(c *cli.Context) error {
-				Config := new(Configuration)
-
-				err := ini.MapTo(Config, c.String("config"))
+				Config, err := LoadConfig(c.String("config"))
 				if err != nil {
 					panic(err)
 				}

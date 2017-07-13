@@ -8,14 +8,7 @@ type File struct {
 	Size      int64
 }
 
-type Configuration struct {
-	LogFileLocation  string
-	DBFileLocation   string
-	MaxWorkerThreads int
-	Source           string
-}
-
 type Block struct {
 	Version string
-	Scans map[string][]File
+	Scans   map[string][]File
 }
