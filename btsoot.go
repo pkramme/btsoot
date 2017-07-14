@@ -122,13 +122,14 @@ func main() {
 
 				newandchanged, deleted := Compare(Data.Scans[sortingslice[len(sortingslice)-1]], Data.Scans[sortingslice[len(sortingslice)-2]])
 
+				for i, v := range deleted {
+					fmt.Println("DEL:", i, v.Path, v.Checksum)
+				}
+
 				for i, v := range newandchanged {
 					fmt.Println("NEW:", i, v.Path, v.Checksum)
 				}
 
-				for i, v := range deleted {
-					fmt.Println("DEL:", i, v.Path, v.Checksum)
-				}
 				err = Save(Config.DBFileLocation, Data)
 				if err != nil {
 					log.Println(err)
