@@ -122,8 +122,8 @@ Resultloop:
 		default:
 		}
 	}
-	for i, v := range files {
-		fmt.Println(i, v.Path, v.Checksum)
-	}
+	// for i, v := range files {
+	// 	fmt.Println(i, v.Path, v.Checksum)
+	// }
 	return
 }

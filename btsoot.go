@@ -11,11 +11,15 @@ import (
 )
 
 const (
+	// Version string used for all version checking and CLI assignment
 	Version = "0.7.0"
 
-	StopCode    = 1000
+	// StopCode signals a thread to stop.
+	StopCode = 1000
+	// ConfirmCode confirms the execution of a signal.
 	ConfirmCode = 1001
-	ErrorCode   = 1002
+	// ErrorCode denies the save execution of a signal due to an error.
+	ErrorCode = 1002
 )
 
 func main() {
@@ -116,8 +120,15 @@ func main() {
 				fmt.Println(sortingslice[len(sortingslice)-1])
 				fmt.Println(sortingslice[len(sortingslice)-2])
 
-				_, _ = Compare(Data.Scans[sortingslice[len(sortingslice)-1]], Data.Scans[sortingslice[len(sortingslice)-2]])
+				newandchanged, deleted := Compare(Data.Scans[sortingslice[len(sortingslice)-1]], Data.Scans[sortingslice[len(sortingslice)-2]])
 
+				for i, v := range newandchanged {
+					fmt.Println("NEW:", i, v.Path, v.Checksum)
+				}
+
+				for i, v := range deleted {
+					fmt.Println("DEL:", i, v.Path, v.Checksum)
+				}
 				err = Save(Config.DBFileLocation, Data)
 				if err != nil {
 					log.Println(err)
