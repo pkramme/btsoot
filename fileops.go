@@ -6,6 +6,7 @@ import (
 	"os"
 )
 
+// Save saves a datastructure to a specified path with gob encoding.
 func Save(path string, object interface{}) error {
 	file, err := os.Create(path)
 	if err == nil {
@@ -19,6 +20,7 @@ func Save(path string, object interface{}) error {
 	return err
 }
 
+// Load loads gob data from a file into a datastructure.
 func Load(path string, object interface{}) error {
 	file, err := os.Open(path)
 	if err == nil {

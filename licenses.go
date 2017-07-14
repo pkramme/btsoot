@@ -3,7 +3,7 @@ package main
 import "fmt"
 
 const (
-	BTSOOTLicense = `https://github.com/paulkramme/btsoot
+	btsootlicense = `https://github.com/paulkramme/btsoot
 
   BSD 3-Clause License
 
@@ -35,7 +35,7 @@ const (
   OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 `
-	CLILicense = `https://github.com/urfave/cli
+	clilicense = `https://github.com/urfave/cli
 
 MIT License
 
@@ -59,7 +59,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 `
-	INILicense = `https://github.com/go-ini/ini
+	inilicense = `https://github.com/go-ini/ini
 
 Apache License
 Version 2.0, January 2004
@@ -255,10 +255,11 @@ third-party archives.
 `
 )
 
+// License prints all licenses for btsoot project.
 func License() {
-	fmt.Println(BTSOOTLicense)
+	fmt.Println(btsootlicense)
 	fmt.Println("===============")
-	fmt.Println(CLILicense)
+	fmt.Println(clilicense)
 	fmt.Println("===============")
-	fmt.Println(INILicense)
+	fmt.Println(inilicense)
 }
