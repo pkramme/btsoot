@@ -85,7 +85,7 @@ func ScanFiles(location string, MaxWorkerThreads int) (files []File) {
 			return
 		}
 		var f File
-		f.Path = path
+		f.Path = filepath.ToSlash(filepath.Clean(path))
 		f.Name = fileinfo.Name()
 		f.Size = fileinfo.Size()
 		f.Directory = fileinfo.IsDir()
@@ -104,6 +104,12 @@ func ScanFiles(location string, MaxWorkerThreads int) (files []File) {
 Resultloop:
 	for {
 		file := <-WFout
+		relpath, err := filepath.Rel(location, file.Path)
+		if err != nil {
+			fmt.Println(err)
+			log.Println(err)
+		}
+		file.Path = relpath
 		files = append(files, file)
 		select {
 		case <-CheckIfDone:
@@ -114,6 +120,12 @@ Resultloop:
 						delete(WorkerMap, key)
 					default:
 						file := <-WFout
+						relpath, err := filepath.Rel(location, file.Path)
+						if err != nil {
+							fmt.Println(err)
+							log.Println(err)
+						}
+						file.Path = relpath
 						files = append(files, file)
 					}
 				}

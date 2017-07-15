@@ -16,4 +16,5 @@ type Configuration struct {
 	DBFileLocation   string
 	MaxWorkerThreads int
 	Source           string
+	Destination      string
 }

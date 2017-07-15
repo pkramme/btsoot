@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"os"
+	"path/filepath"
 	"sort"
 	"time"
 
@@ -65,7 +67,26 @@ func main() {
 				Data := new(Block)
 
 				Data.Scans = make(map[time.Time][]File)
-				Data.Scans[time.Now()] = ScanFiles(Config.Source, Config.MaxWorkerThreads)
+				newfiles := ScanFiles(Config.Source, Config.MaxWorkerThreads)
+
+				for _, v := range newfiles {
+					// Create dirs first
+					if v.Directory == true {
+						os.MkdirAll(filepath.Join(Config.Destination, v.Path), 0777)
+					}
+				}
+
+				for _, v := range newfiles {
+					// fmt.Println("NEW:", i, v.Path, v.Checksum)
+					if v.Directory == false {
+						err := copy(filepath.Join(Config.Source, v.Path), filepath.Join(Config.Destination, v.Path))
+						if err != nil {
+							log.Println(err)
+						}
+					}
+				}
+
+				Data.Scans[time.Now()] = newfiles
 				Data.Version = Version
 				err = Save(Config.DBFileLocation, Data)
 				if err != nil {
@@ -120,16 +141,47 @@ func main() {
 				fmt.Println(sortingslice[len(sortingslice)-1])
 				fmt.Println(sortingslice[len(sortingslice)-2])
 
+				// for _, v := range Data.Scans[sortingslice[len(sortingslice)-1]] {
+				// 	fmt.Println("NEWSCN:", v)
+				// }
+
 				newandchanged, deleted := Compare(Data.Scans[sortingslice[len(sortingslice)-1]], Data.Scans[sortingslice[len(sortingslice)-2]])
 
-				for i, v := range deleted {
-					fmt.Println("DEL:", i, v.Path, v.Checksum)
+				// for _, v := range deleted {
+				// 	fmt.Println("DEL:", v)
+				// }
+				// for _, v := range newandchanged {
+				// 	fmt.Println("NEW:", v)
+				// }
+
+				for _, v := range deleted {
+					err := os.RemoveAll(filepath.Join(Config.Destination, v.Path))
+					if err != nil {
+						log.Println(err)
+						fmt.Println(err)
+					}
 				}
 
-				for i, v := range newandchanged {
-					fmt.Println("NEW:", i, v.Path, v.Checksum)
+				// Create dirs first
+				for _, v := range newandchanged {
+					if v.Directory == true {
+						err := os.MkdirAll(filepath.Join(Config.Destination, v.Path), 0777)
+						if err != nil {
+							log.Println(err)
+							panic(err)
+						}
+					}
 				}
-
+				// Now copy all files
+				for _, v := range newandchanged {
+					if v.Directory == false {
+						err := copy(filepath.Join(Config.Source, v.Path), filepath.Join(Config.Destination, v.Path))
+						if err != nil {
+							log.Println(err)
+							panic(err)
+						}
+					}
+				}
 				err = Save(Config.DBFileLocation, Data)
 				if err != nil {
 					log.Println(err)
@@ -154,4 +206,22 @@ func (ts timeSlice) Less(i, j int) bool {
 
 func (ts timeSlice) Swap(i, j int) {
 	ts[i], ts[j] = ts[j], ts[i]
+}
+
+func copy(Source string, Destination string) error {
+	fdSource, err := os.Open(Source)
+	if err != nil {
+		return err
+	}
+	defer fdSource.Close()
+	fdDestination, err := os.Create(Destination)
+	if err != nil {
+		return err
+	}
+	defer fdDestination.Close()
+	_, err = io.Copy(fdDestination, fdSource)
+	if err != nil {
+		return err
+	}
+	return err
 }

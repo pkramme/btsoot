@@ -6,14 +6,14 @@ package main
 func Compare(new []File, old []File) (newandchanged []File, deleted []File) {
 	// If new files are not in the old scan, they are new or changed.
 	for _, vnew := range new {
-		if !vnew.ifFileIsIn(old) {
-			newandchanged = append(deleted, vnew)
+		if vnew.ifFileIsIn(old) == false {
+			newandchanged = append(newandchanged, vnew)
 		}
 	}
 
 	// If an old file is not in the new scan, it must have been deleted or changed.
 	for _, vold := range old {
-		if !vold.ifFileIsIn(new) {
+		if vold.ifFileIsIn(new) == false {
 			deleted = append(deleted, vold)
 		}
 	}
