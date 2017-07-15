@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"log"
 	"os"
 	"path/filepath"
@@ -79,7 +78,7 @@ func main() {
 				for _, v := range newfiles {
 					// fmt.Println("NEW:", i, v.Path, v.Checksum)
 					if v.Directory == false {
-						err := copy(filepath.Join(Config.Source, v.Path), filepath.Join(Config.Destination, v.Path))
+						err := Copy(filepath.Join(Config.Source, v.Path), filepath.Join(Config.Destination, v.Path))
 						if err != nil {
 							log.Println(err)
 						}
@@ -175,7 +174,7 @@ func main() {
 				// Now copy all files
 				for _, v := range newandchanged {
 					if v.Directory == false {
-						err := copy(filepath.Join(Config.Source, v.Path), filepath.Join(Config.Destination, v.Path))
+						err := Copy(filepath.Join(Config.Source, v.Path), filepath.Join(Config.Destination, v.Path))
 						if err != nil {
 							log.Println(err)
 							panic(err)
@@ -192,37 +191,4 @@ func main() {
 		},
 	}
 	app.Run(os.Args)
-}
-
-type timeSlice []time.Time
-
-func (ts timeSlice) Len() int {
-	return len(ts)
-}
-
-func (ts timeSlice) Less(i, j int) bool {
-	return ts[i].Before(ts[j])
-}
-
-func (ts timeSlice) Swap(i, j int) {
-	ts[i], ts[j] = ts[j], ts[i]
-}
-
-func copy(Source string, Destination string) (err error) {
-	fdSource, err := os.Open(Source)
-	if err != nil {
-		return
-	}
-	defer fdSource.Close()
-	fdDestination, err := os.Create(Destination)
-	if err != nil {
-		return
-	}
-	defer fdDestination.Close()
-	buf := make([]byte, 512)
-	_, err = io.CopyBuffer(fdSource, fdDestination, buf)
-	if err != nil {
-		return
-	}
-	return
 }
