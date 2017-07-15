@@ -208,20 +208,21 @@ func (ts timeSlice) Swap(i, j int) {
 	ts[i], ts[j] = ts[j], ts[i]
 }
 
-func copy(Source string, Destination string) error {
+func copy(Source string, Destination string) (err error) {
 	fdSource, err := os.Open(Source)
 	if err != nil {
-		return err
+		return
 	}
 	defer fdSource.Close()
 	fdDestination, err := os.Create(Destination)
 	if err != nil {
-		return err
+		return
 	}
 	defer fdDestination.Close()
-	_, err = io.Copy(fdDestination, fdSource)
+	buf := make([]byte, 512)
+	_, err = io.CopyBuffer(fdSource, fdDestination, buf)
 	if err != nil {
-		return err
+		return
 	}
-	return err
+	return
 }
