@@ -9,6 +9,8 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+
+	"golang.org/x/crypto/blake2b"
 )
 
 func sha256sum(filePath string) (result string, err error) {
@@ -47,6 +49,27 @@ func sha512sum(filePath string) (result string, err error) {
 	return
 }
 
+func blake2bsum(filePath string) (result string, err error) {
+	file, err := os.Open(filePath)
+	if err != nil {
+		return
+	}
+	defer file.Close()
+
+	buf := make([]byte, 128)
+
+	hash, err := blake2b.New512(nil)
+	if err != nil {
+		panic(err)
+	}
+	_, err = io.CopyBuffer(hash, file, buf)
+	if err != nil {
+		return
+	}
+	result = hex.EncodeToString(hash.Sum(nil))
+	return
+}
+
 func worker(in chan File, out chan File, comm chan bool) {
 	for {
 		FileToProcess, ok := <-in
@@ -58,7 +81,7 @@ func worker(in chan File, out chan File, comm chan bool) {
 			out <- FileToProcess
 			continue
 		}
-		hash, err := sha512sum(FileToProcess.Path)
+		hash, err := blake2bsum(FileToProcess.Path)
 		if err != nil {
 			log.Println(err)
 			continue
