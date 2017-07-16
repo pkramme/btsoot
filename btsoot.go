@@ -104,6 +104,10 @@ func main() {
 					Name:  "config, c",
 					Usage: "Specifies the location of the configfile",
 				},
+				cli.BoolFlag{
+					Name:  "override, o",
+					Usage: "Overrides the saveguard. It has to be enabled. USE WITH CAUTION!",
+				},
 			},
 			Action: func(c *cli.Context) error {
 				Config, err := LoadConfig(c.String("config"))
@@ -130,7 +134,9 @@ func main() {
 				if Data.Version == "0.7.0" {
 					fmt.Println("Block Version is 0.7.0")
 				}
+				fmt.Println("Scanning...")
 				Data.Scans[time.Now()] = ScanFiles(Config.Source, Config.MaxWorkerThreads)
+				fmt.Println("Done.")
 				sortingslice := make(timeSlice, 0, len(Data.Scans))
 				for k := range Data.Scans {
 					sortingslice = append(sortingslice, k)
@@ -140,18 +146,23 @@ func main() {
 				fmt.Println(sortingslice[len(sortingslice)-1])
 				fmt.Println(sortingslice[len(sortingslice)-2])
 
-				// for _, v := range Data.Scans[sortingslice[len(sortingslice)-1]] {
-				// 	fmt.Println("NEWSCN:", v)
-				// }
-
 				newandchanged, deleted := Compare(Data.Scans[sortingslice[len(sortingslice)-1]], Data.Scans[sortingslice[len(sortingslice)-2]])
 
-				// for _, v := range deleted {
-				// 	fmt.Println("DEL:", v)
-				// }
-				// for _, v := range newandchanged {
-				// 	fmt.Println("NEW:", v)
-				// }
+				if Config.Saveguard {
+					scanlen := len(Data.Scans[sortingslice[len(sortingslice)-1]])
+					deletedlen := len(deleted)
+					percentage := (deletedlen / scanlen) * 100
+					if percentage >= Config.SaveguardMaxPercentage {
+						if c.Bool("override") != true {
+							fmt.Println("The change percentage exceeds the maximum saveguard percentage. Aborting.")
+							log.Println("The change percentage exceeds the maximum saveguard percentage. Aborting.")
+							os.Exit(1)
+						}
+						fmt.Println("The change percentage exceeds the maximum saveguard percentage, but the override flag is set.")
+						log.Println("The change percentage exceeds the maximum saveguard percentage, but the override flag is set.")
+					}
+
+				}
 
 				for _, v := range deleted {
 					err := os.RemoveAll(filepath.Join(Config.Destination, v.Path))
