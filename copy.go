@@ -18,7 +18,7 @@ func Copy(Source string, Destination string) (err error) {
 	}
 	defer fdDestination.Close()
 	buf := make([]byte, 512)
-	_, err = io.CopyBuffer(fdSource, fdDestination, buf)
+	_, err = io.CopyBuffer(fdDestination, fdSource, buf)
 	if err != nil {
 		return
 	}
