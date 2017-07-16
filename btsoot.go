@@ -50,7 +50,7 @@ func main() {
 				if err != nil {
 					panic(err)
 				}
-				df, err := os.Create(Config.DBFileLocation)
+				df, err := os.Create(Config.DataFileLocation)
 				df.Close()
 
 				var f *os.File
@@ -87,7 +87,7 @@ func main() {
 
 				Data.Scans[time.Now()] = newfiles
 				Data.Version = Version
-				err = Save(Config.DBFileLocation, Data)
+				err = Save(Config.DataFileLocation, Data)
 				if err != nil {
 					log.Println(err)
 					panic(err)
@@ -122,7 +122,7 @@ func main() {
 				}
 
 				Data := new(Block)
-				err = Load(Config.DBFileLocation, Data)
+				err = Load(Config.DataFileLocation, Data)
 				if err != nil {
 					log.Println(err)
 					fmt.Println("Datafile not found. Please initialize the file")
@@ -181,7 +181,7 @@ func main() {
 						}
 					}
 				}
-				err = Save(Config.DBFileLocation, Data)
+				err = Save(Config.DataFileLocation, Data)
 				if err != nil {
 					log.Println(err)
 					panic(err)
