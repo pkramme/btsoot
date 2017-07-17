@@ -9,6 +9,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"runtime"
 
 	"golang.org/x/crypto/blake2b"
 )
@@ -98,6 +99,9 @@ func ScanFiles(location string, MaxWorkerThreads int) (files []File) {
 
 	CheckIfDone := make(chan bool)
 	WorkerMap := make(map[int]chan bool)
+	if MaxWorkerThreads == 0 {
+		MaxWorkerThreads = runtime.NumCPU()
+	}
 	for i := MaxWorkerThreads; i > 0; i-- {
 		WorkerMap[i] = make(chan bool)
 		go worker(WFin, WFout, WorkerMap[i])
