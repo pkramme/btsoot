@@ -167,11 +167,13 @@ func main() {
 					}
 
 				}
+
 				if c.Bool("dry-run") {
 					fmt.Println("dry-run flag is set, quitting.")
 					log.Println("dry-run flag is set, quitting.")
 					return nil
 				}
+
 				for _, v := range deleted {
 					err := os.RemoveAll(filepath.Join(Config.Destination, v.Path))
 					if err != nil {
@@ -192,7 +194,7 @@ func main() {
 				}
 				// Now copy all files
 				for _, v := range newandchanged {
-					if v.Directory == false {
+					if !v.Directory {
 						err := Copy(filepath.Join(Config.Source, v.Path), filepath.Join(Config.Destination, v.Path))
 						if err != nil {
 							log.Println(err)
