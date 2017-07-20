@@ -108,6 +108,10 @@ func main() {
 					Name:  "override, o",
 					Usage: "Overrides the saveguard. It has to be enabled. USE WITH CAUTION!",
 				},
+				cli.BoolFlag{
+					Name:  "dry-run, d",
+					Usage: "Scans the block, but doesn't change or copies anything",
+				},
 			},
 			Action: func(c *cli.Context) error {
 				Config, err := LoadConfig(c.String("config"))
@@ -163,7 +167,11 @@ func main() {
 					}
 
 				}
-
+				if c.Bool("dry-run") {
+					fmt.Println("dry-run flag is set, quitting.")
+					log.Println("dry-run flag is set, quitting.")
+					return nil
+				}
 				for _, v := range deleted {
 					err := os.RemoveAll(filepath.Join(Config.Destination, v.Path))
 					if err != nil {
@@ -174,7 +182,7 @@ func main() {
 
 				// Create dirs first
 				for _, v := range newandchanged {
-					if v.Directory == true {
+					if v.Directory {
 						err := os.MkdirAll(filepath.Join(Config.Destination, v.Path), 0777)
 						if err != nil {
 							log.Println(err)
