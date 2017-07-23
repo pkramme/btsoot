@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"time"
 
 	"golang.org/x/crypto/blake2b"
 )
@@ -92,7 +93,7 @@ func worker(in chan File, out chan File, comm chan bool) {
 	}
 }
 
-// ScanFiles takes a folder and a maximum thread number, scans the directory, and returnes File type with SHA512 checksums.
+// ScanFiles takes a folder and a maximum thread number, scans the directory, and returnes File type with blake2b checksums.
 func ScanFiles(location string, MaxWorkerThreads int) (files []File) {
 	WFin := make(chan File)
 	WFout := make(chan File)
@@ -164,5 +165,34 @@ Resultloop:
 	// for i, v := range files {
 	// 	fmt.Println(i, v.Path, v.Checksum)
 	// }
+	return
+}
+
+// ScanFilesTimestamp takes a folder, scans the directory, and returnes File type with last changed dates as checksums.
+func ScanFilesTimestamp(location string) (files []File) {
+	var walkcallback = func(path string, fileinfo os.FileInfo, inputerror error) (err error) {
+		if inputerror != nil {
+			fmt.Println(inputerror)
+			return
+		}
+		var f File
+		f.Path, err = filepath.Rel(location, filepath.ToSlash(filepath.Clean(path)))
+		if err != nil {
+			log.Println(err)
+			fmt.Println(err)
+		}
+		f.Name = fileinfo.Name()
+		f.Size = fileinfo.Size()
+		f.Directory = fileinfo.IsDir()
+		if !f.Directory {
+			f.Checksum = fileinfo.ModTime().Format(time.RFC3339)
+		}
+		files = append(files, f)
+		return
+	}
+	err := filepath.Walk(location, walkcallback)
+	if err != nil {
+		panic(err)
+	}
 	return
 }

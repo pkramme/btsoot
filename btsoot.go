@@ -66,7 +66,14 @@ func main() {
 				Data := new(Block)
 
 				Data.Scans = make(map[time.Time][]File)
-				newfiles := ScanFiles(Config.Source, Config.MaxWorkerThreads)
+				var newfiles []File
+				if Config.Scantype.Blake2bBased {
+					newfiles = ScanFiles(Config.Source, Config.MaxWorkerThreads)
+				} else if Config.Scantype.TimestampBased {
+					newfiles = ScanFilesTimestamp(Config.Source)
+				} else {
+					panic("Unsupported scantype")
+				}
 
 				for _, v := range newfiles {
 					// Create dirs first
@@ -76,7 +83,6 @@ func main() {
 				}
 
 				for _, v := range newfiles {
-					// fmt.Println("NEW:", i, v.Path, v.Checksum)
 					if v.Directory == false {
 						err := Copy(filepath.Join(Config.Source, v.Path), filepath.Join(Config.Destination, v.Path))
 						if err != nil {
@@ -133,13 +139,22 @@ func main() {
 				err = Load(Config.DataFileLocation, Data)
 				if err != nil {
 					log.Println(err)
-					fmt.Println("Datafile not found. Please initialize the file")
+					panic("Datafile not found. Please initialize the file.")
+
 				}
 				if Data.Version == "0.7.0" {
 					fmt.Println("Block Version is 0.7.0")
 				}
 				fmt.Println("Scanning...")
-				Data.Scans[time.Now()] = ScanFiles(Config.Source, Config.MaxWorkerThreads)
+
+				if Config.Scantype.Blake2bBased {
+					Data.Scans[time.Now()] = ScanFiles(Config.Source, Config.MaxWorkerThreads)
+				} else if Config.Scantype.TimestampBased {
+					Data.Scans[time.Now()] = ScanFilesTimestamp(Config.Source)
+				} else {
+					panic("Unsupported scantype")
+				}
+
 				fmt.Println("Done.")
 				sortingslice := make(timeSlice, 0, len(Data.Scans))
 				for k := range Data.Scans {
@@ -152,7 +167,7 @@ func main() {
 
 				newandchanged, deleted := Compare(Data.Scans[sortingslice[len(sortingslice)-1]], Data.Scans[sortingslice[len(sortingslice)-2]])
 
-				if Config.Saveguard {
+				if Config.SaveguardEnable {
 					scanlen := len(Data.Scans[sortingslice[len(sortingslice)-1]])
 					deletedlen := len(deleted)
 					percentage := (deletedlen / scanlen) * 100
@@ -168,6 +183,8 @@ func main() {
 
 				}
 
+				fmt.Println("New or changed:", len(newandchanged))
+				fmt.Println("Deleted or changed:", len(deleted))
 				if c.Bool("dry-run") {
 					fmt.Println("dry-run flag is set, quitting.")
 					log.Println("dry-run flag is set, quitting.")

@@ -13,11 +13,21 @@ func LoadConfig(path string) (*Configuration, error) {
 
 // Configuration is the struct in which all the configuration is loaded.
 type Configuration struct {
-	LogFileLocation        string
-	DataFileLocation       string
-	MaxWorkerThreads       int
-	Source                 string
-	Destination            string
-	Saveguard              bool
+	LogFileLocation  string
+	DataFileLocation string
+	MaxWorkerThreads int
+	Source           string
+	Destination      string
+	Saveguard
+	Scantype
+}
+
+type Scantype struct {
+	Blake2bBased   bool
+	TimestampBased bool
+}
+
+type Saveguard struct {
 	SaveguardMaxPercentage int
+	SaveguardEnable        bool
 }
