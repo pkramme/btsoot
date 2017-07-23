@@ -95,8 +95,9 @@ func main() {
 							if err != nil {
 								fmt.Println(err)
 								log.Println(err)
-								fmt.Print(out.String())
 							}
+							fmt.Print(out.String())
+							log.Print(out.String())
 						} else {
 							err := CopyFile(filepath.Join(Config.Source, v.Path), filepath.Join(Config.Destination, v.Path))
 							if err != nil {
