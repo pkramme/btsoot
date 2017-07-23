@@ -1,12 +1,15 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"log"
 	"os"
 	"path/filepath"
 	"sort"
 	"time"
+
+	"os/exec"
 
 	cli "gopkg.in/urfave/cli.v1"
 )
@@ -84,7 +87,23 @@ func main() {
 
 				for _, v := range newfiles {
 					if v.Directory == false {
-						err := Copy(filepath.Join(Config.Source, v.Path), filepath.Join(Config.Destination, v.Path))
+						if Config.Copy.UseExternalCopy {
+							cmd := exec.Command(Config.Copy.ExternalCopyPath, filepath.Join(Config.Source, v.Path), filepath.Join(Config.Destination, v.Path))
+							var out bytes.Buffer
+							cmd.Stdout = &out
+							err := cmd.Run()
+							if err != nil {
+								fmt.Println(err)
+								log.Println(err)
+								fmt.Print(out.String())
+							}
+						} else {
+							err := CopyFile(filepath.Join(Config.Source, v.Path), filepath.Join(Config.Destination, v.Path))
+							if err != nil {
+								log.Println(err)
+								panic(err)
+							}
+						}
 						if err != nil {
 							log.Println(err)
 						}
@@ -212,10 +231,14 @@ func main() {
 				// Now copy all files
 				for _, v := range newandchanged {
 					if !v.Directory {
-						err := Copy(filepath.Join(Config.Source, v.Path), filepath.Join(Config.Destination, v.Path))
-						if err != nil {
-							log.Println(err)
-							panic(err)
+						if Config.Copy.UseExternalCopy {
+							exec.Command(Config.Copy.ExternalCopyPath, filepath.Join(Config.Source, v.Path), filepath.Join(Config.Destination, v.Path))
+						} else {
+							err := CopyFile(filepath.Join(Config.Source, v.Path), filepath.Join(Config.Destination, v.Path))
+							if err != nil {
+								log.Println(err)
+								panic(err)
+							}
 						}
 					}
 				}

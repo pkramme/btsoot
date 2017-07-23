@@ -20,6 +20,12 @@ type Configuration struct {
 	Destination      string
 	Saveguard
 	Scantype
+	Copy
+}
+
+type Copy struct {
+	UseExternalCopy  bool
+	ExternalCopyPath string
 }
 
 type Scantype struct {

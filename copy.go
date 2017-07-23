@@ -6,7 +6,7 @@ import (
 )
 
 // Copy copies files and returnes error if it fails.
-func Copy(Source string, Destination string) (err error) {
+func CopyFile(Source string, Destination string) (err error) {
 	fdSource, err := os.Open(Source)
 	if err != nil {
 		return
@@ -22,5 +22,6 @@ func Copy(Source string, Destination string) (err error) {
 	if err != nil {
 		return
 	}
+	fdDestination.Sync()
 	return
 }
