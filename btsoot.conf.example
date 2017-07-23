@@ -7,3 +7,10 @@ data_file_location = "./exampledatabase.data"
 max_worker_threads = 4
 source = "/home/test/test"
 destination = "/another/home/test"
+
+[saveguard]
+saveguard = true
+saveguard_max_percentage = 50
+
+[scantype]
+blake2b_based
