@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/hex"
-	"fmt"
 	"io"
 	"log"
 	"os"
@@ -80,7 +79,7 @@ func ScanFilesBlake2b(location string, MaxWorkerThreads int) (files []File) {
 	}
 	var walkcallback = func(path string, fileinfo os.FileInfo, inputerror error) (err error) {
 		if inputerror != nil {
-			fmt.Println(inputerror)
+			log.Println(inputerror)
 			return
 		}
 		var f File
@@ -104,7 +103,6 @@ Resultloop:
 		file := <-WFout
 		relpath, err := filepath.Rel(location, file.Path)
 		if err != nil {
-			fmt.Println(err)
 			log.Println(err)
 		}
 		file.Path = relpath
@@ -120,7 +118,6 @@ Resultloop:
 						file := <-WFout
 						relpath, err := filepath.Rel(location, file.Path)
 						if err != nil {
-							fmt.Println(err)
 							log.Println(err)
 						}
 						file.Path = relpath
@@ -132,9 +129,6 @@ Resultloop:
 		default:
 		}
 	}
-	// for i, v := range files {
-	// 	fmt.Println(i, v.Path, v.Checksum)
-	// }
 	return
 }
 
@@ -142,14 +136,13 @@ Resultloop:
 func ScanFilesTimestamp(location string) (files []File) {
 	var walkcallback = func(path string, fileinfo os.FileInfo, inputerror error) (err error) {
 		if inputerror != nil {
-			fmt.Println(inputerror)
+			log.Println(inputerror)
 			return
 		}
 		var f File
 		f.Path, err = filepath.Rel(location, filepath.ToSlash(filepath.Clean(path)))
 		if err != nil {
 			log.Println(err)
-			fmt.Println(err)
 		}
 		f.Size = fileinfo.Size()
 		f.Directory = fileinfo.IsDir()

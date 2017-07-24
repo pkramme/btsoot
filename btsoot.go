@@ -10,7 +10,6 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -93,10 +92,8 @@ func main() {
 							cmd.Stdout = &out
 							err := cmd.Run()
 							if err != nil {
-								fmt.Println(err)
 								log.Println(err)
 							}
-							fmt.Print(out.String())
 							log.Print(out.String())
 						} else {
 							err := CopyFile(filepath.Join(Config.Source, v.Path), filepath.Join(Config.Destination, v.Path))
@@ -163,9 +160,9 @@ func main() {
 
 				}
 				if Data.Version == "0.7.0" {
-					fmt.Println("Block Version is 0.7.0")
+					log.Println("Block Version is 0.7.0")
 				}
-				fmt.Println("Scanning...")
+				log.Println("Scan initialized")
 
 				if Config.Scantype.Blake2bBased {
 					Data.Scans[time.Now()] = ScanFilesBlake2b(Config.Source, Config.MaxWorkerThreads)
@@ -175,15 +172,15 @@ func main() {
 					panic("Unsupported scantype")
 				}
 
-				fmt.Println("Done.")
+				log.Println("Scan finished.")
 				sortingslice := make(timeSlice, 0, len(Data.Scans))
 				for k := range Data.Scans {
 					sortingslice = append(sortingslice, k)
 				}
 
 				sort.Sort(sortingslice)
-				fmt.Println(sortingslice[len(sortingslice)-1])
-				fmt.Println(sortingslice[len(sortingslice)-2])
+				log.Println(sortingslice[len(sortingslice)-1])
+				log.Println(sortingslice[len(sortingslice)-2])
 
 				newandchanged, deleted := Compare(Data.Scans[sortingslice[len(sortingslice)-1]], Data.Scans[sortingslice[len(sortingslice)-2]])
 
@@ -193,20 +190,17 @@ func main() {
 					percentage := (deletedlen / scanlen) * 100
 					if percentage >= Config.SaveguardMaxPercentage {
 						if c.Bool("override") != true {
-							fmt.Println("The change percentage exceeds the maximum saveguard percentage. Aborting.")
 							log.Println("The change percentage exceeds the maximum saveguard percentage. Aborting.")
 							os.Exit(1)
 						}
-						fmt.Println("The change percentage exceeds the maximum saveguard percentage, but the override flag is set.")
 						log.Println("The change percentage exceeds the maximum saveguard percentage, but the override flag is set.")
 					}
 
 				}
 
-				fmt.Println("New or changed:", len(newandchanged))
-				fmt.Println("Deleted or changed:", len(deleted))
+				log.Println("New or changed:", len(newandchanged))
+				log.Println("Deleted or changed:", len(deleted))
 				if c.Bool("dry-run") {
-					fmt.Println("dry-run flag is set, quitting.")
 					log.Println("dry-run flag is set, quitting.")
 					return nil
 				}
@@ -215,7 +209,7 @@ func main() {
 					err := os.RemoveAll(filepath.Join(Config.Destination, v.Path))
 					if err != nil {
 						log.Println(err)
-						fmt.Println(err)
+						panic(err)
 					}
 				}
 
