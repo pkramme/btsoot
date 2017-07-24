@@ -142,8 +142,8 @@ func main() {
 					panic(err)
 				}
 
-				var f *os.File
 				if Config.LogFileLocation != "" {
+					var f *os.File
 					f, err = os.OpenFile(Config.LogFileLocation, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 					if err != nil {
 						log.Fatalln(err)
