@@ -71,7 +71,7 @@ func main() {
 				Data.Scans = make(map[time.Time][]File)
 				var newfiles []File
 				if Config.Scantype.Blake2bBased {
-					newfiles = ScanFiles(Config.Source, Config.MaxWorkerThreads)
+					newfiles = ScanFilesBlake2b(Config.Source, Config.MaxWorkerThreads)
 				} else if Config.Scantype.TimestampBased {
 					newfiles = ScanFilesTimestamp(Config.Source)
 				} else {
@@ -168,7 +168,7 @@ func main() {
 				fmt.Println("Scanning...")
 
 				if Config.Scantype.Blake2bBased {
-					Data.Scans[time.Now()] = ScanFiles(Config.Source, Config.MaxWorkerThreads)
+					Data.Scans[time.Now()] = ScanFilesBlake2b(Config.Source, Config.MaxWorkerThreads)
 				} else if Config.Scantype.TimestampBased {
 					Data.Scans[time.Now()] = ScanFilesTimestamp(Config.Source)
 				} else {

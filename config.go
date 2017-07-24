@@ -23,16 +23,19 @@ type Configuration struct {
 	Copy
 }
 
+// Copy is an Configuration struct extension
 type Copy struct {
 	UseExternalCopy  bool
 	ExternalCopyPath string
 }
 
+// Scantype is an Configuration struct extension
 type Scantype struct {
 	Blake2bBased   bool
 	TimestampBased bool
 }
 
+// Saveguard is an Configuration struct extension
 type Saveguard struct {
 	SaveguardMaxPercentage int
 	SaveguardEnable        bool

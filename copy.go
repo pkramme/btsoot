@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-// Copy copies files and returnes error if it fails.
+// CopyFile copies files and returnes error if it fails.
 func CopyFile(Source string, Destination string) (err error) {
 	fdSource, err := os.Open(Source)
 	if err != nil {

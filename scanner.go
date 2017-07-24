@@ -93,8 +93,8 @@ func worker(in chan File, out chan File, comm chan bool) {
 	}
 }
 
-// ScanFiles takes a folder and a maximum thread number, scans the directory, and returnes File type with blake2b checksums.
-func ScanFiles(location string, MaxWorkerThreads int) (files []File) {
+// ScanFilesBlake2b takes a folder and a maximum thread number, scans the directory, and returnes File type with blake2b checksums.
+func ScanFilesBlake2b(location string, MaxWorkerThreads int) (files []File) {
 	WFin := make(chan File)
 	WFout := make(chan File)
 
