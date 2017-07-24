@@ -1,3 +1,11 @@
+/*BTSOOT
+BTSOOT is crossplatform incremental backup tool written in golang.
+It is able to identify files based on lastmod date or by a blake2b
+checksum. It then copies changed files to a remote destination.
+
+BTSOOT is licensed under BSD 3 Clause and is created by Paul Kramme.
+*/
+
 package main
 
 import (
@@ -5,11 +13,10 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"sort"
 	"time"
-
-	"os/exec"
 
 	cli "gopkg.in/urfave/cli.v1"
 )
