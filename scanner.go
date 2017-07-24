@@ -1,8 +1,6 @@
 package main
 
 import (
-	"crypto/sha256"
-	"crypto/sha512"
 	"encoding/hex"
 	"fmt"
 	"io"
@@ -15,41 +13,14 @@ import (
 	"golang.org/x/crypto/blake2b"
 )
 
-func sha256sum(filePath string) (result string, err error) {
-	file, err := os.Open(filePath)
-	if err != nil {
-		return
-	}
-	defer file.Close()
-
-	buf := make([]byte, 64)
-
-	hash := sha256.New()
-	_, err = io.CopyBuffer(hash, file, buf)
-	if err != nil {
-		return
-	}
-	result = hex.EncodeToString(hash.Sum(nil))
-	return
-}
-
-func sha512sum(filePath string) (result string, err error) {
-	file, err := os.Open(filePath)
-	if err != nil {
-		return
-	}
-	defer file.Close()
-
-	buf := make([]byte, 128)
-
-	hash := sha512.New()
-	_, err = io.CopyBuffer(hash, file, buf)
-	if err != nil {
-		return
-	}
-	result = hex.EncodeToString(hash.Sum(nil))
-	return
-}
+const (
+	// StopCode signals a thread to stop.
+	StopCode = 1000
+	// ConfirmCode confirms the execution of a signal.
+	ConfirmCode = 1001
+	// ErrorCode denies the save execution of a signal due to an error.
+	ErrorCode = 1002
+)
 
 func blake2bsum(filePath string) (result string, err error) {
 	file, err := os.Open(filePath)

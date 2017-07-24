@@ -24,13 +24,6 @@ import (
 const (
 	// Version string used for all version checking and CLI assignment
 	Version = "0.7.0"
-
-	// StopCode signals a thread to stop.
-	StopCode = 1000
-	// ConfirmCode confirms the execution of a signal.
-	ConfirmCode = 1001
-	// ErrorCode denies the save execution of a signal due to an error.
-	ErrorCode = 1002
 )
 
 func main() {
