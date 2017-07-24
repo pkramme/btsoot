@@ -114,7 +114,6 @@ func ScanFilesBlake2b(location string, MaxWorkerThreads int) (files []File) {
 		}
 		var f File
 		f.Path = filepath.ToSlash(filepath.Clean(path))
-		f.Name = fileinfo.Name()
 		f.Size = fileinfo.Size()
 		f.Directory = fileinfo.IsDir()
 		WFin <- f
@@ -181,7 +180,6 @@ func ScanFilesTimestamp(location string) (files []File) {
 			log.Println(err)
 			fmt.Println(err)
 		}
-		f.Name = fileinfo.Name()
 		f.Size = fileinfo.Size()
 		f.Directory = fileinfo.IsDir()
 		if !f.Directory {
