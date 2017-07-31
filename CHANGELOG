@@ -1,3 +1,15 @@
+v0.7
+- Complete rewrite in golang
+- Remove restore functionality, this program shall never touch a original file
+- Change data format to JSON for better readability
+- Change configuration format to ini
+- Now working on Windows, FreeBSD, Linux and MacOS (supports any OS golang does)
+- Supports timestamps as hashing
+- Change standard hash algorithm to blake2b
+- Add support for external and internal copy programs
+- By default statically compiled binaries, no dependencies necessary
+- Change license to BSD 3 Clause
+
 v0.6
 - Performance improvements through limiting disk writes
 - More efficient copy function through sendfile
