@@ -237,6 +237,11 @@ func main() {
 						}
 					}
 				}
+
+				if len(Data.Scans) > 3 {
+					delete(Data.Scans, sortingslice[0])
+				}
+
 				err = Save(Config.DataFileLocation, Data)
 				if err != nil {
 					log.Println(err)
