@@ -9,6 +9,7 @@ v0.7
 - Add support for external and internal copy programs
 - By default statically compiled binaries, no dependencies necessary
 - Change license to BSD 3 Clause
+- Add old scan deletion
 
 v0.6
 - Performance improvements through limiting disk writes
