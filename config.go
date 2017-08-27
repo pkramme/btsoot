@@ -21,6 +21,14 @@ type Configuration struct {
 	Saveguard
 	Scantype
 	Copy
+	OnStartScript
+}
+
+// OnStartScript executes a file before the backup process starts.
+type OnStartScript struct {
+	OnStartScriptEnable bool
+	OnStartScriptPath   string
+	OnStartScriptArgs   string
 }
 
 // Copy is an Configuration struct extension

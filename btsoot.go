@@ -139,7 +139,7 @@ func main() {
 			Action: func(c *cli.Context) error {
 				Config, err := LoadConfig(c.String("config"))
 				if err != nil {
-					panic(err)
+					log.Fatalln(err)
 				}
 
 				if Config.LogFileLocation != "" {
@@ -150,6 +150,22 @@ func main() {
 					}
 					defer f.Close()
 					log.SetOutput(f)
+				}
+
+				// Exec OnStartScript
+				if Config.OnStartScriptEnable {
+					if Config.OnStartScriptPath != "" {
+						command := exec.Command(Config.OnStartScriptPath, Config.OnStartScriptArgs)
+						var out bytes.Buffer
+						command.Stdout = &out
+						err := command.Run()
+						if err != nil {
+							log.Fatalln("OnStartScript:", err)
+						}
+						log.Println("OnStartScript Output:\n", out.String())
+					} else {
+						log.Fatalln("OnStartScriptEnable is true, but the path is empty.")
+					}
 				}
 
 				Data := new(Block)
@@ -190,8 +206,7 @@ func main() {
 					percentage := (deletedlen / scanlen) * 100
 					if percentage >= Config.SaveguardMaxPercentage {
 						if c.Bool("override") != true {
-							log.Println("The change percentage exceeds the maximum saveguard percentage. Aborting.")
-							os.Exit(1)
+							log.Fatalln("Saveguard: The change percentage exceeds the maximum saveguard percentage. Aborting.")
 						}
 						log.Println("The change percentage exceeds the maximum saveguard percentage, but the override flag is set.")
 					}
@@ -208,8 +223,7 @@ func main() {
 				for _, v := range deleted {
 					err := os.RemoveAll(filepath.Join(Config.Destination, v.Path))
 					if err != nil {
-						log.Println(err)
-						panic(err)
+						log.Fatalln(err)
 					}
 				}
 
@@ -218,8 +232,8 @@ func main() {
 					if v.Directory {
 						err := os.MkdirAll(filepath.Join(Config.Destination, v.Path), 0777)
 						if err != nil {
-							log.Println(err)
-							panic(err)
+							log.Fatalln(err)
+
 						}
 					}
 				}
@@ -231,8 +245,7 @@ func main() {
 						} else {
 							err := CopyFile(filepath.Join(Config.Source, v.Path), filepath.Join(Config.Destination, v.Path))
 							if err != nil {
-								log.Println(err)
-								panic(err)
+								log.Fatalln(err)
 							}
 						}
 					}
@@ -244,8 +257,7 @@ func main() {
 
 				err = Save(Config.DataFileLocation, Data)
 				if err != nil {
-					log.Println(err)
-					panic(err)
+					log.Fatalln(err)
 				}
 				return err
 			},
